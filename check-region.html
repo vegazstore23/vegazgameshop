@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Region MLBB - VEGAZGAMESHOP</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/pages.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header Component -->
+    <div id="header"></div>
+
+    <!-- Check Region Section -->
+    <section class="page-section">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Check Region MLBB</h1>
+                <p class="page-subtitle">Cek ID & Server Mobile Legends kamu sebelum order</p>
+            </div>
+            
+            <div class="check-form-wrapper">
+                <form id="checkForm" class="check-form">
+                    <div class="form-group">
+                        <label for="userId">User ID</label>
+                        <input type="number" id="userId" placeholder="Masukkan User ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="zoneId">Zone ID</label>
+                        <input type="number" id="zoneId" placeholder="Masukkan Zone ID" required>
+                    </div>
+                    <button type="submit" class="check-button">
+                        <span id="checkButtonText">Check Region</span>
+                        <div id="checkLoader" class="loader" style="display: none;"></div>
+                    </button>
+                </form>
+                
+                <div id="checkResult" class="check-result" style="display: none;">
+                    <div class="result-success">
+                        <div class="result-icon">✓</div>
+                        <div class="result-info">
+                            <h3>Akun Ditemukan!</h3>
+                            <p id="playerName"></p>
+                            <div style="margin-top: 2rem;">
+                                <a href="topup.html" class="cta-btn primary">Lanjut Top Up →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="checkError" class="check-error" style="display: none;">
+                    <div class="error-icon">✗</div>
+                    <p id="errorMessage"></p>
+                </div>
+
+                <div class="info-box">
+                    <h3>💡 Cara Menemukan ID & Zone ID:</h3>
+                    <ol>
+                        <li>Buka Mobile Legends</li>
+                        <li>Tap ikon profil di pojok kiri atas</li>
+                        <li>User ID dan Zone ID tertera di bawah username</li>
+                        <li>Format: 12345678 (9012)</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Component -->
+    <div id="footer"></div>
+
+    <!-- Scripts -->
+    <script src="components/header.js"></script>
+    <script src="components/footer.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/check-region.js"></script>
+    <script>
+        initHeader('check');
+        initFooter();
+    </script>
+</body>
+</html>

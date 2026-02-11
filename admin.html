@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - VEGAZGAMESHOP</title>
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="login-header">
+                <h1 class="login-brand">⚡ VEGAZGAMESHOP</h1>
+                <p class="login-subtitle">Admin Dashboard</p>
+            </div>
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" value="admin@vegazgameshop.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" value="admin123" required>
+                </div>
+                <button type="submit" class="login-button">Login</button>
+                <p class="login-hint">Default: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="345550595d5a74425153554e53555951475c5b441a575b59">[email&#160;protected]</a> / admin123</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="admin-dashboard" style="display: none;">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="brand-icon">⚡</span>
+                <span class="brand-text">VEGAZ</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="statistics">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-section="packages">
+                    <span class="nav-icon">💎</span>
+                    <span>Paket Diamond</span>
+                </a>
+                <a href="#" class="nav-item" data-section="stock">
+                    <span class="nav-icon">🎮</span>
+                    <span>Stock Akun</span>
+                </a>
+                <a href="#" class="nav-item" data-section="testimonials">
+                    <span class="nav-icon">⭐</span>
+                    <span>Testimoni</span>
+                </a>
+                <a href="#" class="nav-item" data-section="settings">
+                    <span class="nav-icon">⚙️</span>
+                    <span>Settings</span>
+                </a>
+            </nav>
+            <button class="logout-button" id="logoutButton">
+                <span>🚪</span>
+                <span>Logout</span>
+            </button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="content-header">
+                <h2 id="sectionTitle">Dashboard</h2>
+                <div class="header-actions">
+                    <span class="admin-name">Admin</span>
+                    <div class="admin-avatar">A</div>
+                </div>
+            </header>
+
+            <!-- Statistics Section -->
+            <section id="statistics" class="content-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">💎</div>
+                        <div class="stat-info">
+                            <h3 id="totalPackages">0</h3>
+                            <p>Total Paket</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎮</div>
+                        <div class="stat-info">
+                            <h3 id="totalStock">0</h3>
+                            <p>Stock Akun</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-info">
+                            <h3>10K+</h3>
+                            <p>Total Transaksi</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-info">
+                            <h3>99%</h3>
+                            <p>Success Rate</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="welcome-card">
+                    <h3>Selamat Datang di Admin Dashboard! 🎉</h3>
+                    <p>Kelola paket diamond dan stock akun MLBB dengan mudah.</p>
+                    <div class="quick-actions">
+                        <button class="action-btn" onclick="switchSection('packages')">
+                            Kelola Paket
+                        </button>
+                        <button class="action-btn" onclick="switchSection('stock')">
+                            Kelola Stock
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Packages Section -->
+            <section id="packages" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <button class="add-button" onclick="showAddPackageModal()">
+                        + Tambah Paket Baru
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Diamond</th>
+                                <th>Bonus</th>
+                                <th>Harga</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="packagesTableBody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Stock Section -->
+            <section id="stock" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <button class="add-button" onclick="showAddStockModal()">
+                        + Tambah Stock Baru
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Rank</th>
+                                <th>Hero</th>
+                                <th>Skin</th>
+                                <th>Emblem</th>
+                                <th>Harga</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stockTableBody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Testimonials Section -->
+            <section id="testimonials" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <button class="add-button" onclick="showAddTestimonialModal()">
+                        + Upload Foto Testimoni
+                    </button>
+                </div>
+
+                <div class="testimonials-grid" id="testimonialsGrid">
+                    <!-- Testimonials will be loaded by JS -->
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings" class="content-section" style="display: none;">
+                <div class="settings-card">
+                    <h3>Pengaturan Toko</h3>
+                    <form id="settingsForm" class="settings-form">
+                        <div class="form-group">
+                            <label for="adminPhone">Nomor WhatsApp Admin</label>
+                            <input type="tel" id="adminPhone" placeholder="628xxxxxxxxxx" required>
+                            <small>Format: 628xxxxxxxxxx (tanpa +)</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="shopName">Nama Toko</label>
+                            <input type="text" id="shopName" value="VEGAZGAMESHOP" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="shopDescription">Deskripsi Toko</label>
+                            <textarea id="shopDescription" rows="4">Top Up Mobile Legends Diamond Termurah & Tercepat</textarea>
+                        </div>
+                        <button type="submit" class="save-button">Simpan Pengaturan</button>
+                    </form>
+                </div>
+
+                <div class="settings-card">
+                    <h3>Data & Backup</h3>
+                    <div class="backup-actions">
+                        <button class="action-btn" onclick="exportData()">
+                            📥 Export Data
+                        </button>
+                        <button class="action-btn" onclick="importData()">
+                            📤 Import Data
+                        </button>
+                        <button class="action-btn danger" onclick="clearAllData()">
+                            🗑️ Reset Semua Data
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal: Add/Edit Package -->
+    <div id="packageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="packageModalTitle">Tambah Paket</h3>
+                <button class="modal-close" onclick="closePackageModal()">&times;</button>
+            </div>
+            <form id="packageForm">
+                <input type="hidden" id="packageId">
+                <div class="form-group">
+                    <label for="packageDiamond">Jumlah Diamond *</label>
+                    <input type="text" id="packageDiamond" placeholder="e.g. 86" required>
+                </div>
+                <div class="form-group">
+                    <label for="packageBonus">Bonus *</label>
+                    <input type="text" id="packageBonus" placeholder="e.g. +10" required>
+                </div>
+                <div class="form-group">
+                    <label for="packagePrice">Harga (Rp) *</label>
+                    <input type="number" id="packagePrice" placeholder="20000" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="cancel-button" onclick="closePackageModal()">Batal</button>
+                    <button type="submit" class="save-button">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Add/Edit Stock -->
+    <div id="stockModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="stockModalTitle">Tambah Stock</h3>
+                <button class="modal-close" onclick="closeStockModal()">&times;</button>
+            </div>
+            <form id="stockForm">
+                <input type="hidden" id="stockId">
+                <div class="form-group">
+                    <label for="stockRank">Rank *</label>
+                    <select id="stockRank" required>
+                        <option value="">Pilih Rank</option>
+                        <option value="Mythical Glory">Mythical Glory</option>
+                        <option value="Mythic">Mythic</option>
+                        <option value="Legend">Legend</option>
+                        <option value="Epic">Epic</option>
+                        <option value="Grandmaster">Grandmaster</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="stockHero">Jumlah Hero *</label>
+                    <input type="number" id="stockHero" placeholder="120" required>
+                </div>
+                <div class="form-group">
+                    <label for="stockSkin">Jumlah Skin *</label>
+                    <input type="number" id="stockSkin" placeholder="350" required>
+                </div>
+                <div class="form-group">
+                    <label for="stockEmblem">Emblem *</label>
+                    <input type="text" id="stockEmblem" placeholder="Max All" required>
+                </div>
+                <div class="form-group">
+                    <label for="stockPrice">Harga (Rp) *</label>
+                    <input type="number" id="stockPrice" placeholder="500000" required>
+                </div>
+                <div class="form-group">
+                    <label for="stockStatus">Status *</label>
+                    <select id="stockStatus" required>
+                        <option value="available">Available</option>
+                        <option value="sold">Sold</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="cancel-button" onclick="closeStockModal()">Batal</button>
+                    <button type="submit" class="save-button">Simpan</button>
+                      </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Upload Testimonial -->
+    <div id="testimonialModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Upload Foto Testimoni</h3>
+                <button class="modal-close" onclick="closeTestimonialModal()">&times;</button>
+            </div>
+            <form id="testimonialForm">
+                <div class="form-group">
+                    <label for="testimonialImage">URL Gambar Testimoni *</label>
+                    <input type="url" id="testimonialImage" placeholder="https://example.com/image.jpg" required>
+                    <small style="color: #8892b0; display: block; margin-top: 0.5rem;">
+                        Upload gambar ke hosting seperti Imgur, Imgbb, atau gunakan link Google Drive
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label>Preview:</label>
+                    <div id="testimonialPreview" style="width: 100%; max-width: 300px; margin: 1rem auto; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; display: none;">
+                        <img id="testimonialPreviewImg" style="width: 100%; height: auto; display: block;">
+                    </div>
+                    <button type="button" class="action-btn" onclick="previewTestimonial()" style="width: 100%; margin-top: 0.5rem;">
+                        👁️ Preview Gambar
+                    </button>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="cancel-button" onclick="closeTestimonialModal()">Batal</button>
+                    <button type="submit" class="save-button">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="assets/js/admin.js"></script>
+</body>
+</html>

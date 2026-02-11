@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Up Diamond MLBB - VEGAZGAMESHOP</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/pages.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="header"></div>
+
+    <section class="page-section">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Top Up Diamond MLBB</h1>
+                <p class="page-subtitle">Pilih paket diamond favorit kamu</p>
+            </div>
+            
+            <div id="packageList" class="package-grid"></div>
+
+            <div class="order-form-wrapper">
+                <h3>Form Order</h3>
+                <form id="orderForm" class="order-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="orderUserId">User ID *</label>
+                            <input type="number" id="orderUserId" placeholder="Masukkan User ID" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="orderZoneId">Zone ID *</label>
+                            <input type="number" id="orderZoneId" placeholder="Masukkan Zone ID" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="selectedPackage">Paket Diamond *</label>
+                        <select id="selectedPackage" required>
+                            <option value="">Pilih Paket</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="whatsappNumber">Nomor WhatsApp *</label>
+                        <input type="tel" id="whatsappNumber" placeholder="08xxxxxxxxxx" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="orderNote">Catatan (Opsional)</label>
+                        <textarea id="orderNote" placeholder="Tambahkan catatan jika ada" rows="3"></textarea>
+                    </div>
+
+                    <div class="order-summary" id="orderSummary" style="display: none;">
+                        <h4>Ringkasan Order</h4>
+                        <div class="summary-item">
+                            <span>Paket:</span>
+                            <span id="summaryPackage">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Harga:</span>
+                            <span id="summaryPrice" class="price">-</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-button">
+                        <span>Order via WhatsApp</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>
+
+    <script src="components/header.js"></script>
+    <script src="components/footer.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/topup.js"></script>
+    <script>
+        initHeader('topup');
+        initFooter();
+    </script>
+</body>
+</html>
