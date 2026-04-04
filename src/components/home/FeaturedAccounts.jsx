@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { apiGet } from "../../services/api";
-import AccountCard from "./AccountCard";
+import AccountCard from "../ui/AccountCard";
 
 export default function FeaturedAccounts() {
   const [accounts, setAccounts] = useState([]);
@@ -26,7 +26,7 @@ export default function FeaturedAccounts() {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {accounts.map((acc) => (
-        <AccountCard key={acc.id} acc={acc} />
+        <AccountCard key={acc.id} acc={acc} type="home" />
       ))}
     </div>
   );

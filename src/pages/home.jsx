@@ -1,8 +1,10 @@
-import Banner from "../components/home/Banner";
+import Banner from "../components/home/banner";
 import FeaturedAccounts from "../components/home/FeaturedAccounts";
 import SellAccount from "../components/home/SellAccount";
 import FeedbackSlider from "../components/home/FeedbackSlider";
 import Section from "../components/ui/Section";
+import ContactSection from "../components/home/ContactSection";
+import PopularSection from "../components/home/PopularSection";
 
 import mainBg from "../assets/background/background.webp";
 import bg1 from "../assets/background/bg-vegaz2.webp";
@@ -24,6 +26,10 @@ export default function Home() {
       </Section>
 
       <Section bg={bg2}>
+        <PopularSection />
+      </Section>
+
+      <Section bg={bg2}>
         <h2 className="text-2xl font-bold mb-4">Featured Accounts</h2>
         <FeaturedAccounts />
       </Section>
@@ -31,6 +37,11 @@ export default function Home() {
       <Section bg={bg3}>
         <h2 className="text-xl font-bold mb-4">Customer Feedback</h2>
         <FeedbackSlider />
+      </Section>
+
+      <Section bg={bg1}>
+        <h2 className="text-xl font-bold text-center mb-4">OFFICIAL CONTACT</h2>
+        <ContactSection />
       </Section>
     </div>
   );
