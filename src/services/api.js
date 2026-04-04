@@ -1,4 +1,4 @@
-const API_BASE = "https://api.vegazgameshop.com";
+const API_BASE = "srv1528270.hstgr.cloud";
 
 export const ASSET_BASE = API_BASE;
 
