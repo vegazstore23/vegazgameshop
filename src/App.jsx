@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 
-import Home from "./pages/home";
-import Stock from "./pages/stock";
+import Home from "./pages/Home";
+import Stock from "./pages/Stock";
 import Region from "./pages/Region";
 
 function App() {
