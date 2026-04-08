@@ -67,8 +67,8 @@ export default function Footer() {
       "VegazGameShop - Platform Nombor 1 Asia untuk Membeli dan Menjual Akaun Permainan Popular.",
     footerText: "",
   });
-  const [socials, setSocials] = useState([]); 
-  const [services, setServices] = useState([]); 
+  const [socials, setSocials] = useState([]);
+  const [services, setServices] = useState([]);
   const [sellHref, setSellHref] = useState("#");
 
   useEffect(() => {
@@ -144,7 +144,7 @@ export default function Footer() {
           <div className="col-span-2 md:col-span-1">
             <Link to="/" className="inline-block mb-4">
               <img
-                src="/assets/images/logo/vegazgameshop.png"
+                src="/assets/logo/vegazgameshop.png"
                 className="h-7 md:h-8"
                 alt="VegazGameShop"
               />
