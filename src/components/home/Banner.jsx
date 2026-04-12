@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from "react";
-// Sesuaikan import path apiGet jika diperlukan
 import { apiGet } from "../../services/api";
 
 export default function Banner() {
@@ -8,7 +7,6 @@ export default function Banner() {
   const [isTransitioning, setIsTransitioning] = useState(true);
   const [isClickable, setIsClickable] = useState(true);
 
-  // 🔥 STATE BARU: Deteksi apakah layar sedang di ukuran HP (< 768px)
   const [isMobile, setIsMobile] = useState(false);
 
   const [touchStartX, setTouchStartX] = useState(0);
@@ -19,16 +17,13 @@ export default function Banner() {
     isTransitioningRef.current = isTransitioning;
   }, [isTransitioning]);
 
-  // 🔥 EFEK BARU: Mengecek ukuran layar secara real-time
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
 
-    // Cek saat pertama kali website diload
     handleResize();
 
-    // Dengarkan perubahan jika user me-resize layar (atau rotasi HP)
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
