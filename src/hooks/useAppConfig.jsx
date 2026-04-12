@@ -7,7 +7,7 @@ async function fetchAppConfig() {
   if (cachedConfig) return cachedConfig;
   if (fetchPromise) return fetchPromise;
 
-  fetchPromise = fetch("https://api.vegazgameshop.com/api/public/app-config")
+  fetchPromise = fetch("https://apivgz.vegazgameshop.com/api/public")
     .then((res) => {
       if (!res.ok) throw new Error("app-config failed");
       return res.json();

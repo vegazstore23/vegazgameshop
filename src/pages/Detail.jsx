@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { apiGet } from "../services/api";
 
-const ASSET_BASE = "https://api.vegazgameshop.com"; // Sesuaikan base API kamu
+const ASSET_BASE = "https://apivgz.vegazgameshop.com"; 
 
 const Detail = () => {
   const { id } = useParams();
