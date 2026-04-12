@@ -106,7 +106,7 @@ export default function Header({ hideBottomNav = false }) {
     async function load() {
       try {
         const res = await fetch(
-          "https://api.vegazgameshop.com/api/public/app-config",
+          "https://api.vegazgameshop.com/api/public",
         );
         const json = await res.json();
         const contacts = json?.data?.contacts ?? [];

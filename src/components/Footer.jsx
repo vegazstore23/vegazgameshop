@@ -74,9 +74,7 @@ export default function Footer() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch(
-          "https://api.vegazgameshop.com/api/public/app-config",
-        );
+        const res = await fetch("https://api.vegazgameshop.com/api/public");
         const json = await res.json();
 
         /* Shop settings */
