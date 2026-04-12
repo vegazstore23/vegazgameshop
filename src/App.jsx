@@ -18,13 +18,21 @@ function App() {
         <Route path="/check-region" element={<Region />} />
         <Route path="/calculator-mlbb" element={<Calculator />} />
         <Route path="/about" element={<About />} />
-        <Route path="*" element={
-          <div className="min-h-screen flex flex-col items-center justify-center text-white gap-4">
-            <h1 className="text-6xl font-black text-blue-400">404</h1>
-            <p className="text-gray-400">Halaman tidak ditemukan.</p>
-            <a href="/" className="bg-blue-600 px-6 py-2 rounded-xl hover:bg-blue-500 transition">Kembali ke Home</a>
-          </div>
-        } />
+        <Route
+          path="*"
+          element={
+            <div className="min-h-screen flex flex-col items-center justify-center text-white gap-4">
+              <h1 className="text-6xl font-black text-blue-400">404</h1>
+              <p className="text-gray-400">Halaman tidak ditemukan.</p>
+              <a
+                href="/"
+                className="bg-blue-600 px-6 py-2 rounded-xl hover:bg-blue-500 transition"
+              >
+                Kembali ke Home
+              </a>
+            </div>
+          }
+        />
       </Routes>
     </MainLayout>
   );

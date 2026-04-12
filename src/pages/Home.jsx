@@ -1,4 +1,4 @@
-import Banner from "../components/home/banner";
+import Banner from "../components/home/Banner";
 import FeaturedAccounts from "../components/home/FeaturedAccounts";
 import SellAccount from "../components/home/SellAccount";
 import FeedbackSlider from "../components/home/FeedbackSlider";
