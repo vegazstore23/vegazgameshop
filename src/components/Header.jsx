@@ -92,6 +92,7 @@ const PAGE_MAP = {
   "/topup": "topup",
   "/about": "about",
   "/calculator": "calculator",
+  "/check-region": "region",
 };
 
 export default function Header({ hideBottomNav = false }) {
@@ -186,11 +187,11 @@ export default function Header({ hideBottomNav = false }) {
             </li>
             <li>
               <Link
-                to="/#feedbackWrapper"
+                to="/check-region"
                 className="flex items-center gap-2 font-semibold text-gray-400 hover:text-blue-400"
               >
                 <IconStar />
-                <span>Feedback</span>
+                <span>CheckREGION</span>
               </Link>
             </li>
             <li>
