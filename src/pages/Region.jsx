@@ -1,6 +1,4 @@
 import { useState } from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 import { apiGet } from "../services/api";
 
 export default function Region() {
@@ -51,7 +49,6 @@ export default function Region() {
 
   return (
     <>
-      <Header />
 
       <main className="pt-24 md:pt-28 lg:pt-32 min-h-screen bg-[url('/assets/images/background/bg-stripe.webp')] bg-center bg-cover">
         <div className="max-w-4xl mx-auto px-4">
@@ -67,7 +64,7 @@ export default function Region() {
             </h3>
             <p className="text-gray-300 text-sm mb-6">
               Masukkan User ID dan Server ID untuk mengetahui username dan
-              region akun.
+              region account.
             </p>
 
             {/* INPUT */}
@@ -78,7 +75,7 @@ export default function Region() {
                 value={gameId}
                 onChange={(e) => setGameId(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="User ID (123456789)"
+                placeholder="User ID 123456789"
                 className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white outline-none focus:border-blue-500 transition-all"
               />
               <input
@@ -100,7 +97,7 @@ export default function Region() {
                 loading ? "opacity-60 cursor-not-allowed" : ""
               }`}
             >
-              {loading ? "Memeriksa..." : "CEK SEKARANG"}
+              {loading ? "Memeriksa..." : "CHECK NOW"}
             </button>
 
             {/* ERROR */}
@@ -132,7 +129,6 @@ export default function Region() {
         </div>
       </main>
 
-      <Footer />
     </>
   );
 }

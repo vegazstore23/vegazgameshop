@@ -11,7 +11,7 @@ export default function PopularSection() {
     {
       title: "Check Region",
       desc: "Cek region akun ML",
-      to: "/region",
+      to: "/check-region",
       bg: "from-purple-500 to-purple-700",
     },
     {
