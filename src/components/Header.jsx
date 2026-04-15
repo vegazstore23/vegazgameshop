@@ -191,7 +191,7 @@ export default function Header({ hideBottomNav = false }) {
                 className="flex items-center gap-2 font-semibold text-gray-400 hover:text-blue-400"
               >
                 <IconStar />
-                <span>CheckREGION</span>
+                <span>CheckRegion</span>
               </Link>
             </li>
             <li>
@@ -259,7 +259,7 @@ export default function Header({ hideBottomNav = false }) {
           className="flex items-center gap-3 p-3 rounded-xl font-semibold text-gray-200 hover:text-blue-400 hover:bg-white/5 transition"
         >
           <IconSell />
-          <span>Jual Akun</span>
+          <span>Jual Account</span>
         </a>
 
         <div className="h-px bg-white/10 my-1" />
@@ -301,11 +301,11 @@ export default function Header({ hideBottomNav = false }) {
             <span>Top Up</span>
           </Link>
           <Link
-            to="/#feedbackWrapper"
+            to="/check-region"
             className="flex flex-col items-center justify-center text-xs font-medium transition text-gray-400 hover:text-blue-400"
           >
             <IconStar />
-            <span>Feedback</span>
+            <span>CheckRegion</span>
           </Link>
           <Link to="/calculator" className={bottomCls("calculator")}>
             <IconCalculator />

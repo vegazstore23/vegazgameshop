@@ -24,12 +24,12 @@ export default function SellAccount() {
 
       const message = encodeURIComponent(
         `Halo Admin Vegaz,
-
-Saya nak jual account Mobile Legends
-Skin:
-Rank:
-
-Maklumat apa sahaja yang perlu saya siapkan?`,
+        
+        Saya nak jual account Mobile Legends
+        Skin:
+        Rank:
+        
+        Maklumat apa sahaja yang perlu saya siapkan?`,
       );
 
       setLink(`https://wa.me/${number}?text=${message}`);

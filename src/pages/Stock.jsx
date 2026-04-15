@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import { apiGet } from "../services/api";
 
+import Entry from "../assets/misc/Entry.svg";
+import Basic from "../assets/misc/Basic.svg";
+import High from "../assets/misc/High.svg";
+import Luxury from "../assets/misc/Luxury.svg";
+import mainBg from "../assets/background/background.webp";
+import bg1 from "../assets/background/bg-vegaz2.webp";
+import bg2 from "../assets/background/bg-akun.webp";
+import bg3 from "../assets/background/bg-transaksi.webp";
+
 const TIER_LABELS = {
   entry: "Entry RM1–RM100",
   mid: "Mid RM101–RM249",
@@ -105,16 +114,16 @@ export default function Stock() {
         {/* TIER */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
           <button onClick={() => selectTier("entry", 1, 200)}>
-            <img src="/assets/images/MISC/Entry.svg" />
+            <img src={Entry} />
           </button>
           <button onClick={() => selectTier("mid", 201, 400)}>
-            <img src="/assets/images/MISC/Basic.svg" />
+            <img src={Basic} />
           </button>
           <button onClick={() => selectTier("mythic", 401, 600)}>
-            <img src="/assets/images/MISC/High.svg" />
+            <img src={High} />
           </button>
           <button onClick={() => selectTier("glory", 601, 10000)}>
-            <img src="/assets/images/MISC/Luxury.svg" />
+            <img src={Luxury} />
           </button>
         </div>
 

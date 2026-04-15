@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { apiGet } from "../services/api";
 
-const ASSET_BASE = "https://apivgz.vegazgameshop.com"; 
+import mainBg from "../assets/background/background.webp";
+import bg1 from "../assets/background/bg-vegaz2.webp";
+import bg2 from "../assets/background/bg-akun.webp";
+import bg3 from "../assets/background/bg-transaksi.webp";
+
+const ASSET_BASE = "https://apivgz.vegazgameshop.com";
 
 const Detail = () => {
   const { id } = useParams();
@@ -38,7 +43,7 @@ const Detail = () => {
   };
 
   return (
-    <main className="pt-20 pb-16 min-h-screen bg-[url('/assets/images/background/bg-akun.webp')] bg-center bg-cover">
+    <main className="pt-20 pb-16 min-h-screen bg-{bg1} bg-center bg-cover">
       {/* NAVIGATION */}
       <section className="mb-6 py-4 bg-gradient-to-r from-blue-800 to-blue-600 rounded-2xl max-w-7xl mx-auto px-4 shadow-lg flex gap-2">
         <Link
@@ -61,7 +66,11 @@ const Detail = () => {
         <div className="flex flex-col gap-4 p-6 bg-[#0d2d6b]/80 backdrop-blur-xl border border-blue-400/20 rounded-3xl">
           <div className="relative">
             <img
-              src={`${ASSET_BASE}/uploads/${images[currentIndex]}`}
+              src={
+                images[currentIndex]?.startsWith("http")
+                  ? images[currentIndex]
+                  : `${ASSET_BASE}/uploads/${images[currentIndex]}`
+              } //
               className="w-full aspect-[4/5] object-cover rounded-2xl transition-opacity duration-300"
               alt="Main"
             />
@@ -79,7 +88,11 @@ const Detail = () => {
                 className={`w-16 aspect-[4/5] rounded-md overflow-hidden border-2 cursor-pointer transition-all ${index === currentIndex ? "border-green-500 opacity-100" : "border-transparent opacity-50"}`}
               >
                 <img
-                  src={`${ASSET_BASE}/uploads/${img}`}
+                  src={
+                    images[currentIndex]?.startsWith("http")
+                      ? images[currentIndex]
+                      : `${ASSET_BASE}/uploads/${images[currentIndex]}`
+                  } //
                   className="w-full h-full object-cover"
                   alt="Thumb"
                 />

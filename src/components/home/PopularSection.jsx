@@ -3,20 +3,20 @@ import { Link } from "react-router-dom";
 export default function PopularSection() {
   const items = [
     {
-      title: "Stock Akun",
-      desc: "Cari akun siap pakai",
+      title: "Stock Acc MLLBB",
+      desc: "All Stock Account MLBB by VegazStore",
       to: "/stock",
       bg: "from-blue-500 to-blue-700",
     },
     {
-      title: "Check Region",
-      desc: "Cek region akun ML",
+      title: "Check Region ID MLBB",
+      desc: "Cek region account MLBB sebelum topup",
       to: "/check-region",
       bg: "from-purple-500 to-purple-700",
     },
     {
-      title: "Top Up",
-      desc: "Top up diamond cepat",
+      title: "Top Up Games",
+      desc: "Top up diamond cepat harga berbaloi",
       to: "/topup",
       bg: "from-yellow-500 to-orange-500",
     },

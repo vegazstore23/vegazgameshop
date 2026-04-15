@@ -6,8 +6,7 @@ export default function Banner() {
   const [index, setIndex] = useState(2);
   const [isTransitioning, setIsTransitioning] = useState(true);
   const [isClickable, setIsClickable] = useState(true);
-
-  const [isMobile, setIsMobile] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchEndX, setTouchEndX] = useState(0);
@@ -18,12 +17,7 @@ export default function Banner() {
   }, [isTransitioning]);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    handleResize();
-
+    const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -36,13 +30,11 @@ export default function Banner() {
     try {
       const res = await apiGet("/api/banner");
       const data = (res?.data || []).filter((b) => b.page?.includes("home"));
-
       if (data.length > 1) {
         const last = data[data.length - 1];
         const prevLast = data.length > 2 ? data[data.length - 2] : data[0];
         const first = data[0];
         const second = data.length > 1 ? data[1] : data[0];
-
         setBanners([prevLast, last, ...data, first, second]);
         setIndex(2);
       } else {
@@ -70,7 +62,6 @@ export default function Banner() {
 
   useEffect(() => {
     if (!isTransitioningRef.current || banners.length <= 1) return;
-
     let timeoutId;
     const realCount = banners.length - 4;
     const firstRealIndex = 2;
@@ -89,11 +80,8 @@ export default function Banner() {
         setIsClickable(true);
       }, 500);
     } else {
-      timeoutId = setTimeout(() => {
-        setIsClickable(true);
-      }, 500);
+      timeoutId = setTimeout(() => setIsClickable(true), 500);
     }
-
     return () => clearTimeout(timeoutId);
   }, [index, banners.length]);
 
@@ -106,36 +94,46 @@ export default function Banner() {
 
   const handleTouchStart = (e) => setTouchStartX(e.targetTouches[0].clientX);
   const handleTouchMove = (e) => setTouchEndX(e.targetTouches[0].clientX);
-
   const handleTouchEnd = () => {
     if (!touchStartX || !touchEndX || !isClickable) return;
     const distance = touchStartX - touchEndX;
-    const minSwipeDistance = 50;
-
-    if (distance > minSwipeDistance) next();
-    else if (distance < -minSwipeDistance) prev();
-
+    if (distance > 50) next();
+    else if (distance < -50) prev();
     setTouchStartX(0);
     setTouchEndX(0);
   };
 
   if (!banners.length) return null;
 
-  // 🔥 MATEMATIKA RESPONSIVE:
-  const itemWidth = isMobile ? 80 : 50; // Lebar 80% di HP, 50% di Desktop
-  const offset = isMobile ? 10 : 25; // Sisa ruang penarik tengah (10% di HP, 25% di Desktop)
+  let itemWidth;
+  let scaleInactive;
+  let gap;
+
+  if (windowWidth >= 1024) {
+    itemWidth = 50; 
+    scaleInactive = "scale-[0.8] opacity-40 blur-[1px]";
+    gap = "-1%";
+  } else if (windowWidth >= 768) {
+    itemWidth = 75;
+    scaleInactive = "scale-[0.85] opacity-50";
+    gap = "0%";
+  } else {
+    itemWidth = 88; 
+    scaleInactive = "scale-[0.9] opacity-60";
+    gap = "0%";
+  }
+
+  const dynamicOffset = (100 - itemWidth) / 2;
 
   return (
-    <div className="w-full py-16 overflow-hidden select-none relative z-0">
-      <div className="max-w-6xl mx-auto relative group">
-        {/* TRACK */}
+    <div className="w-full py-4 overflow-hidden select-none relative z-0">
+      <div className="max-w-7xl mx-auto relative">
         <div
           className="flex w-full items-center"
           style={{
-            // Rumus sekarang menggunakan variabel dinamis
-            transform: `translateX(calc(${offset}% - ${index * itemWidth}%))`,
+            transform: `translateX(calc(${dynamicOffset}% - ${index * itemWidth}%))`,
             transition: isTransitioning
-              ? "transform 500ms ease-in-out"
+              ? "transform 600ms cubic-bezier(0.2, 1, 0.3, 1)"
               : "none",
           }}
           onTouchStart={handleTouchStart}
@@ -144,64 +142,52 @@ export default function Banner() {
         >
           {banners.map((b, i) => {
             const isActive = i === index;
-
             return (
               <div
                 key={i}
-                className={`shrink-0 px-2 relative ${
-                  isTransitioning
-                    ? "transition-all duration-500 ease-in-out"
-                    : "transition-none"
-                } ${
-                  isMobile ? "w-[80%]" : "w-[50%]" // Atur lebar pembungkus dinamis
-                } ${
-                  isActive
-                    ? isMobile
-                      ? "scale-105 z-20 opacity-100"
-                      : "scale-[1.25] z-20 opacity-100"
-                    : isMobile
-                      ? "scale-[0.90] z-10 opacity-50"
-                      : "scale-[0.85] z-10 opacity-60"
-                }`}
+                className="shrink-0 relative flex justify-center items-center transition-all duration-500"
+                style={{
+                  width: `${itemWidth}%`,
+                  zIndex: isActive ? 20 : 10,
+                  margin: `0 ${gap}`,
+                }}
               >
                 <div
-                  className={`relative rounded-2xl overflow-hidden h-full ${
-                    isActive ? "shadow-[0_0_30px_rgba(0,0,0,0.6)]" : "shadow-md"
+                  className={`relative rounded-2xl overflow-hidden transition-all duration-700 ease-out ${
+                    isActive
+                      ? "scale-100 z-20 opacity-100 shadow-[0_10px_40px_rgba(0,0,0,0.5)]"
+                      : `${scaleInactive} z-10`
                   }`}
+                  style={{
+                    width: "100%",
+                    aspectRatio: windowWidth < 768 ? "16/8" : "21/8",
+                  }}
                 >
                   <img
                     src={b.image}
                     alt={`Banner ${i}`}
-                    className="w-full h-auto object-cover pointer-events-none rounded-2xl"
+                    className="w-full h-full object-cover pointer-events-none"
                   />
-
-                  {/* LAYER GELAP */}
-                  <div
-                    className={`absolute inset-0 bg-black/75 ${
-                      isTransitioning
-                        ? "transition-opacity duration-500 ease-in-out"
-                        : "transition-none"
-                    } ${isActive ? "opacity-0" : "opacity-100"}`}
-                  ></div>
+                  {!isActive && (
+                    <div className="absolute inset-0 bg-black/40 transition-opacity"></div>
+                  )}
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* BUTTONS */}
         <button
           onClick={prev}
-          className="hidden md:flex absolute left-8 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white w-12 h-12 items-center justify-center rounded-full z-30 transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm"
+          className="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 bg-white/90 text-black w-10 h-10 items-center justify-center rounded-full z-30 shadow-lg hover:bg-white"
         >
-          ←
+          <span>{"<"}</span>
         </button>
-
         <button
           onClick={next}
-          className="hidden md:flex absolute right-8 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white w-12 h-12 items-center justify-center rounded-full z-30 transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm"
+          className="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 bg-white/90 text-black w-10 h-10 items-center justify-center rounded-full z-30 shadow-lg hover:bg-white"
         >
-          →
+          <span>{">"}</span>
         </button>
       </div>
     </div>
