@@ -24,7 +24,6 @@ export default function PopularSection() {
 
   return (
     <div className="max-w-7xl mx-auto px-4">
-      <h2 className="text-2xl font-bold mb-6">Popular</h2>
 
       <div className="grid md:grid-cols-3 gap-6">
         {items.map((item, i) => (
