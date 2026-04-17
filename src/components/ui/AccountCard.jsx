@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { apiGet } from "../../services/api";
 
 import HotIcon from "../../assets/icons/hot.png";
-import StarIcon from "../../assets/icons/star.webp";
+import StarIcon from "../../assets/icons/Star.webp";
 
 export default function AccountCard({ acc, type }) {
   const navigate = useNavigate();
