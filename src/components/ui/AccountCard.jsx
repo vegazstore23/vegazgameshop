@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiGet } from "../../services/api";
 
-import HotIcon from "../../assets/icons/hot.png";
+import HotIcon from "../../assets/icons/Hot.png";
 import StarIcon from "../../assets/icons/Star.webp";
 
 export default function AccountCard({ acc, type }) {
