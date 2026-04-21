@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Link ke sitemap kamu nanti
+Sitemap: https://vegazgameshop.com/sitemap.xml

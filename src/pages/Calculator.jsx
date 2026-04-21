@@ -6,7 +6,7 @@ import ScrollReveal from "../components/ScrollReveal.jsx";
 
 export default function Calculator() {
   useEffect(() => {
-    document.title = "Winrate Calculator MLBB | VegazGameShop";
+    document.title = "Calculator Winrate & Gacha MLBB | VegazGameShop";
   }, []);
 
   const [activeTab, setActiveTab] = useState("winrate");

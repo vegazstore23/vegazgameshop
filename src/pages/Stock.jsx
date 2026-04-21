@@ -75,7 +75,7 @@ export default function Stock() {
   ]);
 
   useEffect(() => {
-    document.title = "Stock ID MLBB | VegazGameShop";
+    document.title = "Stock Account MLBB Update | VegazGameShop";
     loadStock();
   }, [loadStock]);
 

@@ -100,7 +100,7 @@ export default function Region() {
   }
 
   useEffect(() => {
-    document.title = "Region Checker MLBB | VegazGameShop";
+    document.title = "Region Checker Tools | Semakan Pelayanan Rasmi Moonton";
   }, []);
 
   return (

@@ -7,7 +7,7 @@ import AboutPrivacy from "../components/about/AboutPrivacy";
 
 export default function About() {
   useEffect(() => {
-    document.title = "About FAQ | VegazGameShop";
+    document.title = "About & FAQ | VegazGameShop";
   }, []);
 
   const [activeTab, setActiveTab] = useState("about");
