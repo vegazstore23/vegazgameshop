@@ -7,16 +7,16 @@ export default function Pagination({
 
   return (
     <div className="flex justify-center items-center gap-2 mt-12 pb-10">
-      {/* Tombol Previous */}
+      {/* Butang Sebelumnya */}
       <button
         onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
         disabled={currentPage === 1}
         className="px-3 py-1 rounded bg-white/5 hover:bg-blue-600 disabled:opacity-30 disabled:hover:bg-white/5 transition"
       >
-        Prev
+        Sebelum
       </button>
 
-      {/* Page Numbers */}
+      {/* Nombor Halaman */}
       <div className="flex gap-2">
         {Array.from({ length: totalPages }, (_, i) => {
           const pageNum = i + 1;
@@ -36,13 +36,13 @@ export default function Pagination({
         })}
       </div>
 
-      {/* Tombol Next */}
+      {/* Butang Seterusnya */}
       <button
         onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
         disabled={currentPage === totalPages}
         className="px-3 py-1 rounded bg-white/5 hover:bg-blue-600 disabled:opacity-30 disabled:hover:bg-white/5 transition"
       >
-        Next
+        Seterusnya
       </button>
     </div>
   );

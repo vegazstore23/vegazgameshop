@@ -8,10 +8,10 @@ export default function DetailInfo({ account, isDescOpen, setIsDescOpen }) {
     async function fetchContact() {
       try {
         const res = await apiGet("/api/contact");
+        // FIX: Guna c.roles?.includes("order") — konsisten dengan Stock.jsx & BottomPriceBar
+        // Sebelum ini guna c.role & c.tags yang tak wujud → waAdmin sentiasa kosong
         const admin = res.data?.find(
-          (c) =>
-            c.role?.toLowerCase().includes("order") ||
-            c.tags?.toLowerCase().includes("order"),
+          (c) => c.isActive && c.roles?.includes("order"),
         );
         if (admin) setWaAdmin(admin.value);
       } catch (err) {
@@ -22,11 +22,15 @@ export default function DetailInfo({ account, isDescOpen, setIsDescOpen }) {
   }, []);
 
   const mainPrice = Number(account.price);
-  const originalPrice = Math.round(mainPrice / 0.9); // Simulasi diskon 10%
+  const originalPrice = Math.round(mainPrice / 0.9);
+
+  // FIX: Normalize status ke lowercase untuk perbandingan konsisten
+  // Sebelum ini: account.status !== "available" — gagal jika API return "Available" atau "AVAILABLE"
+  const isAvailable = account.status?.toLowerCase() === "available";
 
   const handleOrder = () => {
     const cleanWA = waAdmin.replace(/\D/g, "");
-    const message = `Halo Admin Vegaz, saya berminat dengan account:\n\nTitle: ${account.title}\nCode: ${account.code}\nHarga: RM ${mainPrice.toFixed(2)}\n\nApakah masih tersedia?`;
+    const message = `Halo Admin Vegaz, saya berminat dengan akaun ini:\n\nTajuk: ${account.title}\nKod: ${account.code}\nHarga: RM ${mainPrice.toFixed(2)}\n\nAdakah masih tersedia?`;
     window.open(
       `https://wa.me/${cleanWA}?text=${encodeURIComponent(message)}`,
       "_blank",
@@ -37,7 +41,7 @@ export default function DetailInfo({ account, isDescOpen, setIsDescOpen }) {
     <div className="p-6 bg-[#021d4a]/60 backdrop-blur-xl border border-blue-400/20 rounded-3xl text-white shadow-2xl">
       <div className="mb-2">
         <span className="text-blue-400 text-[10px] font-black tracking-[0.2em] uppercase">
-          Account Detail
+          Maklumat Akaun
         </span>
       </div>
       <h1 className="text-3xl font-black mb-4 uppercase italic tracking-tighter font-orbitron bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
@@ -49,15 +53,19 @@ export default function DetailInfo({ account, isDescOpen, setIsDescOpen }) {
           {account.code}
         </div>
         <div
-          className={`px-4 py-1.5 rounded-lg font-bold text-white text-[10px] tracking-widest uppercase ${account.status === "available" ? "bg-green-600/40 border border-green-500/50" : "bg-red-600/40 border border-red-500/50"}`}
+          className={`px-4 py-1.5 rounded-lg font-bold text-white text-[10px] tracking-widest uppercase ${
+            isAvailable
+              ? "bg-green-600/40 border border-green-500/50"
+              : "bg-red-600/40 border border-red-500/50"
+          }`}
         >
-          {account.status}
+          {isAvailable ? "Tersedia" : "Tidak Tersedia"}
         </div>
       </div>
 
       <div className="bg-white/5 border border-white/10 p-5 rounded-2xl mb-6">
         <p className="text-[10px] text-blue-300 uppercase font-black mb-1 tracking-widest">
-          Current Price
+          Harga Semasa
         </p>
         <div className="flex items-baseline gap-3">
           <span className="text-4xl font-black text-yellow-400 font-orbitron">
@@ -74,24 +82,24 @@ export default function DetailInfo({ account, isDescOpen, setIsDescOpen }) {
           onClick={() => setIsDescOpen(!isDescOpen)}
           className="w-full flex justify-between items-center text-blue-300 font-black text-[11px] uppercase tracking-widest mb-3 bg-white/5 px-4 py-2 rounded-lg hover:bg-white/10 transition-all"
         >
-          <span>Description</span>
+          <span>Penerangan</span>
           <span>{isDescOpen ? "−" : "+"}</span>
         </button>
         {isDescOpen && (
           <div className="bg-black/20 border border-white/5 p-4 rounded-xl text-sm text-gray-300 leading-relaxed font-medium whitespace-pre-line">
-            {account.description || "No description provided for this account."}
+            {account.description ||
+              "Tiada penerangan disediakan untuk akaun ini."}
           </div>
         )}
       </div>
 
+      {/* FIX: disabled kini guna isAvailable (lowercase-normalized) + semak waAdmin */}
       <button
         onClick={handleOrder}
-        disabled={!waAdmin || account.status !== "available"}
-        className="w-full bg-green-500 hover:bg-green-400 disabled:bg-gray-600 disabled:opacity-50 text-white py-4 rounded-2xl font-black transition-all transform active:scale-95 shadow-[0_0_20px_rgba(34,197,94,0.3)] uppercase text-xs tracking-[0.2em]"
+        disabled={!waAdmin || !isAvailable}
+        className="w-full bg-green-500 hover:bg-green-400 disabled:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed text-white py-4 rounded-2xl font-black transition-all transform active:scale-95 shadow-[0_0_20px_rgba(34,197,94,0.3)] uppercase text-xs tracking-[0.2em]"
       >
-        {account.status === "available"
-          ? "Secure This Account Now"
-          : "Account Not Available"}
+        {isAvailable ? "Beli Akaun Ini Sekarang" : "Akaun Tidak Tersedia"}
       </button>
     </div>
   );

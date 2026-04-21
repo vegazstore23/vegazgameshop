@@ -13,7 +13,7 @@ import {
   EffectFade,
   Keyboard,
 } from "swiper/modules";
-import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 const ASSET_BASE = "https://apivgz.vegazgameshop.com";
 
@@ -24,9 +24,9 @@ export default function DetailGallery({ images = [], status }) {
 
   if (!images || images.length === 0) {
     return (
-      <div className="w-full aspect-[4/5] bg-slate-900 rounded-3xl flex items-center justify-center border border-white/10">
+      <div className="w-full aspect-video bg-slate-900 rounded-3xl flex items-center justify-center border border-white/10">
         <span className="text-white/20 uppercase tracking-widest text-xs font-black">
-          No Image Available
+          Tiada Gambar Tersedia
         </span>
       </div>
     );
@@ -37,99 +37,116 @@ export default function DetailGallery({ images = [], status }) {
     return path.startsWith("http") ? path : `${ASSET_BASE}/uploads/${path}`;
   };
 
+  const isAvailable = status?.toLowerCase() === "available";
+
   return (
-    <div className="flex flex-col gap-4 w-full max-w-full overflow-hidden">
-      {/* 1. Main Slider Container */}
-      <div className="relative group w-full aspect-[4/5] sm:aspect-square lg:aspect-[4/5] rounded-3xl overflow-hidden bg-slate-950 border border-white/10 shadow-2xl">
+    <div className="flex flex-col gap-3 w-full">
+      {/* 1. Main Slider
+          FIX: Buang aspect-ratio yang conflict — guna paddingTop trick yang lebih reliable
+          di semua browser mobile. aspect-[4/5] kadang render hitam di Chrome mobile
+          kerana height tidak dikira dengan betul bila parent ada overflow:hidden.
+      */}
+      <div
+        className="relative group w-full rounded-2xl overflow-hidden bg-slate-950 border border-white/10 shadow-2xl"
+        style={{ paddingTop: "125%" }} // = 4:5 ratio, reliable di semua mobile browser
+      >
         {/* Status Badge */}
-        <div className="absolute top-4 right-4 z-20">
+        <div className="absolute top-3 right-3 z-20">
           <span
-            className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl border border-white/20 ${
-              status?.toLowerCase() === "sold" ? "bg-red-600" : "bg-green-600"
+            className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl border border-white/20 ${
+              isAvailable ? "bg-green-600" : "bg-red-600"
             }`}
           >
-            {status || "Available"}
+            {isAvailable ? "Tersedia" : "Telah Dijual"}
           </span>
         </div>
 
-        <Swiper
-          style={{
-            "--swiper-navigation-color": "#fff",
-            "--swiper-pagination-color": "#fff",
-          }}
-          loop={images.length > 1}
-          effect={"fade"}
-          speed={500}
-          keyboard={{ enabled: true }}
-          navigation={{
-            nextEl: ".btn-next",
-            prevEl: ".btn-prev",
-          }}
-          thumbs={{
-            swiper:
-              thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
-          }}
-          modules={[FreeMode, Navigation, Thumbs, EffectFade, Keyboard]}
-          className="w-full h-full"
-        >
-          {images.map((img, index) => (
-            <SwiperSlide key={index} className="w-full h-full bg-slate-950">
-              <img
-                src={getImageUrl(img)}
-                alt="Product"
-                className="w-full h-full object-cover select-none cursor-zoom-in"
-                onClick={() => {
-                  setCurrentModalIndex(index);
-                  setIsFullscreen(true);
-                }}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        {/* Swiper duduk dalam absolute fill supaya paddingTop trick berjaya */}
+        <div className="absolute inset-0">
+          <Swiper
+            style={{
+              "--swiper-navigation-color": "#fff",
+              "--swiper-pagination-color": "#fff",
+              width: "100%",
+              height: "100%",
+            }}
+            loop={images.length > 1}
+            effect="fade"
+            speed={500}
+            keyboard={{ enabled: true }}
+            navigation={{
+              nextEl: ".btn-next",
+              prevEl: ".btn-prev",
+            }}
+            thumbs={{
+              swiper:
+                thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
+            }}
+            modules={[FreeMode, Navigation, Thumbs, EffectFade, Keyboard]}
+            className="w-full h-full"
+          >
+            {images.map((img, index) => (
+              <SwiperSlide key={index} className="w-full h-full">
+                <img
+                  src={getImageUrl(img)}
+                  alt={`Gambar ${index + 1}`}
+                  className="w-full h-full object-cover select-none cursor-zoom-in"
+                  onClick={() => {
+                    setCurrentModalIndex(index);
+                    setIsFullscreen(true);
+                  }}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
 
-        {/* Custom Navigation - Hidden on Small Mobile */}
+        {/* Custom Nav — Desktop only */}
         {images.length > 1 && (
           <div className="hidden md:block">
-            <button className="btn-prev absolute left-4 top-1/2 -translate-y-1/2 z-30 p-3 bg-black/50 backdrop-blur-md rounded-full text-white opacity-0 group-hover:opacity-100 transition-all border border-white/10">
-              <ChevronLeft size={20} />
+            <button className="btn-prev absolute left-3 top-1/2 -translate-y-1/2 z-30 p-2.5 bg-black/50 backdrop-blur-md rounded-full text-white opacity-0 group-hover:opacity-100 transition-all border border-white/10">
+              <ChevronLeft size={18} />
             </button>
-            <button className="btn-next absolute right-4 top-1/2 -translate-y-1/2 z-30 p-3 bg-black/50 backdrop-blur-md rounded-full text-white opacity-0 group-hover:opacity-100 transition-all border border-white/10">
-              <ChevronRight size={20} />
+            <button className="btn-next absolute right-3 top-1/2 -translate-y-1/2 z-30 p-2.5 bg-black/50 backdrop-blur-md rounded-full text-white opacity-0 group-hover:opacity-100 transition-all border border-white/10">
+              <ChevronRight size={18} />
             </button>
           </div>
         )}
       </div>
 
-      {/* 2. Thumbnails Slider */}
+      {/* 2. Thumbnails */}
       {images.length > 1 && (
-        <div className="w-full px-1">
+        <div className="w-full">
           <Swiper
             onSwiper={setThumbsSwiper}
-            spaceBetween={10}
-            slidesPerView={4.5}
+            spaceBetween={8}
             freeMode={true}
             watchSlidesProgress={true}
-            modules={[FreeMode, Navigation, Thumbs]}
-            className="thumb-swiper"
+            modules={[FreeMode, Thumbs]}
             breakpoints={{
-              320: { slidesPerView: 4.2, spaceBetween: 8 },
-              768: { slidesPerView: 5.5, spaceBetween: 12 },
+              0: { slidesPerView: 4.5, spaceBetween: 8 },
+              768: { slidesPerView: 5.5, spaceBetween: 10 },
             }}
           >
             {images.map((img, index) => (
               <SwiperSlide key={index} className="cursor-pointer">
                 {({ isActive }) => (
+                  // FIX: Sama — guna paddingTop trick untuk thumbnail juga
                   <div
-                    className={`aspect-[4/5] rounded-xl overflow-hidden border-2 transition-all ${
+                    className={`relative rounded-xl overflow-hidden border-2 transition-all ${
                       isActive
-                        ? "border-blue-500 scale-95 shadow-[0_0_15px_rgba(59,130,246,0.5)]"
-                        : "border-white/5 opacity-40 hover:opacity-100"
+                        ? "border-blue-500 shadow-[0_0_12px_rgba(59,130,246,0.5)]"
+                        : "border-white/5 opacity-50 hover:opacity-100"
                     }`}
+                    style={{ paddingTop: "125%" }}
                   >
-                    <img
-                      src={getImageUrl(img)}
-                      className="w-full h-full object-cover"
-                    />
+                    <div className="absolute inset-0">
+                      <img
+                        src={getImageUrl(img)}
+                        className="w-full h-full object-cover"
+                        alt={`Thumbnail ${index + 1}`}
+                      />
+                    </div>
                   </div>
                 )}
               </SwiperSlide>
@@ -140,12 +157,13 @@ export default function DetailGallery({ images = [], status }) {
 
       {/* 3. Fullscreen Modal */}
       {isFullscreen && (
-        <div className="fixed inset-0 z-[999] bg-black backdrop-blur-2xl flex flex-col items-center justify-center">
+        <div className="fixed inset-0 z-[999] bg-black/95 backdrop-blur-2xl flex items-center justify-center">
           <button
             onClick={() => setIsFullscreen(false)}
-            className="absolute top-6 right-6 z-[1000] p-4 bg-white/10 rounded-full text-white"
+            className="absolute top-5 right-5 z-[1000] p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-all"
+            title="Tutup"
           >
-            <X size={24} />
+            <X size={22} />
           </button>
           <div className="w-full h-full max-w-4xl p-4">
             <Swiper
@@ -153,7 +171,7 @@ export default function DetailGallery({ images = [], status }) {
               navigation={true}
               keyboard={true}
               modules={[Navigation, Keyboard]}
-              className="w-full h-full"
+              style={{ width: "100%", height: "100%" }}
             >
               {images.map((img, index) => (
                 <SwiperSlide
@@ -162,7 +180,8 @@ export default function DetailGallery({ images = [], status }) {
                 >
                   <img
                     src={getImageUrl(img)}
-                    className="max-w-full max-h-[85vh] object-contain rounded-lg"
+                    className="max-w-full max-h-[88vh] object-contain rounded-xl"
+                    alt={`Gambar ${index + 1}`}
                   />
                 </SwiperSlide>
               ))}

@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import Banner from "../components/home/Banner";
 import FeaturedAccounts from "../components/home/FeaturedAccounts";
 import SellAccount from "../components/home/SellAccount";
@@ -14,12 +15,16 @@ import bg3 from "../assets/background/bg-transaksi.webp";
 import bg4 from "../assets/background/bg-banner.jpg";
 
 export default function Home() {
+  useEffect(() => {
+    document.title = "Platform Jual Beli & Topup Games Malaysia ";
+  }, []);
+
   return (
     <div
       className="text-white min-h-screen bg-cover bg-fixed"
       style={{ backgroundImage: `url(${mainBg})` }}
     >
-      <Section bg={bg4} >
+      <Section bg={bg4}>
         <Banner />
       </Section>
 
@@ -29,7 +34,7 @@ export default function Home() {
             <ScrollReveal>
               <SellAccount />
             </ScrollReveal>
-            {/* Bagian Popular */}
+
             <ScrollReveal delay={0.2}>
               <div>
                 <h2 className="text-2xl font-bold mb-6 font-orbitron tracking-tighter">
@@ -41,33 +46,27 @@ export default function Home() {
 
             <ScrollReveal>
               <h2 className="text-2xl font-bold mb-4 font-orbitron tracking-tighter">
-                Featured Accounts
+                Akaun Pilihan
               </h2>
               <FeaturedAccounts />
             </ScrollReveal>
           </div>
         </Section>
 
-        {/* --- PENYATUAN 2: Feedback & Contact --- */}
-        {/* Kita bungkus dalam satu div, tapi di dalamnya kita panggil Section masing-masing */}
-        {/* Supaya terlihat nyatu tapi beda background, kita hilangkan gap/space antar keduanya */}
         <div className="-space-y-10">
-          {" "}
-          {/* Menghilangkan efek space-y-10 dari parent div */}
-          {/* Feedback Section */}
           <Section bg={bg3}>
             <ScrollReveal>
               <h2 className="text-xl font-bold mb-4 font-orbitron tracking-tighter">
-                Customer Feedback
+                Maklum Balas Pelanggan
               </h2>
               <FeedbackSlider />
             </ScrollReveal>
           </Section>
-          {/* Contact Section (Langsung nempel di bawah Feedback) */}
+
           <Section bg={bg1}>
             <ScrollReveal>
               <h2 className="text-xl font-bold text-center mb-4 font-orbitron tracking-tighter">
-                OFFICIAL CONTACT
+                HUBUNGI RASMI
               </h2>
               <ContactSection />
             </ScrollReveal>
@@ -75,7 +74,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="pb-20"></div>
+      <div className="pb-20" />
     </div>
   );
 }

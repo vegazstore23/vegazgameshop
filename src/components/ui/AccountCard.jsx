@@ -5,13 +5,12 @@ import { apiGet } from "../../services/api";
 import HotIcon from "../../assets/icons/Hot.png";
 import StarIcon from "../../assets/icons/Star.webp";
 
-export default function AccountCard({ acc, type }) {
+export default function AccountCard({ acc, type, waAdmin: propWaAdmin }) {
   const navigate = useNavigate();
-  const [waAdmin, setWaAdmin] = useState("");
+  const [waAdmin, setWaAdmin] = useState(propWaAdmin || "");
 
   if (!acc) return null;
 
-  // Normalisasi Status agar pengecekan konsisten
   const statusRaw = acc.status || "Available";
   const status =
     statusRaw.charAt(0).toUpperCase() + statusRaw.slice(1).toLowerCase();
@@ -24,34 +23,32 @@ export default function AccountCard({ acc, type }) {
   };
 
   useEffect(() => {
-    async function fetchContact() {
-      try {
-        const res = await apiGet("/api/contact");
-        const admin = res.data?.find(
-          (c) =>
-            c.role?.toLowerCase().includes("order") ||
-            c.tags?.toLowerCase().includes("order"),
-        );
-        if (admin) setWaAdmin(admin.value);
-      } catch (err) {
-        console.error("Gagal ambil kontak WA:", err);
+    if (!propWaAdmin) {
+      async function fetchContact() {
+        try {
+          const res = await apiGet("/api/contact");
+          const admin = res.data?.find(
+            (c) =>
+              c.isActive &&
+              (c.roles?.includes("order") || c.roles?.includes("midman")),
+          );
+          if (admin) setWaAdmin(admin.value);
+        } catch (err) {
+          console.error("Gagal ambil kontak WA:", err);
+        }
       }
+      fetchContact();
     }
-    fetchContact();
-  }, []);
+  }, [propWaAdmin]);
 
   const ASSET_BASE = "https://apivgz.vegazgameshop.com";
-
   const imagePath =
     acc.image ||
     acc.mainImage ||
     (acc.AccountImages && acc.AccountImages[0]?.image);
-
   const isHot = acc.isHot || false;
   const sellingPriceRM = Number(acc.price) || 0;
-  const discountPercent = 10;
   const originalPriceRM = Math.round(sellingPriceRM / 0.9);
-
   const rateIDR = 4100;
   const sellingPriceIDR = sellingPriceRM * rateIDR;
   const originalPriceIDR = originalPriceRM * rateIDR;
@@ -63,9 +60,9 @@ export default function AccountCard({ acc, type }) {
 
   const orderWA = (e) => {
     e.preventDefault();
-    e.stopPropagation(); // Biar gak trigger navigate detail
+    e.stopPropagation();
     const cleanWA = waAdmin.replace(/\D/g, "");
-    const message = `Halo Admin Vegaz, saya berminat dengan account:\n\nTitle: ${acc.title}\nCode: ${acc.code}\nHarga: RM ${sellingPriceRM} / Rp ${sellingPriceIDR.toLocaleString("id-ID")}\n\nApakah masih tersedia?`;
+    const message = `Halo Admin Vegaz,\n\nSaya berminat dengan akun:\nTitle: ${acc.title}\nCode: ${acc.code}\nHarga: RM ${sellingPriceRM}\n\nApakah masih tersedia?`;
     window.open(
       `https://wa.me/${cleanWA}?text=${encodeURIComponent(message)}`,
       "_blank",
@@ -79,7 +76,7 @@ export default function AccountCard({ acc, type }) {
     >
       {/* Label Diskon */}
       <div className="absolute top-2 left-2 bg-orange-500 text-[10px] px-2 py-1 rounded z-10 font-bold shadow-md">
-        -{discountPercent}%
+        -10%
       </div>
 
       {/* Badge PNG (Hot/Star) */}
@@ -107,7 +104,7 @@ export default function AccountCard({ acc, type }) {
           </div>
         )}
 
-        {/* Info Badge Status (Hanya muncul jika TIDAK Available) */}
+        {/* Info Badge Status (Hanya jika tidak Available) */}
         {!isAvailable && statusConfig[status] && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-[1px]">
             <span
@@ -118,25 +115,34 @@ export default function AccountCard({ acc, type }) {
           </div>
         )}
 
-        {/* Info Kode Akun */}
-        <div className="absolute bottom-2 left-2 right-2 flex justify-between items-center">
-          <span className="text-[10px] bg-black/60 backdrop-blur-sm px-2 py-1 rounded-md border border-white/10 font-bold text-yellow-400">
-            {acc.code}
-          </span>
-        </div>
+        {/* ROLE ACC DARI BACKEND (Hanya muncul di StockPage) */}
+        {type === "stock" && acc.role && (
+          <div className="absolute bottom-2 left-2 right-2 flex justify-start items-center">
+            <span className="text-[9px] bg-blue-600/80 backdrop-blur-sm px-2 py-1 rounded-md border border-white/20 font-black uppercase tracking-wider text-white shadow-lg">
+              {acc.role}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Konten Text */}
-      <div className="p-4 flex flex-col gap-2 flex-1">
+      <div className="p-4 flex flex-col gap-1 flex-1">
         <h3
-          className={`text-sm font-bold line-clamp-2 min-h-[40px] leading-tight ${!isAvailable ? "opacity-50" : ""}`}
+          className={`text-sm font-bold line-clamp-2 leading-tight ${!isAvailable ? "opacity-50" : ""}`}
         >
           {acc.title || "Akun MLBB"}
         </h3>
 
+        {/* KODE AKUN DI BAWAH JUDUL */}
+        <div className="mb-1">
+          <span className="text-[10px] font-bold text-yellow-400 uppercase tracking-wider">
+            Code: {acc.code}
+          </span>
+        </div>
+
         {/* Harga Section */}
         <div
-          className={`flex flex-col gap-1 mt-1 ${!isAvailable ? "opacity-50" : ""}`}
+          className={`flex flex-col gap-1 mt-auto ${!isAvailable ? "opacity-50" : ""}`}
         >
           <div className="flex justify-between text-[10px] text-gray-400 line-through">
             <span>RM {originalPriceRM.toLocaleString("ms-MY")}</span>
@@ -157,9 +163,9 @@ export default function AccountCard({ acc, type }) {
           </div>
         </div>
 
-        {/* Button hanya jika Available dan tipe Home */}
+        {/* Button hanya jika tipe Home */}
         {type === "home" && isAvailable && (
-          <div className="mt-auto pt-3">
+          <div className="pt-3">
             <button
               onClick={orderWA}
               className="w-full bg-green-500 hover:bg-green-600 py-2.5 rounded-xl text-xs font-black transition shadow-lg uppercase"

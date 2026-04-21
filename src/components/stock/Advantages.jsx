@@ -1,25 +1,25 @@
-import { ShieldCheck, PhoneCall, CreditCard, Zap } from "lucide-react"; // Gunakan library icon seperti lucide-react
+import { ShieldCheck, PhoneCall, CreditCard, Zap } from "lucide-react";
 
 export default function Advantages() {
   const features = [
     {
-      title: "Jaminan Layanan",
-      desc: "Keamanan dan kualitas layanan terjamin",
+      title: "Jaminan Perkhidmatan",
+      desc: "Keselamatan dan kualiti perkhidmatan terjamin sepenuhnya",
       icon: <ShieldCheck className="text-yellow-400 w-8 h-8" />,
     },
     {
-      title: "Jaminan Layanan 24 Jam",
-      desc: "Layanan non-stop, 24 jam setiap hari",
+      title: "Perkhidmatan 24 Jam",
+      desc: "Perkhidmatan tanpa henti, 24 jam setiap hari",
       icon: <PhoneCall className="text-yellow-400 w-8 h-8" />,
     },
     {
-      title: "Pembayaran Aman & Terpercaya",
-      desc: "Transaksi aman, pembayaran dapat dipercaya.",
+      title: "Pembayaran Selamat & Dipercayai",
+      desc: "Transaksi selamat, pembayaran boleh dipercayai.",
       icon: <CreditCard className="text-yellow-400 w-8 h-8" />,
     },
     {
-      title: "Proses Cepat & Otomatis",
-      desc: "Proses cepat, otomatis, tanpa hambatan.",
+      title: "Proses Cepat & Automatik",
+      desc: "Proses pantas, automatik, tanpa sebarang masalah.",
       icon: <Zap className="text-yellow-400 w-8 h-8" />,
     },
   ];
@@ -28,7 +28,7 @@ export default function Advantages() {
     <div className="w-full py-16">
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="text-center text-white font-bold text-xl mb-10 tracking-widest uppercase">
-          KENAPA BELI ACCOUNT DI VEGAZSTORE?
+          Kenapa Beli Akaun Di VegazStore?
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

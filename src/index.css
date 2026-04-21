@@ -23,7 +23,7 @@
   height: 100%;
   pointer-events: none;
   z-index: 2;
-  overflow: hidden; 
+  overflow: hidden;
   mix-blend-mode: screen;
 }
 
@@ -31,7 +31,7 @@
   position: absolute;
   width: 2px;
   height: 80px;
-  background: linear-gradient(to bottom, rgba(255,255,255,0), #fff);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #fff);
   animation: meteor 5s linear infinite;
   opacity: 0.7;
 }
