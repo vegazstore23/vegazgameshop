@@ -14,3 +14,34 @@
 .animate-scroll {
   animation: scrollX 20s linear infinite;
 }
+
+.meteors {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden; 
+  mix-blend-mode: screen;
+}
+
+.meteors li {
+  position: absolute;
+  width: 2px;
+  height: 80px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), #fff);
+  animation: meteor 5s linear infinite;
+  opacity: 0.7;
+}
+@keyframes meteor {
+  0% {
+    transform: translateY(-100px) rotate(45deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(600px) rotate(45deg);
+    opacity: 0;
+  }
+}

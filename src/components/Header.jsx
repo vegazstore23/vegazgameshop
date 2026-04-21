@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import Vegaz from "../assets/logo/vegazgameshop.png";
 
+// --- Icons ---
 const IconHome = () => (
   <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 3l9 7v11a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V10l9-7z" />
@@ -11,6 +13,11 @@ const IconStock = () => (
     <path d="M4 4h16a1 1 0 0 1 1 1v3H3V5a1 1 0 0 1 1-1z" />
     <path d="M3 10h18v4H3z" />
     <path d="M3 16h18v3a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" />
+  </svg>
+);
+const IconRegion = () => (
+  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
   </svg>
 );
 const IconTopup = () => (
@@ -24,29 +31,9 @@ const IconTopup = () => (
     />
   </svg>
 );
-const IconContact = () => (
+const IconAbout = () => (
   <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-    <circle cx="18" cy="5" r="2" />
-    <circle cx="6" cy="12" r="2" />
-    <circle cx="18" cy="19" r="2" />
-    <path
-      d="M8 12l8-6M8 12l8 6"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      fill="none"
-    />
-  </svg>
-);
-const IconStar = () => (
-  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 3l2.9 6 6.6.6-5 4.3 1.5 6.4L12 17l-6 3.3 1.5-6.4-5-4.3 6.6-.6L12 3z" />
-  </svg>
-);
-const IconInfo = () => (
-  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-    <circle cx="12" cy="12" r="10" />
-    <rect x="11" y="10" width="2" height="7" fill="white" />
-    <circle cx="12" cy="7" r="1.3" fill="white" />
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
   </svg>
 );
 const IconCalculator = () => (
@@ -68,31 +55,20 @@ const IconSell = () => (
     <circle cx="12" cy="15" r="2" />
   </svg>
 );
-const IconFaq = () => (
-  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-    <circle cx="12" cy="12" r="10" />
-    <path
-      d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-2 2-2 3"
-      stroke="white"
-      strokeWidth="1.5"
-      fill="none"
-    />
-    <circle cx="12" cy="17" r="1.2" fill="white" />
-  </svg>
-);
 const IconSupport = () => (
   <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 2a7 7 0 0 0-7 7v4a3 3 0 0 0 3 3h2v-6H7V9a5 5 0 0 1 10 0v1h-3v6h2a3 3 0 0 0 3-3V9a7 7 0 0 0-7-7z" />
   </svg>
 );
 
+// Map path sesuai App.jsx + Topup
 const PAGE_MAP = {
   "/": "home",
   "/stock": "stock",
   "/topup": "topup",
-  "/about": "about",
-  "/calculator": "calculator",
   "/check-region": "region",
+  "/calculator-mlbb": "calculator",
+  "/about": "about",
 };
 
 export default function Header({ hideBottomNav = false }) {
@@ -111,8 +87,6 @@ export default function Header({ hideBottomNav = false }) {
         );
         const json = await res.json();
         const contacts = json?.data?.contacts ?? [];
-
-        // Contact model: roles is a JSON array e.g. ["order"] or ["cs","order"]
         const orderContact = contacts.find(
           (c) => Array.isArray(c.roles) && c.roles.includes("order"),
         );
@@ -133,7 +107,6 @@ export default function Header({ hideBottomNav = false }) {
     load();
   }, []);
 
-  /* Close menu on outside click */
   useEffect(() => {
     if (!menuOpen) return;
     const handler = (e) => {
@@ -148,94 +121,87 @@ export default function Header({ hideBottomNav = false }) {
     return () => document.removeEventListener("click", handler);
   }, [menuOpen]);
 
-  /* Close menu on route change */
   useEffect(() => {
     setMenuOpen(false);
   }, [pathname]);
 
-  const desktopCls = (page) =>
-    `flex items-center gap-2 font-semibold transition ${
-      activePage === page ? "text-white" : "text-gray-400 hover:text-blue-400"
+  const getNavClass = (path, isDesktop = false) => {
+    const isActive = pathname === path;
+    if (isDesktop) {
+      return `flex items-center gap-2 font-semibold transition ${
+        isActive ? "text-white" : "text-gray-400 hover:text-blue-400"
+      }`;
+    }
+    return `flex flex-col items-center justify-center text-xs font-medium transition ${
+      isActive ? "text-white" : "text-gray-400 hover:text-blue-400"
     }`;
-
-  const bottomCls = (page) =>
-    `flex flex-col items-center justify-center text-xs font-medium transition ${
-      activePage === page ? "text-white" : "text-gray-400 hover:text-blue-400"
-    }`;
+  };
 
   return (
     <>
       {/* ── Top header bar ───────────────────────── */}
       <header className="fixed top-0 left-0 w-full z-[9999] bg-[#172454] border-b border-white/10 shadow-lg">
         <div className="max-w-screen-xl mx-auto px-4 md:px-6 flex items-center justify-between h-16 md:h-20">
-          {/* Logo */}
           <Link to="/" className="flex items-center">
             <img
-              src="/assets/logo/vegazgameshop.png"
+              src={Vegaz}
               className="h-9 md:h-10 lg:h-11 object-contain drop-shadow-[0_0_8px_rgba(59,130,246,0.6)]"
               alt="VegazGameShop"
             />
           </Link>
 
           {/* Desktop nav */}
-          <ul className="hidden lg:flex items-center gap-6 lg:gap-8 text-xl">
+          <ul className="hidden lg:flex items-center gap-6 lg:gap-8">
             <li>
-              <Link to="/" className={desktopCls("home")}>
+              <Link to="/" className={getNavClass("/", true)}>
                 <IconHome />
                 <span>Home</span>
               </Link>
             </li>
             <li>
-              <Link
-                to="/check-region"
-                className="flex items-center gap-2 font-semibold text-gray-400 hover:text-blue-400"
-              >
-                <IconStar />
-                <span>CheckRegion</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/topup" className={desktopCls("topup")}>
+              <Link to="/topup" className={getNavClass("/topup", true)}>
                 <IconTopup />
                 <span>Top Up</span>
               </Link>
             </li>
             <li>
-              <Link to="/stock" className={desktopCls("stock")}>
+              <Link to="/stock" className={getNavClass("/stock", true)}>
                 <IconStock />
                 <span>Stock</span>
               </Link>
             </li>
             <li>
               <Link
-                to="/#contactWrapper"
-                className="flex items-center gap-2 font-semibold text-gray-400 hover:text-blue-400"
+                to="/check-region"
+                className={getNavClass("/check-region", true)}
               >
-                <IconContact />
-                <span>Contact</span>
+                <IconRegion />
+                <span>Region</span>
               </Link>
             </li>
             <li>
-              <Link to="/about" className={desktopCls("about")}>
-                <IconInfo />
-                <span>About</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/calculator" className={desktopCls("calculator")}>
+              <Link
+                to="/calculator-mlbb"
+                className={getNavClass("/calculator-mlbb", true)}
+              >
                 <IconCalculator />
                 <span>Calculator</span>
               </Link>
             </li>
+            <li>
+              <Link to="/about" className={getNavClass("/about", true)}>
+                <IconAbout />
+                <span>About</span>
+              </Link>
+            </li>
           </ul>
 
-          {/* Hamburger */}
           <button
             id="mobileToggle"
             className="lg:hidden text-white text-3xl p-2"
             onClick={(e) => {
               e.stopPropagation();
-              setMenuOpen((v) => !v);
+              setMenuOpen(!menuOpen);
             }}
           >
             ☰
@@ -248,7 +214,7 @@ export default function Header({ hideBottomNav = false }) {
         id="mobileMenu"
         className={`fixed top-16 left-0 w-full bg-[#1c4ed8]/55 backdrop-blur-lg border-b border-white/10 flex flex-col gap-2 p-6 z-40 lg:hidden transition-all duration-300 ease-out ${
           menuOpen
-            ? "opacity-100 translate-y-0 pointer-events-auto"
+            ? "opacity-100 translate-y-0"
             : "opacity-0 -translate-y-4 pointer-events-none"
         }`}
       >
@@ -261,19 +227,7 @@ export default function Header({ hideBottomNav = false }) {
           <IconSell />
           <span>Jual Account</span>
         </a>
-
         <div className="h-px bg-white/10 my-1" />
-
-        <Link
-          to="/about"
-          className="flex items-center gap-3 p-3 rounded-xl font-semibold text-gray-200 hover:text-blue-400 hover:bg-white/5 transition"
-        >
-          <IconFaq />
-          <span>About / FAQ</span>
-        </Link>
-
-        <div className="h-px bg-white/10 my-1" />
-
         <a
           href={csHref}
           target="_blank"
@@ -288,28 +242,32 @@ export default function Header({ hideBottomNav = false }) {
       {/* ── Mobile bottom nav ─────────────────────── */}
       {!hideBottomNav && (
         <nav className="fixed bottom-0 left-0 w-full bg-[#172454] border-t border-white/10 shadow-[0_-4px_20px_rgba(0,0,0,0.4)] flex justify-around items-center h-16 lg:hidden z-50">
-          <Link to="/" className={bottomCls("home")}>
+          <Link to="/" className={getNavClass("/")}>
             <IconHome />
             <span>Home</span>
           </Link>
-          <Link to="/stock" className={bottomCls("stock")}>
-            <IconStock />
-            <span>Stock</span>
-          </Link>
-          <Link to="/topup" className={bottomCls("topup")}>
+          <Link to="/topup" className={getNavClass("/topup")}>
             <IconTopup />
             <span>Top Up</span>
           </Link>
-          <Link
-            to="/check-region"
-            className="flex flex-col items-center justify-center text-xs font-medium transition text-gray-400 hover:text-blue-400"
-          >
-            <IconStar />
-            <span>CheckRegion</span>
+          <Link to="/stock" className={getNavClass("/stock")}>
+            <IconStock />
+            <span>Stock</span>
           </Link>
-          <Link to="/calculator" className={bottomCls("calculator")}>
+          <Link to="/check-region" className={getNavClass("/check-region")}>
+            <IconRegion />
+            <span>Region</span>
+          </Link>
+          <Link
+            to="/calculator-mlbb"
+            className={getNavClass("/calculator-mlbb")}
+          >
             <IconCalculator />
             <span>Calc</span>
+          </Link>
+          <Link to="/about" className={getNavClass("/about")}>
+            <IconAbout />
+            <span>About</span>
           </Link>
         </nav>
       )}

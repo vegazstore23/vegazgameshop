@@ -30,7 +30,7 @@ export default function Stock() {
       const params = new URLSearchParams({
         page: currentPage,
         limit: perPage,
-        sort: currentSort,
+        sort: "oldest",
         minPrice: currentMinPrice,
         maxPrice: currentMaxPrice,
       });
@@ -38,7 +38,19 @@ export default function Stock() {
 
       const result = await apiGet(`/api/account?${params.toString()}`);
       const payload = result.data || {};
-      setAccounts(payload.data || []);
+      let rawData = payload.data || [];
+
+      const sorted = rawData.sort((a, b) => {
+        const statusOrder = { Available: 1, Reserved: 2, Hold: 3, Sold: 4 };
+        const orderA = statusOrder[a.status] || 1;
+        const orderB = statusOrder[b.status] || 1;
+
+        if (orderA !== orderB) return orderA - orderB;
+
+        return new Date(a.createdAt) - new Date(b.createdAt);
+      });
+
+      setAccounts(sorted);
       setTotalPages(payload.totalPages || 1);
     } catch (err) {
       console.log("Stock Load Error:", err);
@@ -92,13 +104,9 @@ export default function Stock() {
               ))}
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-              {accounts.map((item, i) => (
-                <AccountCard
-                  key={item.id}
-                  acc={item} 
-                  type="stock" 
-                />
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-6">
+              {accounts.map((item) => (
+                <AccountCard key={item.id} acc={item} type="stock" />
               ))}
             </div>
             <Advantages />

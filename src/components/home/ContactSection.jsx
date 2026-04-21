@@ -21,30 +21,32 @@ export default function ContactSection() {
     const val = c.value;
     if (c.type === "whatsapp") return `https://wa.me/${val}`;
     if (c.type === "telegram") return `https://t.me/${val}`;
-    if (c.type === "instagram") return `https://instagram.com/${val.replace('@', '')}`;
-    if (c.type === "tiktok") return `https://tiktok.com/@${val.replace('@', '')}`;
-    if (c.type === "youtube") return val.includes('http') ? val : `https://youtube.com/${val}`;
-    if (c.type === "facebook") return val.includes('http') ? val : `https://facebook.com/${val}`;
-    return val.includes('http') ? val : "#";
+    if (c.type === "instagram")
+      return `https://instagram.com/${val.replace("@", "")}`;
+    if (c.type === "tiktok")
+      return `https://tiktok.com/@${val.replace("@", "")}`;
+    if (c.type === "youtube")
+      return val.includes("http") ? val : `https://youtube.com/${val}`;
+    if (c.type === "facebook")
+      return val.includes("http") ? val : `https://facebook.com/${val}`;
+    return val.includes("http") ? val : "#";
   }
 
   function getIcon(type) {
     if (type === "whatsapp") return waIcon;
     if (type === "telegram") return tgIcon;
     if (type === "instagram") return igIcon;
-    // Fallback sederhana jika icon svg belum diimport
     return null;
   }
 
   if (!contacts.length) return null;
 
-  // SINKRONISASI FILTER: Menggunakan 'contacts' dan 'socials' sesuai database terbaru
-  const contactGroup = contacts.filter(
-    (c) => c.category?.toLowerCase() === "contacts"
+   const contactGroup = contacts.filter(
+    (c) => c.category?.toLowerCase() === "contacts",
   );
 
   const socialGroup = contacts.filter(
-    (c) => c.category?.toLowerCase() === "socials"
+    (c) => c.category?.toLowerCase() === "socials",
   );
 
   const ContactCard = ({ c }) => (
