@@ -18,8 +18,6 @@ export default function FilterChips({
   currentSort,
   onClearSort,
 }) {
-  // FIX: Default sort kini "newest" (sama dengan Stock.jsx)
-  // Chip hanya muncul bila ada tier aktif ATAU sort bukan "newest"
   if (!activeTier && currentSort === "newest") return null;
 
   return (

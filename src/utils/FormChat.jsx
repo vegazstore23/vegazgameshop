@@ -8,7 +8,7 @@ export const getContactByRole = async (targetRole) => {
   try {
     const res = await apiGet("/api/contact");
     if (res?.success && Array.isArray(res.data)) {
-      // Mencari item yang array roles-nya mengandung targetRole
+
       const contact = res.data.find(
         (item) => item.isActive && item.roles.includes(targetRole),
       );

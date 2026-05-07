@@ -1,67 +1,26 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+
+import { RiHome3Fill } from "react-icons/ri";
+import { DiRuby } from "react-icons/di";
+import { RiArchiveStackFill } from "react-icons/ri";
+import { RiMapPinFill } from "react-icons/ri";
+import { RiCustomerServiceFill } from "react-icons/ri";
+import { BiSolidCalculator } from "react-icons/bi";
+import { RiSpam2Fill } from "react-icons/ri";
+import { RiSendPlaneFill } from "react-icons/ri";
 import Vegaz from "../assets/logo/vegazgameshop.png";
 
 // --- Icons ---
-const IconHome = () => (
-  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 3l9 7v11a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V10l9-7z" />
-  </svg>
-);
-const IconStock = () => (
-  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M4 4h16a1 1 0 0 1 1 1v3H3V5a1 1 0 0 1 1-1z" />
-    <path d="M3 10h18v4H3z" />
-    <path d="M3 16h18v3a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" />
-  </svg>
-);
-const IconRegion = () => (
-  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-  </svg>
-);
-const IconTopup = () => (
-  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M7 3h10l4 6-9 12L3 9l4-6z" />
-    <path
-      d="M7 3l5 6 5-6M3 9h18"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    />
-  </svg>
-);
-const IconAbout = () => (
-  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
-  </svg>
-);
-const IconCalculator = () => (
-  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-    <rect x="4" y="2" width="16" height="20" rx="2" />
-    <rect x="7" y="5" width="10" height="3" fill="white" />
-    <circle cx="8" cy="12" r="1" />
-    <circle cx="12" cy="12" r="1" />
-    <circle cx="16" cy="12" r="1" />
-    <circle cx="8" cy="16" r="1" />
-    <circle cx="12" cy="16" r="1" />
-    <circle cx="16" cy="16" r="1" />
-  </svg>
-);
-const IconSell = () => (
-  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M4 4h16v4H4z" />
-    <path d="M4 10h16v10H4z" />
-    <circle cx="12" cy="15" r="2" />
-  </svg>
-);
-const IconSupport = () => (
-  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 2a7 7 0 0 0-7 7v4a3 3 0 0 0 3 3h2v-6H7V9a5 5 0 0 1 10 0v1h-3v6h2a3 3 0 0 0 3-3V9a7 7 0 0 0-7-7z" />
-  </svg>
-);
+const IconHome = () => <RiHome3Fill className="w-6 h-6" />;
+const IconStock = () => <RiArchiveStackFill className="w-6 h-6" />;
+const IconRegion = () => <RiMapPinFill className="w-6 h-6" />;
+const IconTopup = () => <DiRuby className="w-6 h-6" />;
+const IconAbout = () => <RiSpam2Fill className="w-6 h-6" />;
+const IconCalculator = () => <BiSolidCalculator className="w-6 h-6" />;
+const IconSell = () => <RiSendPlaneFill className="w-6 h-6" />;
+const IconSupport = () => <RiCustomerServiceFill className="w-6 h-6" />;
 
-// Map path sesuai App.jsx + Topup
 const PAGE_MAP = {
   "/": "home",
   "/stock": "stock",
@@ -209,7 +168,7 @@ export default function Header({ hideBottomNav = false }) {
         </div>
       </header>
 
-      {/* ── Mobile dropdown ──────────────────────── */}
+      {/* ── Mobile dropdown (Original Theme - Tidy Version) ──────────────────────── */}
       <div
         id="mobileMenu"
         className={`fixed top-16 left-0 w-full bg-[#1c4ed8]/55 backdrop-blur-lg border-b border-white/10 flex flex-col gap-2 p-6 z-40 lg:hidden transition-all duration-300 ease-out ${
@@ -222,21 +181,36 @@ export default function Header({ hideBottomNav = false }) {
           href={orderHref}
           target="_blank"
           rel="noreferrer"
-          className="flex items-center gap-3 p-3 rounded-xl font-semibold text-gray-200 hover:text-blue-400 hover:bg-white/5 transition"
+          className="flex items-center gap-3 p-3 rounded-xl font-semibold text-gray-200 hover:text-white hover:bg-white/10 transition"
         >
           <IconSell />
           <span>Jual Account</span>
         </a>
+
         <div className="h-px bg-white/10 my-1" />
+
         <a
           href={csHref}
           target="_blank"
           rel="noreferrer"
-          className="flex items-center gap-3 p-3 rounded-xl font-semibold text-gray-200 hover:text-blue-400 hover:bg-white/5 transition"
+          className="flex items-center gap-3 p-3 rounded-xl font-semibold text-gray-200 hover:text-white hover:bg-white/10 transition"
         >
           <IconSupport />
           <span>Customer Service</span>
         </a>
+
+        {/* FIXED: Link About sekarang mengarah ke /about dan menggunakan <Link> */}
+        <Link
+          to="/about"
+          className={`flex items-center gap-3 p-3 rounded-xl font-semibold transition ${
+            pathname === "/about"
+              ? "bg-white/20 text-white"
+              : "text-gray-200 hover:text-white hover:bg-white/10"
+          }`}
+        >
+          <IconAbout />
+          <span>About & FAQ</span>
+        </Link>
       </div>
 
       {/* ── Mobile bottom nav ─────────────────────── */}
@@ -264,10 +238,6 @@ export default function Header({ hideBottomNav = false }) {
           >
             <IconCalculator />
             <span>Calc</span>
-          </Link>
-          <Link to="/about" className={getNavClass("/about")}>
-            <IconAbout />
-            <span>About</span>
           </Link>
         </nav>
       )}

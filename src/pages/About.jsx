@@ -7,7 +7,7 @@ import AboutPrivacy from "../components/about/AboutPrivacy";
 
 export default function About() {
   useEffect(() => {
-    document.title = "About & FAQ | VegazGameShop";
+    document.title = "Tentang & FAQ | VegazGameShop";
   }, []);
 
   const [activeTab, setActiveTab] = useState("about");
@@ -30,29 +30,32 @@ export default function About() {
   };
 
   return (
-    <div className="min-h-screen pt-32 pb-20 bg-[#020617] bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-slate-950 to-slate-950">
+    <div className="min-h-screen pt-32 pb-20 bg-[#020617] bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-blue-950/20 via-[#020617] to-[#020617]">
       <div className="max-w-4xl mx-auto px-4">
+        {/* Hero Header */}
         <ScrollReveal>
-          <header className="text-center mb-10">
-            <h1 className="text-white text-3xl font-black uppercase tracking-tighter font-orbitron italic mb-2">
-              Maklumat / <span className="text-blue-500">Soalan Lazim</span>
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-200 to-white mb-4">
+              Maklumat & Soalan Lazim
             </h1>
-            <p className="text-gray-400 text-xs tracking-widest uppercase">
-              Terma &amp; Panduan VegazGameShop
+            <p className="text-sm md:text-base text-gray-400 max-w-xl mx-auto">
+              Semua perkara yang anda perlu tahu mengenai platform
+              VegazGameShop, dasar privasi, dan terma perkhidmatan kami.
             </p>
-          </header>
+          </div>
         </ScrollReveal>
 
+        {/* Tabs Container */}
         <ScrollReveal delay={0.1}>
-          <div className="flex gap-2 p-1 bg-black/40 backdrop-blur-md border border-white/5 rounded-2xl mb-8 overflow-x-auto">
+          <div className="flex gap-2 p-1.5 bg-slate-900/80 backdrop-blur-md border border-white/5 rounded-2xl mb-8 overflow-x-auto scrollbar-none">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id)}
-                className={`flex-1 min-w-[80px] py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${
+                className={`flex-1 min-w-[120px] py-3 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all duration-300 ${
                   activeTab === tab.id
-                    ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20 scale-[1.03]"
-                    : "text-gray-500 hover:text-white hover:bg-white/5"
+                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20 scale-[1.02]"
+                    : "text-gray-400 hover:text-white hover:bg-white/5"
                 }`}
               >
                 {tab.label}
@@ -61,9 +64,10 @@ export default function About() {
           </div>
         </ScrollReveal>
 
+        {/* Active Content Panel */}
         <ScrollReveal delay={0.15}>
           <div
-            className="bg-slate-900/50 backdrop-blur-xl border border-white/5 p-8 rounded-3xl prose prose-invert max-w-none prose-sm"
+            className="bg-slate-900/40 backdrop-blur-xl border border-white/5 p-8 md:p-10 rounded-3xl prose prose-invert max-w-none prose-sm shadow-2xl transition-all duration-300"
             style={{
               opacity: animating ? 0 : 1,
               transform: animating
