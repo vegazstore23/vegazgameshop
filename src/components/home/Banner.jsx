@@ -36,7 +36,6 @@ export default function Banner() {
     };
   }, []);
 
-  // ── Skeleton ───────────────────────────────────────────────────────────────
   if (!banners.length) {
     return (
       <div style={{ width: "100%", padding: "24px 0" }}>
@@ -60,12 +59,9 @@ export default function Banner() {
   }
 
   const slideCount = banners.length;
-  // Loop perlukan sekurang-kurangnya 3 slide supaya clone kiri & kanan cukup
   const canLoop = slideCount >= 3;
 
   return (
-    // ── Wrapper clip: overflow hidden supaya clone slides kiri & kanan
-    //    boleh wujud dalam DOM tapi tak visible luar kawasan banner ──────────
     <div
       style={{ width: "100%", padding: "8px 0", overflow: "hidden" }}
       role="region"
@@ -74,10 +70,7 @@ export default function Banner() {
       <style>{`
         .banner-swiper {
           width: 100%;
-          /* Bagi ruang untuk pagination dots di bawah */
           padding-bottom: 36px !important;
-          /* overflow visible supaya slide sebelah nampak (coverflow effect) —
-             tapi sekarang parent wrapper yang handle clip, bukan swiper sendiri */
           overflow: visible !important;
         }
 
@@ -85,26 +78,29 @@ export default function Banner() {
           aspect-ratio: ${BANNER_ASPECT};
           border-radius: 16px;
           overflow: hidden;
-          cursor: grab;
+          cursor: pointer;
           border: 1px solid rgba(255,255,255,0.05);
           box-shadow: 0 8px 32px rgba(0,0,0,0.5);
           transition: box-shadow 0.4s ease, opacity 0.4s ease !important;
           opacity: 0.6;
-        }
-
-        .banner-swiper .swiper-slide:active {
-          cursor: grabbing;
+          /* Memastikan slide bisa menerima event klik */
+          pointer-events: auto !important; 
         }
 
         .banner-swiper .swiper-slide-active {
           opacity: 1;
           box-shadow: 0 16px 56px rgba(0,0,0,0.7),
                       0 0 0 1px rgba(255,255,255,0.1);
+          z-index: 10; /* Slide aktif harus paling atas */
         }
 
-        .banner-swiper .swiper-slide-prev,
-        .banner-swiper .swiper-slide-next {
-          opacity: 0.75;
+        .banner-link-wrapper {
+          display: block;
+          width: 100%;
+          height: 100%;
+          position: relative;
+          z-index: 50; /* Memaksa link berada di atas efek bayangan swiper */
+          cursor: pointer !important;
         }
 
         .banner-swiper .swiper-slide img {
@@ -112,22 +108,8 @@ export default function Banner() {
           height: 100%;
           object-fit: cover;
           display: block;
-          user-select: none;
-          pointer-events: none;
-          -webkit-user-drag: none;
-        }
-
-        .banner-swiper .swiper-pagination {
-          bottom: 4px !important;
-        }
-
-        .banner-swiper .swiper-pagination-bullet {
-          width: 6px;
-          height: 6px;
-          background: rgba(255,255,255,0.2);
-          opacity: 1;
-          border-radius: 999px;
-          transition: width 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+          /* Hilangkan pointer-events none agar tidak menghalangi klik pada <a> */
+          pointer-events: none; 
         }
 
         .banner-swiper .swiper-pagination-bullet-active {
@@ -144,8 +126,7 @@ export default function Banner() {
         grabCursor
         centeredSlides
         loop={canLoop}
-        // loopAdditionalSlides DIBUANG — deprecated & punca loop kanan broken.
-        // Swiper v8+ handle clone slides sendiri secara automatik.
+        touchStartPreventDefault={false} // Penting agar klik tetap terdeteksi di mobile
         coverflowEffect={{
           rotate: 0,
           stretch: 0,
@@ -168,36 +149,48 @@ export default function Banner() {
         a11y={{ enabled: true }}
         breakpoints={{
           0: { slidesPerView: 1.2 },
-          480: { slidesPerView: 1.2 },
           768: { slidesPerView: 1.35 },
           1024: { slidesPerView: 1.5 },
         }}
       >
-        {banners.map((b, i) => (
-          <SwiperSlide key={b.id ?? i}>
-            <a
-              href={b.url ?? b.link ?? "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={b.title || `Banner ${i + 1}`}
-              style={{ display: "block", width: "100%", height: "100%" }}
-              onClick={(e) => {
-                if (!b.url && !b.link) e.preventDefault();
-              }}
-            >
-              <img
-                src={b.image}
-                alt={b.title || `Banner ${i + 1}`}
-                draggable={false}
-                loading="lazy"
-                onError={(e) => {
-                  const slide = e.currentTarget.closest(".swiper-slide");
-                  if (slide) slide.style.display = "none";
-                }}
-              />
-            </a>
-          </SwiperSlide>
-        ))}
+        {banners.map((b, i) => {
+          // DEBUG: Cek di console apakah link benar-benar ada
+          // console.log("Link Banner:", b.url || b.link);
+
+          const targetUrl = b.url || b.link;
+
+          return (
+            <SwiperSlide key={b.id ?? i}>
+              {targetUrl ? (
+                <a
+                  href={targetUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="banner-link-wrapper"
+                  onClick={(e) => {
+                    // Jika URL tidak valid atau '#' jangan jalankan
+                    if (!targetUrl || targetUrl === "#") {
+                      e.preventDefault();
+                    }
+                    console.log("Banner clicked:", targetUrl);
+                  }}
+                >
+                  <img
+                    src={b.image}
+                    alt={b.title || `Banner ${i + 1}`}
+                    loading="lazy"
+                  />
+                </a>
+              ) : (
+                <img
+                  src={b.image}
+                  alt={b.title || `Banner ${i + 1}`}
+                  loading="lazy"
+                />
+              )}
+            </SwiperSlide>
+          );
+        })}
       </Swiper>
     </div>
   );

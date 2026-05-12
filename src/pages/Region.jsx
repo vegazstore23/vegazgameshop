@@ -12,12 +12,23 @@ const STATUS = {
 
 function friendlyError(msg = "") {
   const m = msg.toLowerCase();
+
+  // Deteksi spam request dari VIPayment
+  if (m.includes("terlalu banyak") || m.includes("too many")) {
+    return "Sistem sedang sibuk. Sila tunggu beberapa saat dan cuba lagi.";
+  }
+
+  // Deteksi ID salah
   if (
     m.includes("tidak valid") ||
     m.includes("invalid") ||
-    m.includes("not found")
-  )
+    m.includes("not found") ||
+    m.includes("fails") ||
+    m.includes("fail")
+  ) {
     return "ID Pengguna atau ID Zon tidak dijumpai. Sila semak semula input anda.";
+  }
+
   return "Ralat sistem berlaku. Pastikan sambungan stabil dan cuba lagi.";
 }
 
@@ -42,14 +53,23 @@ export default function Region() {
 
     setStatus(STATUS.LOADING);
     try {
+      // ✅ PERBAIKAN URL: Pastikan menembak ke endpoint yang benar (tambah /api jika apiGet belum otomatis menambahkannya)
+      // Jika apiGet di file api.js kamu sudah otomatis memakai baseUrl "https://apivgz.../api", gunakan "/region?..."
+      // Jika apiGet memakai baseUrl "https://apivgz...", gunakan "/api/region?..."
       const res = await apiGet(
-        `/check-region?userId=${userId}&zoneId=${zoneId}`,
+        `/api/region?id=${userId}&serverid=${zoneId}&brand=mlbb`,
       );
-      if (res.success && res.data) {
-        setResult(res.data);
+
+      const data = res.result || res.data;
+
+      if ((res.success || res.status === "success") && data) {
+        setResult({
+          username: data.nickname || data["in-game-nickname"] || data.username,
+          country: data.country || "Unknown",
+        });
         setStatus(STATUS.SUCCESS);
       } else {
-        setErrMsg(friendlyError(res.message || "not found"));
+        setErrMsg(friendlyError(res.message || res.error || "not found"));
         setStatus(STATUS.NOT_FOUND);
       }
     } catch (err) {
@@ -96,7 +116,7 @@ export default function Region() {
 
                   <div>
                     <label className="block text-[10px] text-white/40 uppercase tracking-widest font-black mb-2">
-                      ID Zon
+                      ID Zone
                     </label>
                     <input
                       type="text"

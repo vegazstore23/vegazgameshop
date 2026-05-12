@@ -4,7 +4,7 @@ import { AnimatePresence } from "framer-motion"; // Untuk efek transisi loading
 
 import MainLayout from "./layouts/MainLayout";
 import LoadingScreen from "./components/ui/LoadingScreen";
-import ScrollToTop from "./components/ScrollTop"; // Pastikan helper scroll ini ada
+import ScrollToTop from "./components/ScrollTop"; // Pastikan 
 
 import Home from "./pages/Home";
 import Stock from "./pages/Stock";

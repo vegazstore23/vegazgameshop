@@ -31,7 +31,6 @@ export default function SellAccount() {
 
   const handleAction = (e) => {
     e.preventDefault();
-    // Gunakan nombor dari API jika ada, fallback ke fungsi default
     if (contactData?.value) {
       const num = contactData.value.replace(/\D/g, "");
       window.open(
@@ -50,62 +49,43 @@ export default function SellAccount() {
     );
   }
 
+  // Tambahkan sedikit sentuhan transisi warna agar lebih "hidup"
   return (
     <button
       onClick={handleAction}
-      className="w-full flex items-center justify-between bg-gradient-to-r from-blue-600 to-cyan-500 rounded-2xl px-5 py-4 border border-white/20 shadow-lg hover:scale-[1.01] active:scale-[0.98] transition-all group"
+      aria-label={`Jual akaun via WhatsApp ke ${contactData?.label || "Admin"}`}
+      className="w-full flex items-center justify-between bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 rounded-2xl px-5 py-4 border border-white/20 shadow-lg hover:shadow-cyan-500/20 active:scale-[0.97] transition-all group overflow-hidden"
     >
-      {/* Platform icons */}
-      <div className="flex gap-3">
-        <div className="w-10 h-10 bg-gradient-to-tr from-purple-600 to-pink-500 rounded-full flex items-center justify-center p-2.5 shadow-md group-hover:rotate-12 transition-transform">
-          <img
-            src={instagramIcon}
-            alt="Instagram"
-            className="w-full h-full"
-            loading="lazy"
-          />
+      <div className="flex gap-2.5 relative">
+        {/* Jika hanya WA, cukup satu ikon. Jika tetap 3, perkecil sedikit agar tidak sesak */}
+        <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center p-2.5 shadow-md group-hover:scale-110 transition-transform">
+          <img src={whatsappIcon} alt="WhatsApp" className="w-full h-full" />
         </div>
-        <div className="w-10 h-10 bg-sky-500 rounded-full flex items-center justify-center p-2.5 shadow-md group-hover:-rotate-12 transition-transform">
-          <img
-            src={telegramIcon}
-            alt="Telegram"
-            className="w-full h-full"
-            loading="lazy"
-          />
-        </div>
-        <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center p-2.5 shadow-md group-hover:rotate-12 transition-transform">
-          <img
-            src={whatsappIcon}
-            alt="WhatsApp"
-            className="w-full h-full"
-            loading="lazy"
-          />
-        </div>
+        {/* Indikator Online (Opsional - Penambah Trust) */}
+        <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 border-2 border-blue-600 rounded-full animate-pulse"></span>
       </div>
 
-      {/* Label — paparkan nama admin dari API jika ada */}
-      <div className="text-center font-orbitron tracking-tight text-sm md:text-base text-white">
-        JUAL ACCOUNT?{" "}
-        <span className="text-yellow-300 font-black italic">
+      <div className="flex-1 px-4 text-center">
+        <p className="font-orbitron tracking-tight text-xs md:text-sm text-white/90">
+          JUAL ACCOUNT?
+        </p>
+        <p className="text-yellow-300 font-black italic text-sm md:text-base leading-tight">
           {contactData?.label
             ? `CHAT ${contactData.label.toUpperCase()}`
             : "CHAT ADMIN SEKARANG"}
-        </span>
-        {/* Papar nombor WhatsApp dari API */}
+        </p>
         {contactData?.value && (
-          <span className="block text-[10px] font-normal text-white/60 mt-0.5 tracking-normal not-italic font-sans">
+          <span className="block text-[10px] font-medium text-cyan-100/70 mt-0.5 font-sans">
             {contactData.value}
           </span>
         )}
       </div>
 
-      {/* Verified icon */}
-      <div className="w-6 h-6 flex items-center justify-center">
+      <div className="w-8 h-8 flex items-center justify-center bg-white/10 rounded-lg backdrop-blur-sm">
         <img
           src={verifiedIcon}
           alt="Verified"
-          className="w-full h-full brightness-0 invert opacity-80"
-          loading="lazy"
+          className="w-5 h-5 brightness-0 invert opacity-90 group-hover:rotate-[360deg] transition-transform duration-700"
         />
       </div>
     </button>
