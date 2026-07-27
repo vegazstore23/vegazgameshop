@@ -23,8 +23,18 @@ function PlatformIcon({ type, className }) {
       return <FaFacebookSquare className={className} />;
     default:
       return (
-        <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+        <svg
+          className={className}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+          />
         </svg>
       );
   }
@@ -54,15 +64,21 @@ function buildHref(type, value, msg = "") {
 const QUICK_LINKS = [
   { to: "/", label: "Home" },
   { to: "/stock", label: "Stock MLBB" },
+  { to: "/topup", label: "Top Up" },
+  { to: "/joki-mlbb", label: "Joki MLBB" },
   { to: "/check-region", label: "ID MLBB Checker" },
+];
+
+const SUPPORT_LINKS = [
+  { to: "/about", label: "About & FAQ" },
   { to: "/calculator-mlbb", label: "Calculator MLBB" },
-  { to: "/about", label: "About / FAQ" },
 ];
 
 export default function Footer() {
   const [shop, setShop] = useState({
     name: "VEGAZGAMESHOP",
-    description: "Vegaz GameShop ialah pembekal top-up permainan dan baucar yang 100% sah dengan menawarkan harga terendah di seluruh Malaysia.",
+    description:
+      "Vegaz GameShop ialah pembekal top-up permainan dan baucar yang 100% sah dengan menawarkan harga terendah di seluruh Malaysia.",
   });
   const [socials, setSocials] = useState([]);
   const [csContacts, setCsContacts] = useState([]);
@@ -72,7 +88,9 @@ export default function Footer() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch("https://apivgz.vegazgameshop.com/api/public/app-config");
+        const res = await fetch(
+          "https://apivgz.vegazgameshop.com/api/public/app-config",
+        );
         const json = await res.json();
         if (json?.success) {
           const shopData = json.data.shop ?? {};
@@ -101,23 +119,35 @@ export default function Footer() {
       <div className="bg-transparent py-6 pt-16 -translate-y-6 relative z-[9] w-full rounded-t-[40px] md:rounded-t-[60px] overflow-hidden"></div>
 
       <div className="max-w-7xl mx-auto px-6 pt-10 pb-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
-          
-          {/* Brand */}
-          <div className="flex flex-col gap-4">
-            <Link to="/" className="inline-block w-fit transition-transform hover:scale-105 active:scale-95">
-              <img src={Vegaz} className="h-10 object-contain" alt="VegazGameShop" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10">
+          {/* 1. Brand */}
+          <div className="flex flex-col gap-4 lg:col-span-1">
+            <Link
+              to="/"
+              className="inline-block w-fit transition-transform hover:scale-105 active:scale-95"
+            >
+              <img
+                src={Vegaz}
+                className="h-10 object-contain"
+                alt="VegazGameShop"
+              />
             </Link>
-            <p className="text-[13px] text-gray-400 leading-relaxed italic">{shop.description}</p>
+            <p className="text-[13px] text-gray-400 leading-relaxed italic">
+              {shop.description}
+            </p>
           </div>
 
-          {/* Navigasi */}
           <div className="flex flex-col gap-4">
-            <h4 className="text-[11px] font-bold text-blue-400 uppercase tracking-[0.18em]">Navigasi</h4>
+            <h4 className="text-[11px] font-bold text-blue-400 uppercase tracking-[0.18em]">
+              Navigasi
+            </h4>
             <ul className="flex flex-col gap-2.5">
               {QUICK_LINKS.map(({ to, label }) => (
                 <li key={label}>
-                  <Link to={to} className="text-[13px] text-gray-400 hover:text-white hover:translate-x-1 transition-all inline-block">
+                  <Link
+                    to={to}
+                    className="text-[13px] text-gray-400 hover:text-white hover:translate-x-1 transition-all inline-block"
+                  >
                     {label}
                   </Link>
                 </li>
@@ -125,37 +155,76 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* CS */}
           <div className="flex flex-col gap-4">
-            <h4 className="text-[11px] font-bold text-blue-400 uppercase tracking-[0.18em]">Customer Service</h4>
+            <h4 className="text-[11px] font-bold text-blue-400 uppercase tracking-[0.18em]">
+              Customer Service
+            </h4>
             <ul className="flex flex-col gap-3">
               {csContacts.map((c) => (
                 <li key={c.id}>
-                  <a href={buildHref(c.type, c.value)} target="_blank" rel="noreferrer" className="flex items-center gap-3 group transition-all">
+                  <a
+                    href={buildHref(c.type, c.value)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-3 group transition-all"
+                  >
                     <span className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-blue-600 transition-all">
-                      <PlatformIcon type={c.type} className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                      <PlatformIcon
+                        type={c.type}
+                        className="w-5 h-5 group-hover:scale-110 transition-transform"
+                      />
                     </span>
-                    <span className="text-[13px] text-gray-400 group-hover:text-white transition-all">{c.label || c.value}</span>
+                    <span className="text-[13px] text-gray-400 group-hover:text-white transition-all">
+                      {c.label || c.value}
+                    </span>
                   </a>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Social Media */}
+          <div className="flex flex-col gap-4">
+            <h4 className="text-[11px] font-bold text-blue-400 uppercase tracking-[0.18em]">
+              Dukungan
+            </h4>
+            <ul className="flex flex-col gap-2.5">
+              {SUPPORT_LINKS.map(({ to, label }) => (
+                <li key={label}>
+                  <Link
+                    to={to}
+                    className="text-[13px] text-gray-400 hover:text-white hover:translate-x-1 transition-all inline-block"
+                  >
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-4">
-              <h4 className="text-[11px] font-bold text-blue-400 uppercase tracking-[0.18em]">Social Media</h4>
+              <h4 className="text-[11px] font-bold text-blue-400 uppercase tracking-[0.18em]">
+                Social Media
+              </h4>
               <ul className="flex flex-col gap-3">
                 {socials.map((s) => (
                   <li key={s.id}>
-                    <a href={buildHref(s.type, s.value)} target="_blank" rel="noreferrer" className="flex items-center gap-3 group active:opacity-70 transition-all">
+                    <a
+                      href={buildHref(s.type, s.value)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center gap-3 group active:opacity-70 transition-all"
+                    >
                       <span className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-blue-600 transition-all duration-300">
                         <PlatformIcon type={s.type} className="w-5 h-5" />
                       </span>
                       <div className="flex flex-col overflow-hidden">
-                        <span className="text-[9px] text-blue-400 font-bold uppercase tracking-widest leading-none mb-1 opacity-0 group-hover:opacity-100 transition-all">{s.type}</span>
-                        <span className="text-[13px] text-gray-400 group-hover:text-white transition-colors truncate">{s.label || s.value}</span>
+                        <span className="text-[9px] text-blue-400 font-bold uppercase tracking-widest leading-none mb-1 opacity-0 group-hover:opacity-100 transition-all">
+                          {s.type}
+                        </span>
+                        <span className="text-[13px] text-gray-400 group-hover:text-white transition-colors truncate">
+                          {s.label || s.value}
+                        </span>
                       </div>
                     </a>
                   </li>
@@ -163,18 +232,29 @@ export default function Footer() {
               </ul>
             </div>
 
-            {/* Jual Akun */}
             {!loading && jualContact && (
               <a
-                href={buildHref(jualContact.type, jualContact.value, "Halo Vegaz, saya ingin jual account game")}
-                target="_blank" rel="noreferrer"
+                href={buildHref(
+                  jualContact.type,
+                  jualContact.value,
+                  "Halo Vegaz, saya ingin jual account game",
+                )}
+                target="_blank"
+                rel="noreferrer"
                 className="flex items-center gap-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 rounded-xl px-4 py-3 group relative overflow-hidden active:scale-95 transition-all"
               >
                 <div className="absolute inset-0 bg-white opacity-0 group-hover:animate-pulse pointer-events-none" />
-                <PlatformIcon type={jualContact.type} className="w-5 h-5 relative z-10" />
+                <PlatformIcon
+                  type={jualContact.type}
+                  className="w-5 h-5 relative z-10"
+                />
                 <div className="flex flex-col leading-tight relative z-10">
-                  <span className="text-[12px] font-bold text-white uppercase">Jual Akun</span>
-                  <span className="text-[10px] text-blue-100 opacity-80">Proses Cepat & Aman</span>
+                  <span className="text-[12px] font-bold text-white uppercase">
+                    Jual Akun
+                  </span>
+                  <span className="text-[10px] text-blue-100 opacity-80">
+                    Proses Cepat & Aman
+                  </span>
                 </div>
               </a>
             )}

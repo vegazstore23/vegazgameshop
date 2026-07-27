@@ -22,32 +22,26 @@ export default function StockProfileBanner() {
 
   if (!profileData) {
     return (
-      /* Update: Mengubah skeleton aspect ratio menjadi 3110/1159 */
       <div className="w-full aspect-[3110/1159] bg-gray-800 animate-pulse rounded-2xl mb-12"></div>
     );
   }
 
   return (
     <div className="w-full mb-0 select-none group">
-      {/* 1. Bagian Cover Banner */}
       <div className="relative overflow-hidden z-0">
-        {/* Update: Mengubah aspect ratio utama menjadi 3110/1159 */}
         <div className="aspect-[3110/1159] w-full">
           <img
             src={profileData.image}
             alt="Game Cover"
             className="w-full h-full object-cover"
           />
-          {/* Gradient Biru Gelap */}
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent"></div>
         </div>
       </div>
 
-      {/* 2. Bagian Info Profil */}
       <div className="bg-[#001d57] pb-8">
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <div className="relative -mt-12 md:-mt-16 lg:-mt-20 z-10 flex items-end gap-4 md:gap-6">
-            {/* FOTO PROFIL GAME */}
             <div className="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 p-1.5 md:p-2 bg-[#1a1c20] rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.8)] border-4 border-[#1a1c20]">
               <div className="w-full h-full rounded-2xl overflow-hidden border border-white/10 relative">
                 <img

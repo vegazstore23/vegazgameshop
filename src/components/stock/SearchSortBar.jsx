@@ -42,7 +42,6 @@ export default function SearchSortBar({
     };
   }, []);
 
-  // BUG FIX 2: Tutup dropdown bila klik di luar kawasan dropdown
   useEffect(() => {
     if (!dropdownOpen) return;
 
@@ -52,27 +51,18 @@ export default function SearchSortBar({
       }
     };
 
-    // Guna mousedown supaya tutup sebelum blur/focus events lain
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [dropdownOpen]);
 
-  // BUG FIX 3 (bonus): Clear search — kosongkan input dan trigger API semula
   const handleClearSearch = () => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     setSearchValue("");
     setCurrentSearch("");
   };
 
-  /*
-    Reset dilakukan dari Stock.jsx dengan mengubah prop `key` (searchSortResetKey).
-    Bila key berubah, React unmount + remount komponen ini →
-    searchValue & dropdownOpen reset ke nilai awal secara automatik.
-  */
-
   return (
     <div className="flex flex-col md:flex-row gap-3 relative z-50">
-      {/* Search input dengan butang clear */}
       <div className="relative flex-1">
         <input
           value={searchValue}

@@ -1,9 +1,6 @@
 import { apiGet } from "../services/api";
 
-/**
- * Mengambil data kontak dari backend dan mencari value berdasarkan role
- * @param {string} targetRole - 'order', 'jual', 'cs', 'topup', atau 'midman'
- */
+
 export const getContactByRole = async (targetRole) => {
   try {
     const res = await apiGet("/api/contact");
@@ -21,9 +18,6 @@ export const getContactByRole = async (targetRole) => {
   }
 };
 
-/**
- * Handler utama untuk redirect chat
- */
 export const handleWhatsAppChat = async (targetRole, type, data = {}) => {
   const contact = await getContactByRole(targetRole);
 
@@ -32,12 +26,11 @@ export const handleWhatsAppChat = async (targetRole, type, data = {}) => {
     return;
   }
 
-  const targetValue = contact.value; // Bisa nomor WA (6011...) atau username (@vegaz69)
+  const targetValue = contact.value;
   const isWhatsapp = contact.type === "whatsapp";
 
   let message = "";
 
-  // Template Pesan
   switch (type) {
     case "beli":
       message = `Halo Admin VegazGameShop,\n\nSaya ingin membeli akun:\n*Produk:* ${data.title || data.name}\n*Harga:* Rp ${data.price?.toLocaleString("id-ID")}\n\nApakah stok ini masih tersedia?`;
@@ -54,7 +47,6 @@ export const handleWhatsAppChat = async (targetRole, type, data = {}) => {
   if (isWhatsapp) {
     window.open(`https://wa.me/${targetValue}?text=${encodedMsg}`, "_blank");
   } else {
-    // Jika Telegram (seperti role 'cs' di gambar)
     const username = targetValue.replace("@", "");
     window.open(`https://t.me/${username}`, "_blank");
   }

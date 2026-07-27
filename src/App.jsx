@@ -1,15 +1,16 @@
-import { useState, useEffect } from "react"; // Tambahkan ini agar tidak error
+import { useState, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import { AnimatePresence } from "framer-motion"; // Untuk efek transisi loading
-
+import { AnimatePresence } from "framer-motion";
 import MainLayout from "./layouts/MainLayout";
 import LoadingScreen from "./components/ui/LoadingScreen";
-import ScrollToTop from "./components/ScrollTop"; // Pastikan 
+import ScrollToTop from "./components/ScrollTop";
 
 import Home from "./pages/Home";
+import Topup from "./pages/Topup";
 import Stock from "./pages/Stock";
 import Detail from "./pages/Detail";
 import Region from "./pages/Region";
+import Joki from "./pages/Joki";
 import Calculator from "./pages/Calculator";
 import About from "./pages/About";
 
@@ -18,7 +19,6 @@ function App() {
   const location = useLocation();
 
   useEffect(() => {
-    // Simulasi loading aset/data selama 2 detik
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 2000);
@@ -28,7 +28,6 @@ function App() {
 
   return (
     <>
-      {/* ScrollToTop memastikan layar kembali ke atas setiap pindah halaman */}
       <ScrollToTop />
 
       <AnimatePresence mode="wait">
@@ -38,9 +37,11 @@ function App() {
           <MainLayout key="main">
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<Home />} />
+              <Route path="/topup" element={<Topup />} />
               <Route path="/stock" element={<Stock />} />
               <Route path="/detail/:id" element={<Detail />} />
               <Route path="/check-region" element={<Region />} />
+              <Route path="/joki-MLBB" element={<Joki />} />
               <Route path="/calculator-mlbb" element={<Calculator />} />
               <Route path="/about" element={<About />} />
               <Route

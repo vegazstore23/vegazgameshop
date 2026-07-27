@@ -36,6 +36,21 @@ export default function Banner() {
     };
   }, []);
 
+  const handleBannerClick = (swiper) => {
+    const clickedIndex = swiper.clickedIndex;
+    if (clickedIndex === undefined) return;
+
+    const clickedSlide = swiper.slides[clickedIndex];
+    if (!clickedSlide) return;
+
+    const targetUrl = clickedSlide.getAttribute("data-link");
+
+    if (targetUrl && targetUrl !== "#" && targetUrl.trim() !== "") {
+      console.log("Navigating to:", targetUrl);
+      window.open(targetUrl, "_blank", "noopener,noreferrer");
+    }
+  };
+
   if (!banners.length) {
     return (
       <div style={{ width: "100%", padding: "24px 0" }}>
@@ -83,7 +98,6 @@ export default function Banner() {
           box-shadow: 0 8px 32px rgba(0,0,0,0.5);
           transition: box-shadow 0.4s ease, opacity 0.4s ease !important;
           opacity: 0.6;
-          /* Memastikan slide bisa menerima event klik */
           pointer-events: auto !important; 
         }
 
@@ -91,16 +105,7 @@ export default function Banner() {
           opacity: 1;
           box-shadow: 0 16px 56px rgba(0,0,0,0.7),
                       0 0 0 1px rgba(255,255,255,0.1);
-          z-index: 10; /* Slide aktif harus paling atas */
-        }
-
-        .banner-link-wrapper {
-          display: block;
-          width: 100%;
-          height: 100%;
-          position: relative;
-          z-index: 50; /* Memaksa link berada di atas efek bayangan swiper */
-          cursor: pointer !important;
+          z-index: 10;
         }
 
         .banner-swiper .swiper-slide img {
@@ -108,7 +113,6 @@ export default function Banner() {
           height: 100%;
           object-fit: cover;
           display: block;
-          /* Hilangkan pointer-events none agar tidak menghalangi klik pada <a> */
           pointer-events: none; 
         }
 
@@ -126,7 +130,8 @@ export default function Banner() {
         grabCursor
         centeredSlides
         loop={canLoop}
-        touchStartPreventDefault={false} // Penting agar klik tetap terdeteksi di mobile
+        onClick={handleBannerClick}
+        touchStartPreventDefault={false}
         coverflowEffect={{
           rotate: 0,
           stretch: 0,
@@ -154,40 +159,15 @@ export default function Banner() {
         }}
       >
         {banners.map((b, i) => {
-          // DEBUG: Cek di console apakah link benar-benar ada
-          // console.log("Link Banner:", b.url || b.link);
-
-          const targetUrl = b.url || b.link;
+          const targetUrl = b.url || b.link || "";
 
           return (
-            <SwiperSlide key={b.id ?? i}>
-              {targetUrl ? (
-                <a
-                  href={targetUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="banner-link-wrapper"
-                  onClick={(e) => {
-                    // Jika URL tidak valid atau '#' jangan jalankan
-                    if (!targetUrl || targetUrl === "#") {
-                      e.preventDefault();
-                    }
-                    console.log("Banner clicked:", targetUrl);
-                  }}
-                >
-                  <img
-                    src={b.image}
-                    alt={b.title || `Banner ${i + 1}`}
-                    loading="lazy"
-                  />
-                </a>
-              ) : (
-                <img
-                  src={b.image}
-                  alt={b.title || `Banner ${i + 1}`}
-                  loading="lazy"
-                />
-              )}
+            <SwiperSlide key={b.id ?? i} data-link={targetUrl}>
+              <img
+                src={b.image}
+                alt={b.title || `Banner ${i + 1}`}
+                loading="lazy"
+              />
             </SwiperSlide>
           );
         })}

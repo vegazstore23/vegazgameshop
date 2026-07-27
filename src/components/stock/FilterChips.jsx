@@ -35,7 +35,6 @@ export default function FilterChips({
         </span>
       )}
 
-      {/* Chip sort muncul hanya bila sort bukan default "newest" */}
       {currentSort !== "newest" && (
         <span className="bg-white/10 border border-white/20 px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase flex items-center gap-2">
           Susun: {SORT_LABELS[currentSort]}

@@ -6,9 +6,9 @@ import { DiRuby } from "react-icons/di";
 import { RiArchiveStackFill } from "react-icons/ri";
 import { RiMapPinFill } from "react-icons/ri";
 import { RiCustomerServiceFill } from "react-icons/ri";
-import { BiSolidCalculator } from "react-icons/bi";
 import { RiSpam2Fill } from "react-icons/ri";
 import { RiSendPlaneFill } from "react-icons/ri";
+import { GiSwordman } from "react-icons/gi";
 import Vegaz from "../assets/logo/vegazgameshop.png";
 
 // --- Icons ---
@@ -16,8 +16,8 @@ const IconHome = () => <RiHome3Fill className="w-6 h-6" />;
 const IconStock = () => <RiArchiveStackFill className="w-6 h-6" />;
 const IconRegion = () => <RiMapPinFill className="w-6 h-6" />;
 const IconTopup = () => <DiRuby className="w-6 h-6" />;
+const IconJoki = () => <GiSwordman className="w-6 h-6" />;
 const IconAbout = () => <RiSpam2Fill className="w-6 h-6" />;
-const IconCalculator = () => <BiSolidCalculator className="w-6 h-6" />;
 const IconSell = () => <RiSendPlaneFill className="w-6 h-6" />;
 const IconSupport = () => <RiCustomerServiceFill className="w-6 h-6" />;
 
@@ -25,14 +25,30 @@ const PAGE_MAP = {
   "/": "home",
   "/stock": "stock",
   "/topup": "topup",
+  "/joki-mlbb": "joki",
   "/check-region": "region",
-  "/calculator-mlbb": "calculator",
   "/about": "about",
 };
 
+const DESKTOP_NAV = [
+  { to: "/", icon: <IconHome />, label: "Home" },
+  { to: "/stock", icon: <IconStock />, label: "Stock" },
+  { to: "/topup", icon: <IconTopup />, label: "Top Up" },
+  { to: "/joki-mlbb", icon: <IconJoki />, label: "Joki" },
+  { to: "/check-region", icon: <IconRegion />, label: "Region" },
+  { to: "/about", icon: <IconAbout />, label: "About" },
+];
+
+const BOTTOM_NAV = [
+  { to: "/", icon: <IconHome />, label: "Home" },
+  { to: "/stock", icon: <IconStock />, label: "Stock" },
+  { to: "/topup", icon: <IconTopup />, label: "Top Up" },
+  { to: "/joki-mlbb", icon: <IconJoki />, label: "Joki" },
+  { to: "/check-region", icon: <IconRegion />, label: "Region" },
+];
+
 export default function Header({ hideBottomNav = false }) {
   const { pathname } = useLocation();
-  const activePage = PAGE_MAP[pathname] ?? "";
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [orderHref, setOrderHref] = useState("#");
@@ -84,13 +100,15 @@ export default function Header({ hideBottomNav = false }) {
     setMenuOpen(false);
   }, [pathname]);
 
-  const getNavClass = (path, isDesktop = false) => {
+  const getDesktopNavClass = (path) => {
     const isActive = pathname === path;
-    if (isDesktop) {
-      return `flex items-center gap-2 font-semibold transition ${
-        isActive ? "text-white" : "text-gray-400 hover:text-blue-400"
-      }`;
-    }
+    return `flex items-center gap-2 font-semibold transition ${
+      isActive ? "text-white" : "text-gray-400 hover:text-blue-400"
+    }`;
+  };
+
+  const getBottomNavClass = (path) => {
+    const isActive = pathname === path;
     return `flex flex-col items-center justify-center text-xs font-medium transition ${
       isActive ? "text-white" : "text-gray-400 hover:text-blue-400"
     }`;
@@ -98,7 +116,6 @@ export default function Header({ hideBottomNav = false }) {
 
   return (
     <>
-      {/* ── Top header bar ───────────────────────── */}
       <header className="fixed top-0 left-0 w-full z-[9999] bg-[#172454] border-b border-white/10 shadow-lg">
         <div className="max-w-screen-xl mx-auto px-4 md:px-6 flex items-center justify-between h-16 md:h-20">
           <Link to="/" className="flex items-center">
@@ -109,50 +126,15 @@ export default function Header({ hideBottomNav = false }) {
             />
           </Link>
 
-          {/* Desktop nav */}
           <ul className="hidden lg:flex items-center gap-6 lg:gap-8">
-            <li>
-              <Link to="/" className={getNavClass("/", true)}>
-                <IconHome />
-                <span>Home</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/topup" className={getNavClass("/topup", true)}>
-                <IconTopup />
-                <span>Top Up</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/stock" className={getNavClass("/stock", true)}>
-                <IconStock />
-                <span>Stock</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/check-region"
-                className={getNavClass("/check-region", true)}
-              >
-                <IconRegion />
-                <span>Region</span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/calculator-mlbb"
-                className={getNavClass("/calculator-mlbb", true)}
-              >
-                <IconCalculator />
-                <span>Calculator</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/about" className={getNavClass("/about", true)}>
-                <IconAbout />
-                <span>About</span>
-              </Link>
-            </li>
+            {DESKTOP_NAV.map(({ to, icon, label }) => (
+              <li key={to}>
+                <Link to={to} className={getDesktopNavClass(to)}>
+                  {icon}
+                  <span>{label}</span>
+                </Link>
+              </li>
+            ))}
           </ul>
 
           <button
@@ -168,7 +150,6 @@ export default function Header({ hideBottomNav = false }) {
         </div>
       </header>
 
-      {/* ── Mobile dropdown (Original Theme - Tidy Version) ──────────────────────── */}
       <div
         id="mobileMenu"
         className={`fixed top-16 left-0 w-full bg-[#1c4ed8]/55 backdrop-blur-lg border-b border-white/10 flex flex-col gap-2 p-6 z-40 lg:hidden transition-all duration-300 ease-out ${
@@ -177,6 +158,21 @@ export default function Header({ hideBottomNav = false }) {
             : "opacity-0 -translate-y-4 pointer-events-none"
         }`}
       >
+
+        <Link
+          to="/about"
+          className={`flex items-center gap-3 p-3 rounded-xl font-semibold transition ${
+            pathname === "/about"
+              ? "bg-white/20 text-white"
+              : "text-gray-200 hover:text-white hover:bg-white/10"
+          }`}
+        >
+          <IconAbout />
+          <span>About & FAQ</span>
+        </Link>
+
+        <div className="h-px bg-white/10 my-1" />
+
         <a
           href={orderHref}
           target="_blank"
@@ -198,47 +194,16 @@ export default function Header({ hideBottomNav = false }) {
           <IconSupport />
           <span>Customer Service</span>
         </a>
-
-        {/* FIXED: Link About sekarang mengarah ke /about dan menggunakan <Link> */}
-        <Link
-          to="/about"
-          className={`flex items-center gap-3 p-3 rounded-xl font-semibold transition ${
-            pathname === "/about"
-              ? "bg-white/20 text-white"
-              : "text-gray-200 hover:text-white hover:bg-white/10"
-          }`}
-        >
-          <IconAbout />
-          <span>About & FAQ</span>
-        </Link>
       </div>
 
-      {/* ── Mobile bottom nav ─────────────────────── */}
       {!hideBottomNav && (
         <nav className="fixed bottom-0 left-0 w-full bg-[#172454] border-t border-white/10 shadow-[0_-4px_20px_rgba(0,0,0,0.4)] flex justify-around items-center h-16 lg:hidden z-50">
-          <Link to="/" className={getNavClass("/")}>
-            <IconHome />
-            <span>Home</span>
-          </Link>
-          <Link to="/topup" className={getNavClass("/topup")}>
-            <IconTopup />
-            <span>Top Up</span>
-          </Link>
-          <Link to="/stock" className={getNavClass("/stock")}>
-            <IconStock />
-            <span>Stock</span>
-          </Link>
-          <Link to="/check-region" className={getNavClass("/check-region")}>
-            <IconRegion />
-            <span>Region</span>
-          </Link>
-          <Link
-            to="/calculator-mlbb"
-            className={getNavClass("/calculator-mlbb")}
-          >
-            <IconCalculator />
-            <span>Calc</span>
-          </Link>
+          {BOTTOM_NAV.map(({ to, icon, label }) => (
+            <Link key={to} to={to} className={getBottomNavClass(to)}>
+              {icon}
+              <span>{label}</span>
+            </Link>
+          ))}
         </nav>
       )}
     </>

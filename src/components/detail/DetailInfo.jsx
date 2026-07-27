@@ -30,7 +30,13 @@ export default function DetailInfo({ account, isDescOpen, setIsDescOpen }) {
 
   const handleOrder = () => {
     const cleanWA = waAdmin.replace(/\D/g, "");
-    const message = `Halo Admin Vegaz, saya berminat dengan akaun ini:\n\nTajuk: ${account.title}\nKod: ${account.code}\nHarga: RM ${mainPrice.toFixed(2)}\n\nAdakah masih tersedia?`;
+    const message = `Halo Admin Vegaz, saya berminat dengan account ini:
+                    \n\n🚀 
+                    Unit: ${account.title}\n🆔 
+                    code: ${account.code}\n💰 
+                    Harga: RM ${mainPrice.toFixed(2)}
+                    \n\n
+                    Adakah masih tersedia?`;
     window.open(
       `https://wa.me/${cleanWA}?text=${encodeURIComponent(message)}`,
       "_blank",

@@ -93,7 +93,7 @@ export default function AccountCard({ acc, type, waAdmin: propWaAdmin }) {
         {imagePath ? (
           <img
             src={getImageUrl(imagePath)}
-            alt={acc.title}
+            alt={acc.title || acc.code}
             className={`w-full h-full object-cover transition duration-500 ${
               isAvailable ? "group-hover:scale-105" : "opacity-40 grayscale"
             }`}
@@ -126,17 +126,11 @@ export default function AccountCard({ acc, type, waAdmin: propWaAdmin }) {
       </div>
 
       {/* Konten Text */}
-      <div className="p-4 flex flex-col gap-1 flex-1">
-        <h3
-          className={`text-sm font-bold line-clamp-2 leading-tight ${!isAvailable ? "opacity-50" : ""}`}
-        >
-          {acc.title || "Akun MLBB"}
-        </h3>
-
-        {/* KODE AKUN DI BAWAH JUDUL */}
-        <div className="mb-1">
-          <span className="text-[10px] font-bold text-yellow-400 uppercase tracking-wider">
-            Code: {acc.code}
+      <div className="p-4 flex flex-col gap-2 flex-1">
+        {/* KODE AKUN DI ATAS HARGA (Warna Putih) */}
+        <div className={`${!isAvailable ? "opacity-50" : ""}`}>
+          <span className="text-sm font-black text-white uppercase tracking-wider block">
+            CODE: {acc.code}
           </span>
         </div>
 
@@ -165,7 +159,7 @@ export default function AccountCard({ acc, type, waAdmin: propWaAdmin }) {
 
         {/* Button hanya jika tipe Home */}
         {type === "home" && isAvailable && (
-          <div className="pt-3">
+          <div className="pt-1">
             <button
               onClick={orderWA}
               className="w-full bg-green-500 hover:bg-green-600 py-2.5 rounded-xl text-xs font-black transition shadow-lg uppercase"

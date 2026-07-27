@@ -7,7 +7,6 @@ export default function Pagination({
 
   return (
     <div className="flex justify-center items-center gap-2 mt-12 pb-10">
-      {/* Butang Sebelumnya */}
       <button
         onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
         disabled={currentPage === 1}
@@ -16,7 +15,6 @@ export default function Pagination({
         Sebelum
       </button>
 
-      {/* Nombor Halaman */}
       <div className="flex gap-2">
         {Array.from({ length: totalPages }, (_, i) => {
           const pageNum = i + 1;
