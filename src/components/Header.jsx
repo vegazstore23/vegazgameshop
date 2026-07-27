@@ -24,8 +24,8 @@ const IconSupport = () => <RiCustomerServiceFill className="w-6 h-6" />;
 const PAGE_MAP = {
   "/": "home",
   "/stock": "stock",
-  "/topup": "topup",
-  "/joki-mlbb": "joki",
+  "/tp": "topup",
+  "/jk": "joki",
   "/check-region": "region",
   "/about": "about",
 };
@@ -33,8 +33,8 @@ const PAGE_MAP = {
 const DESKTOP_NAV = [
   { to: "/", icon: <IconHome />, label: "Home" },
   { to: "/stock", icon: <IconStock />, label: "Stock" },
-  { to: "/topup", icon: <IconTopup />, label: "Top Up" },
-  { to: "/joki-mlbb", icon: <IconJoki />, label: "Joki" },
+  { to: "/tp", icon: <IconTopup />, label: "Top Up" },
+  { to: "/jk", icon: <IconJoki />, label: "Joki" },
   { to: "/check-region", icon: <IconRegion />, label: "Region" },
   { to: "/about", icon: <IconAbout />, label: "About" },
 ];
@@ -42,8 +42,8 @@ const DESKTOP_NAV = [
 const BOTTOM_NAV = [
   { to: "/", icon: <IconHome />, label: "Home" },
   { to: "/stock", icon: <IconStock />, label: "Stock" },
-  { to: "/topup", icon: <IconTopup />, label: "Top Up" },
-  { to: "/joki-mlbb", icon: <IconJoki />, label: "Joki" },
+  { to: "/tp", icon: <IconTopup />, label: "Top Up" },
+  { to: "/jk", icon: <IconJoki />, label: "Joki" },
   { to: "/check-region", icon: <IconRegion />, label: "Region" },
 ];
 
