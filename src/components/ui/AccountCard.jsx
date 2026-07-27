@@ -62,7 +62,13 @@ export default function AccountCard({ acc, type, waAdmin: propWaAdmin }) {
     e.preventDefault();
     e.stopPropagation();
     const cleanWA = waAdmin.replace(/\D/g, "");
-    const message = `Halo Admin Vegaz,\n\nSaya berminat dengan akun:\nTitle: ${acc.title}\nCode: ${acc.code}\nHarga: RM ${sellingPriceRM}\n\nApakah masih tersedia?`;
+    const message = `Halo Admin Vegaz, saya berminat nak beli  account ini:
+                    \n\n🚀 
+                    Unit: ${account.title}\n🆔 
+                    code: ${account.code}\n💰 
+                    Harga: RM ${mainPrice.toFixed(2)}
+                    \n\n
+                    Adakah masih tersedia?`;
     window.open(
       `https://wa.me/${cleanWA}?text=${encodeURIComponent(message)}`,
       "_blank",
