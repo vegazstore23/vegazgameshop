@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 import { apiGet } from "../../services/api";
-import { handleWhatsAppChat } from "../../utils/FormChat";
-
-import whatsappIcon from "../../assets/icons/whatsapp.svg";
+import { FiSend } from "react-icons/fi";
 import telegramIcon from "../../assets/icons/telegram.svg";
-import instagramIcon from "../../assets/icons/instagram.svg";
-import verifiedIcon from "../../assets/icons/verified.svg";
 
 export default function SellAccount() {
   const [contactData, setContactData] = useState(null);
@@ -19,7 +15,6 @@ export default function SellAccount() {
     try {
       const res = await apiGet("/api/contact");
       const data = Array.isArray(res) ? res : res?.data || [];
-
       const contact = data.find((c) => c.isActive && c.roles?.includes("jual"));
       if (contact) setContactData(contact);
     } catch (err) {
@@ -31,62 +26,69 @@ export default function SellAccount() {
 
   const handleAction = (e) => {
     e.preventDefault();
+
+    // Auto text preset untuk Telegram
+    const defaultText =
+      "Halo Admin, saya mau jual akun MLBB nih. Boleh minta info ketentuannya?";
+    const encodedText = encodeURIComponent(defaultText);
+
     if (contactData?.value) {
-      const num = contactData.value.replace(/\D/g, "");
-      window.open(
-        `https://wa.me/${num}?text=Saya%20nak%20jual%20akaun`,
-        "_blank",
-      );
+      const username = contactData.value.replace("@", "").trim();
+      window.open(`https://t.me/${username}?text=${encodedText}`, "_blank");
     } else {
-      handleWhatsAppChat("jual", "jual");
+      window.open(`https://t.me/vegazMLBB?text=${encodedText}`, "_blank");
     }
   };
 
-  // Skeleton sementara data load
   if (loading) {
     return (
-      <div className="w-full h-[72px] rounded-2xl bg-white/5 animate-pulse border border-white/10" />
+      <div className="w-full h-[76px] rounded-2xl bg-slate-800 animate-pulse" />
     );
   }
 
-  // Tambahkan sedikit sentuhan transisi warna agar lebih "hidup"
   return (
     <button
       onClick={handleAction}
-      aria-label={`Jual akaun via WhatsApp ke ${contactData?.label || "Admin"}`}
-      className="w-full flex items-center justify-between bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 rounded-2xl px-5 py-4 border border-white/20 shadow-lg hover:shadow-cyan-500/20 active:scale-[0.97] transition-all group overflow-hidden"
+      className={`
+        group w-full px-5 py-4 rounded-2xl 
+        flex items-center justify-between gap-4 
+        bg-slate-800 text-slate-300
+        transition-all duration-300 ease-in-out
+
+        /* Dark Neumorphism Outer Shadow (Timbul) */
+        shadow-[-5px_-5px_10px_rgba(255,_255,_255,_0.05),_5px_5px_10px_rgba(0,_0,_0,_0.4)]
+        
+        /* Dark Neumorphism Inner Shadow on Hover (Melesak/Ditekan) */
+        hover:shadow-[-1px_-1px_5px_rgba(255,_255,_255,_0.02),_1px_1px_5px_rgba(0,_0,_0,_0.2),inset_-2px_-2px_5px_rgba(255,_255,_255,_0.05),inset_2px_2px_4px_rgba(0,_0,_0,_0.5)]
+        hover:text-sky-400
+        active:scale-[0.98]
+      `}
     >
-      <div className="flex gap-2.5 relative">
-        {/* Jika hanya WA, cukup satu ikon. Jika tetap 3, perkecil sedikit agar tidak sesak */}
-        <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center p-2.5 shadow-md group-hover:scale-110 transition-transform">
-          <img src={whatsappIcon} alt="WhatsApp" className="w-full h-full" />
+      <div className="flex items-center gap-4">
+        {/* Ikon Telegram dengan efek cekung/inset statis */}
+        <div className="w-11 h-11 flex items-center justify-center rounded-full bg-slate-800 shadow-[inset_-2px_-2px_5px_rgba(255,_255,_255,_0.05),inset_2px_2px_4px_rgba(0,_0,_0,_0.5)] group-hover:shadow-none transition-all duration-300">
+          <img
+            src={telegramIcon}
+            alt="Telegram"
+            className="w-5 h-5 brightness-0 invert opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all"
+          />
         </div>
-        {/* Indikator Online (Opsional - Penambah Trust) */}
-        <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 border-2 border-blue-600 rounded-full animate-pulse"></span>
+
+        <div className="text-left">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-sky-500/80 group-hover:text-sky-400 transition-colors">
+            Jual Account?
+          </p>
+          <p className="text-sm mt-0.5 font-medium tracking-wide">
+            {contactData?.label
+              ? `CHAT ${contactData.label.toUpperCase()}`
+              : "CHAT ADMIN TELEGRAM"}
+          </p>
+        </div>
       </div>
 
-      <div className="flex-1 px-4 text-center">
-        <p className="font-orbitron tracking-tight text-xs md:text-sm text-white/90">
-          JUAL ACCOUNT?
-        </p>
-        <p className="text-yellow-300 font-black italic text-sm md:text-base leading-tight">
-          {contactData?.label
-            ? `CHAT ${contactData.label.toUpperCase()}`
-            : "CHAT ADMIN SEKARANG"}
-        </p>
-        {contactData?.value && (
-          <span className="block text-[10px] font-medium text-cyan-100/70 mt-0.5 font-sans">
-            {contactData.value}
-          </span>
-        )}
-      </div>
-
-      <div className="w-8 h-8 flex items-center justify-center bg-white/10 rounded-lg backdrop-blur-sm">
-        <img
-          src={verifiedIcon}
-          alt="Verified"
-          className="w-5 h-5 brightness-0 invert opacity-90 group-hover:rotate-[360deg] transition-transform duration-700"
-        />
+      {/* Ikon dari template yang kamu berikan */}
+      <div className="w-8 h-8 flex items-center justify-center rounded-full opacity-60 group-hover:opacity-100 group-hover:translate-x-1 group-hover:bg-slate-700/50 transition-all duration-300">
+        <FiSend className="text-lg" />
       </div>
     </button>
   );

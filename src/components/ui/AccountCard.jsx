@@ -61,14 +61,21 @@ export default function AccountCard({ acc, type, waAdmin: propWaAdmin }) {
   const orderWA = (e) => {
     e.preventDefault();
     e.stopPropagation();
+
     const cleanWA = waAdmin.replace(/\D/g, "");
-    const message = `Halo Admin Vegaz, saya berminat nak beli  account ini:
-                    \n\n🚀 
-                    Unit: ${account.title}\n🆔 
-                    code: ${account.code}\n💰 
-                    Harga: RM ${mainPrice.toFixed(2)}
-                    \n\n
-                    Adakah masih tersedia?`;
+
+    // Menghasilkan link ke halaman detail akun
+    const detailUrl = `${window.location.origin}/detail/${acc.id}`;
+
+    const message = `Halo Admin Vegaz, saya berminat nak beli account ini:
+
+🚀 Unit: *${acc.title || acc.code}*
+🆔 Code: *${acc.code}*
+💰 Harga: *RM ${sellingPriceRM.toFixed(2)}*
+🔗 Link: ${detailUrl}
+
+Adakah masih tersedia?`;
+
     window.open(
       `https://wa.me/${cleanWA}?text=${encodeURIComponent(message)}`,
       "_blank",

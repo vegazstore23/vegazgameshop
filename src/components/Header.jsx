@@ -24,8 +24,8 @@ const IconSupport = () => <RiCustomerServiceFill className="w-6 h-6" />;
 const PAGE_MAP = {
   "/": "home",
   "/stock": "stock",
-  "/tp": "topup",
-  "/jk": "joki",
+  "/topup": "topup",
+  "/joki": "joki",
   "/check-region": "region",
   "/about": "about",
 };

@@ -118,43 +118,6 @@ function FlashSaleBanner() {
   );
 }
 
-// ── How It Works ─────────────────────────────────────────────────────────────
-function HowItWorksSection() {
-  const steps = [
-    { title: "Browse", desc: "Find your account", icon: <RiSearchLine /> },
-    {
-      title: "Consult",
-      desc: "Chat with admin",
-      icon: <RiCustomerService2Fill />,
-    },
-    { title: "Payment", desc: "Secure checkout", icon: <RiWallet3Line /> },
-    { title: "Instant", desc: "Access delivered", icon: <RiShieldCheckLine /> },
-  ];
-
-  return (
-    <div className="w-full py-10">
-      <h2 className="text-xl font-bold text-center mb-12 font-orbitron tracking-[0.2em] text-white uppercase opacity-80">
-        Purchase Workflow
-      </h2>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-        {steps.map((s, i) => (
-          <div key={i} className="group flex flex-col items-center text-center">
-            <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-blue-500 mb-5 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500">
-              {React.cloneElement(s.icon, { size: 28 })}
-            </div>
-            <h3 className="text-white font-bold text-xs uppercase tracking-widest mb-2">
-              {s.title}
-            </h3>
-            <p className="text-gray-500 text-[10px] leading-relaxed px-4">
-              {s.desc}
-            </p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 // ── Marquee Ticker ────────────────────────────────────────────────────────────
 function MarqueeTicker() {
   const items = [
@@ -241,10 +204,6 @@ export default function Home() {
                 </a>
               </div>
               <FeaturedAccounts />
-            </ScrollReveal>
-
-            <ScrollReveal>
-              <HowItWorksSection />
             </ScrollReveal>
             <ScrollReveal delay={0.1}>
               <Advantages />

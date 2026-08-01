@@ -6,7 +6,10 @@ export default function FeedbackSlider() {
   const [loading, setLoading] = useState(true);
   const trackRef = useRef(null);
 
+  // State untuk Animation & Interaksi
   const isDragging = useRef(false);
+  const isHovered = useRef(false);
+  const lastInteractionTime = useRef(0); // Untuk timer 3 detik
   const startX = useRef(0);
   const scrollStart = useRef(0);
   const velocity = useRef(0);
@@ -20,7 +23,7 @@ export default function FeedbackSlider() {
 
   async function fetchFeedback() {
     try {
-      const res = await apiGet("/api/feedback?limit=5");
+      const res = await apiGet("/api/feedback?limit=10");
       const data = Array.isArray(res)
         ? res
         : res?.data?.data || res?.data || [];
@@ -32,132 +35,146 @@ export default function FeedbackSlider() {
     }
   }
 
-  function applyMomentum() {
-    const el = trackRef.current;
-    if (!el) return;
-    velocity.current *= 0.93;
-    el.scrollLeft += velocity.current;
-    const half = el.scrollWidth / 2;
-    if (el.scrollLeft >= half) el.scrollLeft -= half;
-    if (el.scrollLeft <= 0 && velocity.current < 0) el.scrollLeft += half;
-    if (Math.abs(velocity.current) > 0.5) {
-      rafId.current = requestAnimationFrame(applyMomentum);
-    } else {
-      velocity.current = 0;
-    }
-  }
+  // Helper untuk Touch & Mouse
+  const getClientX = (e) => (e.touches ? e.touches[0].clientX : e.clientX);
 
-  function getClientX(e) {
-    return e.touches ? e.touches[0].clientX : e.clientX;
-  }
-
-  function onDragStart(e) {
-    cancelAnimationFrame(rafId.current);
+  // ── Drag Handlers ──
+  const onDragStart = (e) => {
     isDragging.current = true;
+    lastInteractionTime.current = Date.now(); // Reset timer saat mulai sentuh
     startX.current = getClientX(e);
     scrollStart.current = trackRef.current.scrollLeft;
     velocity.current = 0;
     lastX.current = startX.current;
     lastTime.current = Date.now();
-    trackRef.current.style.cursor = "grabbing";
-  }
 
-  function onDragMove(e) {
+    if (trackRef.current) trackRef.current.style.cursor = "grabbing";
+  };
+
+  const onDragMove = (e) => {
     if (!isDragging.current) return;
-    e.preventDefault();
+
     const x = getClientX(e);
     const now = Date.now();
     const dt = now - lastTime.current || 1;
+
+    // Hitung kecepatan (velocity) untuk efek momentum
     velocity.current = (lastX.current - x) / dt;
     lastX.current = x;
     lastTime.current = now;
-    const delta = startX.current - x;
-    const el = trackRef.current;
-    let next = scrollStart.current + delta;
-    const half = el.scrollWidth / 2;
-    if (next >= half) next -= half;
-    if (next < 0) next += half;
-    el.scrollLeft = next;
-  }
+    lastInteractionTime.current = now; // Update timer terus saat ditarik
 
-  function onDragEnd() {
+    const delta = startX.current - x;
+    trackRef.current.scrollLeft = scrollStart.current + delta;
+  };
+
+  const onDragEnd = () => {
     if (!isDragging.current) return;
     isDragging.current = false;
-    trackRef.current.style.cursor = "grab";
-    velocity.current *= 16;
-    rafId.current = requestAnimationFrame(applyMomentum);
-  }
+    lastInteractionTime.current = Date.now(); // Mulai hitung mundur 3 detik dari sini
 
+    // Beri dorongan momentum setelah dilepas
+    velocity.current *= 15;
+
+    if (trackRef.current) trackRef.current.style.cursor = "grab";
+  };
+
+  // ── Hover Handlers ──
+  const onMouseEnter = () => {
+    isHovered.current = true;
+  };
+
+  const onMouseLeave = () => {
+    isHovered.current = false;
+    if (!isDragging.current) {
+      lastInteractionTime.current = Date.now(); // Mulai timer 3 detik pas kursor keluar
+    }
+    onDragEnd();
+  };
+
+  // ── Core Animation Loop ──
   useEffect(() => {
     if (!feedbacks.length) return;
-    let autoRaf;
-    function autoScroll() {
-      if (isDragging.current) {
-        autoRaf = requestAnimationFrame(autoScroll);
-        return;
-      }
+
+    const loop = () => {
       const el = trackRef.current;
       if (!el) return;
-      el.scrollLeft += 0.6;
-      const half = el.scrollWidth / 2;
-      if (el.scrollLeft >= half) el.scrollLeft -= half;
-      autoRaf = requestAnimationFrame(autoScroll);
-    }
-    autoRaf = requestAnimationFrame(autoScroll);
-    return () => cancelAnimationFrame(autoRaf);
+
+      const now = Date.now();
+      // Cek apakah baru saja berinteraksi dalam 3 detik terakhir (3000ms)
+      const isPausedByTimer = now - lastInteractionTime.current < 1000;
+
+      // 1. Eksekusi Momentum kalau baru dilepas
+      if (!isDragging.current && Math.abs(velocity.current) > 0.1) {
+        velocity.current *= 0.95; // Friksi lambat laun berhenti
+        el.scrollLeft += velocity.current;
+      }
+      // 2. Eksekusi Auto Scroll (Marquee)
+      else if (!isDragging.current && !isHovered.current && !isPausedByTimer) {
+        el.scrollLeft += 0.7; // Kecepatan Marquee
+      }
+
+      // 3. Logic Infinite Loop (Tanpa Putus)
+      // Kita pakai 3x duplikasi, jadi lebarnya 3 bagian.
+      // Kalau nyentuh batas 2/3, balik ke 1/3 tanpa kelihatan.
+      const oneThird = el.scrollWidth / 3;
+      if (el.scrollLeft >= oneThird * 2) {
+        el.scrollLeft -= oneThird;
+      } else if (el.scrollLeft <= 0 && velocity.current < 0) {
+        el.scrollLeft += oneThird;
+      }
+
+      rafId.current = requestAnimationFrame(loop);
+    };
+
+    rafId.current = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(rafId.current);
   }, [feedbacks]);
 
-  // ── Skeleton loader ─────────────────────────────────────────────────────────
+  // ── Skeleton loader ──
   if (loading) {
     return (
-      <div className="flex gap-4 overflow-hidden">
-        {Array.from({ length: 4 }).map((_, i) => (
+      <div className="flex gap-4 overflow-hidden px-4">
+        {Array.from({ length: 5 }).map((_, i) => (
           <div
             key={i}
-            className="flex-shrink-0 w-[220px] aspect-[7/15] rounded-xl bg-white/5 animate-pulse border border-white/5"
+            className="flex-shrink-0 w-[200px] h-[400px] rounded-xl bg-slate-800 animate-pulse border border-white/5"
           />
         ))}
       </div>
     );
   }
 
-  // ── Jika tiada feedback (API error atau kosong), jangan render gap kosong ──
   if (!feedbacks.length) return null;
 
-  const loopData = [...feedbacks, ...feedbacks];
+  const loopData = [...feedbacks, ...feedbacks, ...feedbacks];
 
   return (
-    <div className="relative w-full select-none">
-      <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 z-10 bg-gradient-to-r from-black/40 to-transparent" />
-      <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-16 z-10 bg-gradient-to-l from-black/40 to-transparent" />
+    <div
+      className="relative w-full select-none overflow-hidden group"
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
 
       <div
         ref={trackRef}
-        className="flex gap-4 overflow-x-scroll"
-        style={{
-          cursor: "grab",
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
-          WebkitOverflowScrolling: "touch",
-        }}
+        className="flex gap-4 overflow-x-hidden px-4"
+        style={{ cursor: "grab" }}
         onMouseDown={onDragStart}
         onMouseMove={onDragMove}
         onMouseUp={onDragEnd}
-        onMouseLeave={onDragEnd}
         onTouchStart={onDragStart}
         onTouchMove={onDragMove}
         onTouchEnd={onDragEnd}
       >
-        <style>{`.feedback-track::-webkit-scrollbar { display: none; }`}</style>
-
         {loopData.map((f, i) => (
           <div
             key={i}
-            className="flex-shrink-0 w-[220px] aspect-[7/15] rounded-xl overflow-hidden border border-white/10 pointer-events-none"
+            className="flex-shrink-0 w-[200px] aspect-[7/15] rounded-xl overflow-hidden border border-white/10 bg-slate-900 pointer-events-none shadow-lg transition-transform duration-300 group-hover:border-white/20"
           >
             <img
               src={f.image}
-              alt={`Feedback pelanggan ${(i % feedbacks.length) + 1}`}
+              alt="Feedback"
               draggable={false}
               loading="lazy"
               className="w-full h-full object-cover"

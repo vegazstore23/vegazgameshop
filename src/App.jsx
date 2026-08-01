@@ -37,11 +37,11 @@ function App() {
           <MainLayout key="main">
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<Home />} />
-              <Route path="/tp" element={<Topup />} />
+              <Route path="/topup" element={<Topup />} />
               <Route path="/stock" element={<Stock />} />
               <Route path="/detail/:id" element={<Detail />} />
               <Route path="/check-region" element={<Region />} />
-              <Route path="/jk" element={<Joki />} />
+              <Route path="/joki" element={<Joki />} />
               <Route path="/calculator-mlbb" element={<Calculator />} />
               <Route path="/about" element={<About />} />
               <Route

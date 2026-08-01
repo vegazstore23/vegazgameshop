@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
 import { apiGet } from "../../services/api";
+import { MagneticButton } from "@/components/ui/magnetic-button"; // Pastikan path ini sesuai dengan struktur folder kamu
 
 import waIcon from "../../assets/icons/whatsapp.svg";
 import igIcon from "../../assets/icons/instagram.svg";
 import tgIcon from "../../assets/icons/telegram.svg";
-
-// ── Platform icon map (react-icons fallback pakai emoji SVG inline) ────────────
-// Tambah import jika ada: import { RiTiktokLine, RiYoutubeLine, RiFacebookLine } from "react-icons/ri"
-// Sementara guna SVG inline ringkas supaya consistent
 
 function PlatformIcon({ type, src }) {
   if (src) {
@@ -35,50 +32,66 @@ function PlatformIcon({ type, src }) {
 }
 
 // ── Platform config ───────────────────────────────────────────────────────────
+// Theme telah disesuaikan menggunakan format gradient standar untuk tombol
 const PLATFORM_CONFIG = {
-  whatsapp: { icon: waIcon, bg: "bg-green-500", label: "WhatsApp" },
-  telegram: { icon: tgIcon, bg: "bg-sky-500", label: "Telegram" },
+  whatsapp: {
+    icon: waIcon,
+    theme: "from-green-500 to-green-600 ring-offset-green-500",
+    label: "WhatsApp",
+  },
+  telegram: {
+    icon: tgIcon,
+    theme: "from-sky-500 to-sky-600 ring-offset-sky-500",
+    label: "Telegram",
+  },
   instagram: {
     icon: igIcon,
-    bg: "bg-gradient-to-tr from-purple-500 to-pink-500",
+    theme: "from-purple-500 to-pink-500 ring-offset-pink-500",
     label: "Instagram",
   },
-  tiktok: { icon: null, bg: "bg-black", label: "TikTok" },
-  youtube: { icon: null, bg: "bg-red-600", label: "YouTube" },
-  facebook: { icon: null, bg: "bg-blue-600", label: "Facebook" },
+  tiktok: {
+    icon: null,
+    theme: "from-neutral-800 to-black ring-offset-black",
+    label: "TikTok",
+  },
+  youtube: {
+    icon: null,
+    theme: "from-red-500 to-red-600 ring-offset-red-500",
+    label: "YouTube",
+  },
+  facebook: {
+    icon: null,
+    theme: "from-blue-500 to-blue-600 ring-offset-blue-500",
+    label: "Facebook",
+  },
 };
 
-// Strip semua prefix seperti @, +, t.me/, wa.me/ dll — ambil username/number sahaja
+// Strip semua prefix
 function cleanVal(val) {
   return val
     .trim()
-    .replace(/^https?:\/\/[^/]+\//, "") // buang domain prefix kalau ada URL
-    .replace(/^[@+]/, ""); // buang @ atau + di depan
+    .replace(/^https?:\/\/[^/]+\//, "")
+    .replace(/^[@+]/, "");
 }
 
 function getLink(c) {
   const val = c.value?.trim() || "";
-
-  // Kalau user dah bagi full URL, guna terus
   if (val.startsWith("http://") || val.startsWith("https://")) return val;
 
   const clean = cleanVal(val);
 
   switch (c.type) {
     case "whatsapp":
-      // Guna t.me untuk Telegram CS juga (nombor atau username)
       return `https://wa.me/${clean.replace(/\D/g, "")}`;
     case "telegram":
-      // Support nombor telefon (+60xxx) atau username (@vegazstore / vegazstore)
       return clean.match(/^\d/)
-        ? `https://t.me/+${clean.replace(/\D/g, "")}` // nombor → t.me/+60xxx
-        : `https://t.me/${clean}`; // username → t.me/vegazstore
+        ? `https://t.me/+${clean.replace(/\D/g, "")}`
+        : `https://t.me/${clean}`;
     case "instagram":
       return `https://instagram.com/${clean}`;
     case "tiktok":
       return `https://tiktok.com/@${clean}`;
     case "youtube":
-      // Support channel handle (@vegazstore) atau channel ID
       return clean.startsWith("@")
         ? `https://youtube.com/${clean}`
         : `https://youtube.com/@${clean}`;
@@ -92,8 +105,8 @@ function getLink(c) {
 // ── Skeleton ─────────────────────────────────────────────────────────────────
 function SkeletonCard() {
   return (
-    <div className="flex items-center gap-4 border border-white/10 p-4 rounded-2xl min-w-[240px] animate-pulse">
-      <div className="w-12 h-12 rounded-full bg-white/10 shrink-0" />
+    <div className="flex items-center gap-4 border border-white/10 p-4 rounded-xl min-w-[240px] h-[72px] animate-pulse bg-white/5">
+      <div className="w-10 h-10 rounded-full bg-white/10 shrink-0" />
       <div className="flex flex-col gap-2 flex-1">
         <div className="h-3 bg-white/10 rounded w-20" />
         <div className="h-3 bg-white/10 rounded w-32" />
@@ -104,27 +117,35 @@ function SkeletonCard() {
 
 // ── Contact Card ─────────────────────────────────────────────────────────────
 function ContactCard({ c }) {
-  const config = PLATFORM_CONFIG[c.type] || {};
+  const config = PLATFORM_CONFIG[c.type] || {
+    theme: "from-slate-600 to-slate-700 ring-offset-slate-600",
+  };
 
   return (
-    <a
-      href={getLink(c)}
-      target="_blank"
-      rel="noreferrer"
-      className="flex items-center gap-4 bg-black/20 hover:bg-black/40 border border-white/10 p-4 rounded-2xl transition-all hover:scale-105 min-w-[240px] backdrop-blur-md"
-    >
-      <div
-        className={`w-12 h-12 shrink-0 rounded-full ${config.bg || "bg-white/20"} flex items-center justify-center overflow-hidden`}
+    <MagneticButton>
+      <a
+        href={getLink(c)}
+        target="_blank"
+        rel="noreferrer"
+        // Style diadaptasi dari button template dengan sedikit modifikasi flexbox
+        className={`flex items-center gap-4 cursor-pointer rounded-xl bg-gradient-to-b ${config.theme} px-5 py-3 font-medium text-white ring-1 ring-white/20 ring-offset-1 transition-transform duration-150 ring-inset active:scale-98 min-w-[240px] shadow-lg`}
       >
-        <PlatformIcon type={c.type} src={config.icon} />
-      </div>
-      <div className="flex flex-col text-left overflow-hidden">
-        <span className="text-sm font-bold text-white uppercase tracking-wider">
-          {c.label || config.label || c.type}
-        </span>
-        <span className="text-xs text-white/70 truncate mt-0.5">{c.value}</span>
-      </div>
-    </a>
+        {/* Lingkaran Ikon */}
+        <div className="w-10 h-10 shrink-0 rounded-full bg-white/25 backdrop-blur-sm flex items-center justify-center overflow-hidden shadow-inner">
+          <PlatformIcon type={c.type} src={config.icon} />
+        </div>
+
+        {/* Teks Informasi */}
+        <div className="flex flex-col text-left overflow-hidden">
+          <span className="text-sm font-bold text-white uppercase tracking-wider drop-shadow-sm">
+            {c.label || config.label || c.type}
+          </span>
+          <span className="text-xs text-white/90 truncate mt-0.5 tracking-wide">
+            {c.value}
+          </span>
+        </div>
+      </a>
+    </MagneticButton>
   );
 }
 
