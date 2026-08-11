@@ -1,25 +1,36 @@
 import { ShieldCheck, PhoneCall, CreditCard, Zap } from "lucide-react";
+import { useLangCurr } from "../context/LanguageCurrencyContext";
 
 export default function Advantages() {
+  const { t } = useLangCurr();
+
   const features = [
     {
-      title: "Jaminan Perkhidmatan",
-      desc: "Keselamatan dan kualiti perkhidmatan terjamin sepenuhnya",
+      title: t("stock", "adv1Title") || "Jaminan Perkhidmatan",
+      desc:
+        t("stock", "adv1Desc") ||
+        "Keselamatan dan kualiti perkhidmatan terjamin sepenuhnya",
       icon: <ShieldCheck className="text-yellow-400 w-8 h-8" />,
     },
     {
-      title: "Perkhidmatan 24 Jam",
-      desc: "Perkhidmatan tanpa henti, 24 jam setiap hari",
+      title: t("stock", "adv2Title") || "Perkhidmatan 24 Jam",
+      desc:
+        t("stock", "adv2Desc") ||
+        "Perkhidmatan tanpa henti, 24 jam setiap hari",
       icon: <PhoneCall className="text-yellow-400 w-8 h-8" />,
     },
     {
-      title: "Pembayaran Selamat & Dipercayai",
-      desc: "Transaksi selamat, pembayaran boleh dipercayai.",
+      title: t("stock", "adv3Title") || "Pembayaran Selamat & Dipercayai",
+      desc:
+        t("stock", "adv3Desc") ||
+        "Transaksi selamat, pembayaran boleh dipercayai.",
       icon: <CreditCard className="text-yellow-400 w-8 h-8" />,
     },
     {
-      title: "Proses Cepat & Automatik",
-      desc: "Proses pantas, automatik, tanpa sebarang masalah.",
+      title: t("stock", "adv4Title") || "Proses Cepat & Automatik",
+      desc:
+        t("stock", "adv4Desc") ||
+        "Proses pantas, automatik, tanpa sebarang masalah.",
       icon: <Zap className="text-yellow-400 w-8 h-8" />,
     },
   ];
@@ -28,7 +39,7 @@ export default function Advantages() {
     <div className="w-full py-16">
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="text-center text-white font-bold text-xl mb-10 tracking-widest uppercase">
-          Kenapa Beli Akaun Di VegazStore?
+          {t("stock", "advMainTitle") || "Kenapa Beli Akaun Di VegazStore?"}
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

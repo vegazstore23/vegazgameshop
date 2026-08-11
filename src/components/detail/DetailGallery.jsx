@@ -14,10 +14,12 @@ import {
   Keyboard,
 } from "swiper/modules";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { useLangCurr } from "../context/LanguageCurrencyContext";
 
 const ASSET_BASE = "https://apivgz.vegazgameshop.com";
 
 export default function DetailGallery({ images = [], status }) {
+  const { t } = useLangCurr();
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [currentModalIndex, setCurrentModalIndex] = useState(0);
@@ -26,7 +28,7 @@ export default function DetailGallery({ images = [], status }) {
     return (
       <div className="w-full aspect-video bg-slate-900 rounded-3xl flex items-center justify-center border border-white/10">
         <span className="text-white/20 uppercase tracking-widest text-xs font-black">
-          Tiada Gambar Tersedia
+          {t("detail", "noImage") || "Tiada Gambar Tersedia"}
         </span>
       </div>
     );
@@ -41,14 +43,9 @@ export default function DetailGallery({ images = [], status }) {
 
   return (
     <div className="flex flex-col gap-3 w-full">
-      {/* 1. Main Slider
-          FIX: Buang aspect-ratio yang conflict — guna paddingTop trick yang lebih reliable
-          di semua browser mobile. aspect-[4/5] kadang render hitam di Chrome mobile
-          kerana height tidak dikira dengan betul bila parent ada overflow:hidden.
-      */}
       <div
         className="relative group w-full rounded-2xl overflow-hidden bg-slate-950 border border-white/10 shadow-2xl"
-        style={{ paddingTop: "125%" }} // = 4:5 ratio, reliable di semua mobile browser
+        style={{ paddingTop: "125%" }}
       >
         {/* Status Badge */}
         <div className="absolute top-3 right-3 z-20">
@@ -57,11 +54,12 @@ export default function DetailGallery({ images = [], status }) {
               isAvailable ? "bg-green-600" : "bg-red-600"
             }`}
           >
-            {isAvailable ? "Tersedia" : "Telah Dijual"}
+            {isAvailable
+              ? t("global", "available") || "Tersedia"
+              : t("global", "notAvailable") || "Telah Dijual"}
           </span>
         </div>
 
-        {/* Swiper duduk dalam absolute fill supaya paddingTop trick berjaya */}
         <div className="absolute inset-0">
           <Swiper
             style={{
@@ -101,7 +99,6 @@ export default function DetailGallery({ images = [], status }) {
           </Swiper>
         </div>
 
-        {/* Custom Nav — Desktop only */}
         {images.length > 1 && (
           <div className="hidden md:block">
             <button className="btn-prev absolute left-3 top-1/2 -translate-y-1/2 z-30 p-2.5 bg-black/50 backdrop-blur-md rounded-full text-white opacity-0 group-hover:opacity-100 transition-all border border-white/10">
@@ -114,7 +111,6 @@ export default function DetailGallery({ images = [], status }) {
         )}
       </div>
 
-      {/* 2. Thumbnails */}
       {images.length > 1 && (
         <div className="w-full">
           <Swiper
@@ -131,7 +127,6 @@ export default function DetailGallery({ images = [], status }) {
             {images.map((img, index) => (
               <SwiperSlide key={index} className="cursor-pointer">
                 {({ isActive }) => (
-                  // FIX: Sama — guna paddingTop trick untuk thumbnail juga
                   <div
                     className={`relative rounded-xl overflow-hidden border-2 transition-all ${
                       isActive
@@ -155,7 +150,6 @@ export default function DetailGallery({ images = [], status }) {
         </div>
       )}
 
-      {/* 3. Fullscreen Modal */}
       {isFullscreen && (
         <div className="fixed inset-0 z-[999] bg-black/95 backdrop-blur-2xl flex items-center justify-center">
           <button

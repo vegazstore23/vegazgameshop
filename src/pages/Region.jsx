@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { apiGet } from "../services/api";
 import ScrollReveal from "../components/ScrollReveal.jsx";
+import { useLangCurr } from "../components/context/LanguageCurrencyContext";
 
 const STATUS = {
   IDLE: "idle",
@@ -10,32 +11,36 @@ const STATUS = {
   ERROR: "error",
 };
 
-function friendlyError(msg = "") {
-  const m = msg.toLowerCase();
-
-  // Deteksi spam request dari VIPayment
-  if (m.includes("terlalu banyak") || m.includes("too many")) {
-    return "Sistem sedang sibuk. Sila tunggu beberapa saat dan cuba lagi.";
-  }
-
-  // Deteksi ID salah
-  if (
-    m.includes("tidak valid") ||
-    m.includes("invalid") ||
-    m.includes("not found") ||
-    m.includes("fails") ||
-    m.includes("fail")
-  ) {
-    return "ID Pengguna atau ID Zon tidak dijumpai. Sila semak semula input anda.";
-  }
-
-  return "Ralat sistem berlaku. Pastikan sambungan stabil dan cuba lagi.";
-}
-
 export default function Region() {
+  const { t } = useLangCurr();
+
+  const friendlyError = useCallback(
+    (msg = "") => {
+      const m = msg.toLowerCase();
+
+      if (m.includes("terlalu banyak") || m.includes("too many")) {
+        return t("region", "errSpam");
+      }
+
+      // Deteksi ID salah
+      if (
+        m.includes("tidak valid") ||
+        m.includes("invalid") ||
+        m.includes("not found") ||
+        m.includes("fails") ||
+        m.includes("fail")
+      ) {
+        return t("region", "errInvalid");
+      }
+
+      return t("region", "errDefault");
+    },
+    [t],
+  );
+
   useEffect(() => {
-    document.title = "Semak Wilayah Akaun | VegazGameShop";
-  }, []);
+    document.title = `${t("region", "pageTitle")} | VegazGameShop`;
+  }, [t]);
 
   const [status, setStatus] = useState(STATUS.IDLE);
   const [errMsg, setErrMsg] = useState("");
@@ -46,16 +51,13 @@ export default function Region() {
   const handleCheck = async (e) => {
     e.preventDefault();
     if (!userId || !zoneId) {
-      setErrMsg("Sila masukkan ID Pengguna dan ID Zon.");
+      setErrMsg(t("region", "errInvalid"));
       setStatus(STATUS.ERROR);
       return;
     }
 
     setStatus(STATUS.LOADING);
     try {
-      // ✅ PERBAIKAN URL: Pastikan menembak ke endpoint yang benar (tambah /api jika apiGet belum otomatis menambahkannya)
-      // Jika apiGet di file api.js kamu sudah otomatis memakai baseUrl "https://apivgz.../api", gunakan "/region?..."
-      // Jika apiGet memakai baseUrl "https://apivgz...", gunakan "/api/region?..."
       const res = await apiGet(
         `/api/region?id=${userId}&serverid=${zoneId}&brand=mlbb`,
       );
@@ -85,12 +87,10 @@ export default function Region() {
         <ScrollReveal>
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-200 to-white mb-4">
-              Semak Wilayah Akaun
+              {t("region", "pageTitle")}
             </h1>
             <p className="text-sm md:text-base text-gray-400 max-w-xl mx-auto">
-              Sila masukkan ID Pengguna dan ID Zon akaun anda di bawah untuk
-              mengesahkan wilayah pendaftaran akaun permainan anda secara
-              langsung.
+              {t("region", "pageDesc")}
             </p>
           </div>
         </ScrollReveal>
@@ -103,26 +103,26 @@ export default function Region() {
                 <form onSubmit={handleCheck} className="space-y-6">
                   <div>
                     <label className="block text-[10px] text-white/40 uppercase tracking-widest font-black mb-2">
-                      ID Pengguna
+                      {t("region", "userIdLabel")}
                     </label>
                     <input
                       type="text"
                       value={userId}
                       onChange={(e) => setUserId(e.target.value)}
-                      placeholder="Contoh: 12345678"
+                      placeholder={t("region", "userIdPlaceholder")}
                       className="w-full bg-slate-950/50 border border-white/5 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 text-white rounded-2xl p-4 transition-all outline-none text-sm placeholder-white/20"
                     />
                   </div>
 
                   <div>
                     <label className="block text-[10px] text-white/40 uppercase tracking-widest font-black mb-2">
-                      ID Zone
+                      {t("region", "zoneIdLabel")}
                     </label>
                     <input
                       type="text"
                       value={zoneId}
                       onChange={(e) => setZoneId(e.target.value)}
-                      placeholder="Contoh: 1234"
+                      placeholder={t("region", "zoneIdPlaceholder")}
                       className="w-full bg-slate-950/50 border border-white/5 focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20 text-white rounded-2xl p-4 transition-all outline-none text-sm placeholder-white/20"
                     />
                   </div>
@@ -133,8 +133,8 @@ export default function Region() {
                     className="w-full py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all duration-300 bg-gradient-to-r from-blue-600 to-indigo-600 hover:scale-[1.02] active:scale-[0.98] text-white shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:pointer-events-none"
                   >
                     {status === STATUS.LOADING
-                      ? "Menyemak..."
-                      : "Semak Sekarang"}
+                      ? t("region", "checkBtnLoading")
+                      : t("region", "checkBtnIdle")}
                   </button>
                 </form>
               </div>
@@ -151,11 +151,10 @@ export default function Region() {
                       <i className="ri-shield-user-line text-xl"></i>
                     </div>
                     <p className="text-white/40 text-xs uppercase tracking-widest font-black mb-1">
-                      Sedia Menunggu
+                      {t("region", "idleTitle")}
                     </p>
                     <p className="text-white/30 text-xs max-w-[200px]">
-                      Masukkan butiran akaun anda untuk memulakan carian zon
-                      wilayah.
+                      {t("region", "idleDesc")}
                     </p>
                   </div>
                 )}
@@ -164,7 +163,7 @@ export default function Region() {
                   <div className="bg-slate-900/40 backdrop-blur-xl border border-white/5 rounded-3xl p-8 flex flex-col items-center justify-center text-center h-full min-h-[340px] animate-pulse">
                     <div className="w-10 h-10 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mb-4" />
                     <p className="text-blue-400 font-bold text-[10px] uppercase tracking-widest">
-                      Sistem Sedang Memproses
+                      {t("region", "loadingTitle")}
                     </p>
                   </div>
                 )}
@@ -173,12 +172,12 @@ export default function Region() {
                   <div className="bg-slate-900/40 backdrop-blur-xl border border-white/5 rounded-3xl p-8 shadow-2xl animate-in fade-in slide-in-from-bottom-4 duration-300 h-full min-h-[340px] flex flex-col justify-between">
                     <div>
                       <p className="text-green-400 font-bold text-[10px] uppercase tracking-widest mb-4">
-                        Carian Berjaya
+                        {t("region", "successTitle")}
                       </p>
                       <div className="space-y-4 mb-6">
                         <div>
                           <p className="text-[10px] text-white/40 uppercase mb-0.5">
-                            Nama Pengguna
+                            {t("region", "usernameLabel")}
                           </p>
                           <p className="text-lg font-black text-white">
                             {result.username}
@@ -187,7 +186,7 @@ export default function Region() {
                         <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/5">
                           <div>
                             <p className="text-[10px] text-white/40 uppercase mb-0.5">
-                              Wilayah
+                              {t("region", "regionLabel")}
                             </p>
                             <p className="text-sm font-bold text-white">
                               {result.country}
@@ -195,10 +194,10 @@ export default function Region() {
                           </div>
                           <div>
                             <p className="text-[10px] text-white/40 uppercase mb-0.5">
-                              Status
+                              {t("region", "statusLabel")}
                             </p>
                             <p className="text-sm font-bold text-green-400">
-                              Normal
+                              {t("region", "statusNormal")}
                             </p>
                           </div>
                         </div>
@@ -213,7 +212,7 @@ export default function Region() {
                       <i className="ri-error-warning-line text-xl"></i>
                     </div>
                     <p className="text-red-400 font-bold text-[10px] uppercase mb-2 tracking-widest">
-                      Ralat Sistem
+                      {t("region", "errorTitle")}
                     </p>
                     <p className="text-white/60 text-xs leading-relaxed max-w-[220px]">
                       {errMsg}

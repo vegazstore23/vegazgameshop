@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiGet } from "../../services/api";
+import { useLangCurr } from "../context/LanguageCurrencyContext";
 
 import HotIcon from "../../assets/icons/Hot.png";
 import StarIcon from "../../assets/icons/Star.webp";
 
 export default function AccountCard({ acc, type, waAdmin: propWaAdmin }) {
   const navigate = useNavigate();
+  const { lang, formatPrice, t } = useLangCurr();
   const [waAdmin, setWaAdmin] = useState(propWaAdmin || "");
 
   if (!acc) return null;
@@ -47,11 +49,10 @@ export default function AccountCard({ acc, type, waAdmin: propWaAdmin }) {
     acc.mainImage ||
     (acc.AccountImages && acc.AccountImages[0]?.image);
   const isHot = acc.isHot || false;
-  const sellingPriceRM = Number(acc.price) || 0;
-  const originalPriceRM = Math.round(sellingPriceRM / 0.9);
-  const rateIDR = 4100;
-  const sellingPriceIDR = sellingPriceRM * rateIDR;
-  const originalPriceIDR = originalPriceRM * rateIDR;
+
+  // acc.price dari backend murni IDR (Rupiah). Langsung oper ke formatPrice() context agar dikonversi otomatis sesuai tab mata uang & rate admin!
+  const priceIDR = Number(acc.price) || 0;
+  const originalPriceIDR = Math.round(priceIDR / 0.9);
 
   const getImageUrl = (path) => {
     if (!path) return null;
@@ -63,15 +64,15 @@ export default function AccountCard({ acc, type, waAdmin: propWaAdmin }) {
     e.stopPropagation();
 
     const cleanWA = waAdmin.replace(/\D/g, "");
-
-    // Menghasilkan link ke halaman detail akun
     const detailUrl = `${window.location.origin}/detail/${acc.id}`;
+
+    const formattedPrice = formatPrice(priceIDR);
 
     const message = `Halo Admin Vegaz, saya berminat nak beli account ini:
 
 🚀 Unit: *${acc.title || acc.code}*
 🆔 Code: *${acc.code}*
-💰 Harga: *RM ${sellingPriceRM.toFixed(2)}*
+💰 Harga: *${formattedPrice}*
 🔗 Link: ${detailUrl}
 
 Adakah masih tersedia?`;
@@ -117,7 +118,7 @@ Adakah masih tersedia?`;
           </div>
         )}
 
-        {/* Info Badge Status (Hanya jika tidak Available) */}
+        {/* Info Badge Status */}
         {!isAvailable && statusConfig[status] && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-[1px]">
             <span
@@ -128,7 +129,7 @@ Adakah masih tersedia?`;
           </div>
         )}
 
-        {/* ROLE ACC DARI BACKEND (Hanya muncul di StockPage) */}
+        {/* ROLE ACC DARI BACKEND */}
         {type === "stock" && acc.role && (
           <div className="absolute bottom-2 left-2 right-2 flex justify-start items-center">
             <span className="text-[9px] bg-blue-600/80 backdrop-blur-sm px-2 py-1 rounded-md border border-white/20 font-black uppercase tracking-wider text-white shadow-lg">
@@ -140,7 +141,7 @@ Adakah masih tersedia?`;
 
       {/* Konten Text */}
       <div className="p-4 flex flex-col gap-2 flex-1">
-        {/* KODE AKUN DI ATAS HARGA (Warna Putih) */}
+        {/* KODE AKUN */}
         <div className={`${!isAvailable ? "opacity-50" : ""}`}>
           <span className="text-sm font-black text-white uppercase tracking-wider block">
             CODE: {acc.code}
@@ -151,22 +152,16 @@ Adakah masih tersedia?`;
         <div
           className={`flex flex-col gap-1 mt-auto ${!isAvailable ? "opacity-50" : ""}`}
         >
+          {/* Harga Sebelum Diskon */}
           <div className="flex justify-between text-[10px] text-gray-400 line-through">
-            <span>RM {originalPriceRM.toLocaleString("ms-MY")}</span>
-            {type === "stock" && (
-              <span>Rp {originalPriceIDR.toLocaleString("id-ID")}</span>
-            )}
+            <span>{formatPrice(originalPriceIDR)}</span>
           </div>
 
+          {/* Harga Utama */}
           <div className="flex justify-between items-end">
             <span className="text-yellow-400 font-black text-lg leading-none">
-              RM {sellingPriceRM.toLocaleString("ms-MY")}
+              {formatPrice(priceIDR)}
             </span>
-            {type === "stock" && (
-              <span className="text-[11px] font-bold text-white/90">
-                Rp {sellingPriceIDR.toLocaleString("id-ID")}
-              </span>
-            )}
           </div>
         </div>
 
@@ -177,7 +172,7 @@ Adakah masih tersedia?`;
               onClick={orderWA}
               className="w-full bg-green-500 hover:bg-green-600 py-2.5 rounded-xl text-xs font-black transition shadow-lg uppercase"
             >
-              Beli Sekarang
+              {t("global", "buyNow")}
             </button>
           </div>
         )}

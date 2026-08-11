@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { apiGet } from "../services/api";
+import { useLangCurr } from "../components/context/LanguageCurrencyContext";
 
 import DetailNavigation from "../components/detail/DetailNavigation";
 import DetailGallery from "../components/detail/DetailGallery";
@@ -13,6 +14,7 @@ import bgAkun from "../assets/background/bg-akun.webp";
 
 const Detail = () => {
   const { id } = useParams();
+  const { t } = useLangCurr();
   const [account, setAccount] = useState(null);
   const [isDescOpen, setIsDescOpen] = useState(true);
 
@@ -45,7 +47,7 @@ const Detail = () => {
       <div className="min-h-screen bg-[#0a0a0a] flex flex-col items-center justify-center gap-4">
         <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
         <span className="text-blue-400 font-black tracking-[0.3em] text-xs uppercase animate-pulse">
-          Memuatkan Data...
+          {t("detail", "loading") || "Memuatkan Data..."}
         </span>
       </div>
     );

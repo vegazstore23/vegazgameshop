@@ -1,18 +1,30 @@
+import { useLangCurr } from "../context/LanguageCurrencyContext";
+
 export default function Pagination({
   totalPages,
   currentPage,
   setCurrentPage,
+  onPageChangeCallback,
 }) {
+  const { t } = useLangCurr();
+
   if (totalPages <= 1) return null;
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    if (onPageChangeCallback) {
+      onPageChangeCallback(); 
+    }
+  };
 
   return (
     <div className="flex justify-center items-center gap-2 mt-12 pb-10">
       <button
-        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+        onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
         disabled={currentPage === 1}
-        className="px-3 py-1 rounded bg-white/5 hover:bg-blue-600 disabled:opacity-30 disabled:hover:bg-white/5 transition"
+        className="px-3 py-1 rounded bg-white/5 hover:bg-blue-600 disabled:opacity-30 disabled:hover:bg-white/5 transition text-xs text-white"
       >
-        Sebelum
+        {t("stock", "prevPage") || "Sebelum"}
       </button>
 
       <div className="flex gap-2">
@@ -21,8 +33,8 @@ export default function Pagination({
           return (
             <button
               key={pageNum}
-              onClick={() => setCurrentPage(pageNum)}
-              className={`w-8 h-8 rounded flex items-center justify-center transition ${
+              onClick={() => handlePageChange(pageNum)}
+              className={`w-8 h-8 rounded text-xs text-white flex items-center justify-center transition ${
                 currentPage === pageNum
                   ? "bg-blue-600 shadow-lg shadow-blue-500/50 scale-110"
                   : "bg-white/10 hover:bg-white/20"
@@ -34,13 +46,12 @@ export default function Pagination({
         })}
       </div>
 
-      {/* Butang Seterusnya */}
       <button
-        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+        onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
         disabled={currentPage === totalPages}
-        className="px-3 py-1 rounded bg-white/5 hover:bg-blue-600 disabled:opacity-30 disabled:hover:bg-white/5 transition"
+        className="px-3 py-1 rounded bg-white/5 hover:bg-blue-600 disabled:opacity-30 disabled:hover:bg-white/5 transition text-xs text-white"
       >
-        Seterusnya
+        {t("stock", "nextPage") || "Seterusnya"}
       </button>
     </div>
   );

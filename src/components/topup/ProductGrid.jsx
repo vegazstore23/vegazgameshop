@@ -9,65 +9,66 @@ const ProductGrid = ({
   activeTab,
   exchangeRate = 3200,
 }) => {
-  if (loading) {
-    return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 animate-pulse">
-        {[...Array(6)].map((_, i) => (
-          <div
-            key={i}
-            className="h-24 bg-slate-800/40 rounded-xl border border-white/[0.05]"
-          ></div>
-        ))}
-      </div>
-    );
-  }
-
   const isMalaysiaMode = activeTab === "malaysia";
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-      {products.map((item) => {
-        const isSelected = selectedProduct?.id === item.id;
-        return (
-          <div
-            key={item.id}
-            onClick={() => onSelect(item)}
-            className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 flex flex-col justify-between overflow-hidden min-h-[85px] ${
-              isSelected
-                ? "border-blue-500 bg-gradient-to-br from-blue-600/10 to-cyan-600/5 shadow-md"
-                : "border-white/[0.05] bg-slate-800/30 hover:border-white/20 hover:bg-slate-800/50"
-            }`}
-          >
-            {isSelected && (
-              <div className="absolute top-0 right-0 bg-blue-500 text-white p-1 rounded-bl-lg">
-                <CheckCircle
-                  size={12}
-                  fill="currentColor"
-                  className="text-slate-900"
-                />
-              </div>
-            )}
+    <div className="bg-[#282830] rounded-2xl p-5 sm:p-6 shadow-lg border border-white/5">
+      {/* Header Step 2 */}
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-8 h-8 bg-[#FACC15] rounded flex items-center justify-center font-bold text-black text-sm">
+          2
+        </div>
+        <h2 className="text-base font-bold text-white">Pilih Nominal</h2>
+      </div>
 
-            <div>
-              <p
-                className={`text-xs font-bold leading-tight uppercase tracking-wide transition-colors ${
-                  isSelected ? "text-blue-400" : "text-white/80"
+      {loading ? (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 animate-pulse">
+          {[...Array(6)].map((_, i) => (
+            <div
+              key={i}
+              className="h-24 bg-[#383842] rounded-xl border border-white/5"
+            ></div>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          {products.map((item) => {
+            const isSelected = selectedProduct?.id === item.id;
+            return (
+              <div
+                key={item.id}
+                onClick={() => onSelect(item)}
+                className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 flex flex-col justify-between min-h-[90px] ${
+                  isSelected
+                    ? "border-[#FACC15] bg-[#3f3f4a]"
+                    : "border-transparent bg-[#383842] hover:bg-[#3f3f4a]"
                 }`}
               >
-                {item.productName}
-              </p>
-            </div>
+                <div>
+                  <p className="text-xs font-bold text-white/90 leading-tight">
+                    {item.productName}
+                  </p>
+                </div>
 
-            <div className="mt-2 pt-2 border-t border-white/[0.03] flex items-center justify-between">
-              <span className="text-xs md:text-sm font-black text-white tracking-wide">
-                {isMalaysiaMode
-                  ? `RM ${(Number(item.sellPrice) / exchangeRate).toFixed(2)}`
-                  : `Rp ${Number(item.sellPrice).toLocaleString("id-ID")}`}
-              </span>
-            </div>
-          </div>
-        );
-      })}
+                <div className="mt-3">
+                  <span className="text-sm font-black text-white tracking-wide">
+                    {isMalaysiaMode
+                      ? `RM ${(Number(item.sellPrice) / exchangeRate).toFixed(2)}`
+                      : `Rp ${Number(item.sellPrice).toLocaleString("id-ID")}`}
+                  </span>
+                </div>
+
+                {/* Aksesoris diskon / label */}
+                {isSelected && (
+                  <div className="absolute top-0 right-0 bg-[#FACC15] px-1.5 py-1 rounded-bl-lg rounded-tr-lg">
+                    <CheckCircle size={12} className="text-black" />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

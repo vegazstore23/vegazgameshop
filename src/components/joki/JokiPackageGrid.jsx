@@ -16,7 +16,7 @@ export default function JokiPackageGrid({
     const loadPackages = async () => {
       setLoading(true);
       try {
-        const res = await apiGet(`/joki/variants/${gameId}?type=package`);
+        const res = await apiGet(`/api/joki/variants/${gameId}?type=package`);
         setPackages(res.data || []);
       } catch (err) {
         console.error(err);

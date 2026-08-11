@@ -4,6 +4,7 @@ import { AnimatePresence } from "framer-motion";
 import MainLayout from "./layouts/MainLayout";
 import LoadingScreen from "./components/ui/LoadingScreen";
 import ScrollToTop from "./components/ScrollTop";
+import { LanguageCurrencyProvider } from "./components/context/LanguageCurrencyContext";
 
 import Home from "./pages/Home";
 import Topup from "./pages/Topup";
@@ -13,6 +14,7 @@ import Region from "./pages/Region";
 import Joki from "./pages/Joki";
 import Calculator from "./pages/Calculator";
 import About from "./pages/About";
+import DetailView from "./components/topup/DetailView";
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -22,12 +24,11 @@ function App() {
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 2000);
-
     return () => clearTimeout(timer);
   }, []);
 
   return (
-    <>
+    <LanguageCurrencyProvider>
       <ScrollToTop />
 
       <AnimatePresence mode="wait">
@@ -38,6 +39,7 @@ function App() {
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<Home />} />
               <Route path="/topup" element={<Topup />} />
+              <Route path="/topup/:slug" element={<DetailView />} />
               <Route path="/stock" element={<Stock />} />
               <Route path="/detail/:id" element={<Detail />} />
               <Route path="/check-region" element={<Region />} />
@@ -65,7 +67,7 @@ function App() {
           </MainLayout>
         )}
       </AnimatePresence>
-    </>
+    </LanguageCurrencyProvider>
   );
 }
 

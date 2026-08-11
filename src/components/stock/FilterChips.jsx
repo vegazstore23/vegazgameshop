@@ -1,16 +1,4 @@
-const TIER_LABELS = {
-  entry: "Entry RM1–RM100",
-  mid: "Mid RM101–RM249",
-  mythic: "Mythic RM250–RM400",
-  glory: "Glory RM401–RM10,000",
-};
-
-const SORT_LABELS = {
-  newest: "Terbaru",
-  oldest: "Terlama",
-  price_asc: "Harga Terendah",
-  price_desc: "Harga Tertinggi",
-};
+import { useLangCurr } from "../context/LanguageCurrencyContext";
 
 export default function FilterChips({
   activeTier,
@@ -18,6 +6,22 @@ export default function FilterChips({
   currentSort,
   onClearSort,
 }) {
+  const { t } = useLangCurr();
+
+  const TIER_LABELS = {
+    entry: "Entry RM1–RM100",
+    mid: "Mid RM101–RM249",
+    mythic: "Mythic RM250–RM400",
+    glory: "Glory RM401–RM10,000",
+  };
+
+  const SORT_LABELS = {
+    newest: t("stock", "sortNewest") || "Terbaru",
+    oldest: t("stock", "sortOldest") || "Terlama",
+    price_asc: t("stock", "sortPriceAsc") || "Harga Terendah",
+    price_desc: t("stock", "sortPriceDesc") || "Harga Tertinggi",
+  };
+
   if (!activeTier && currentSort === "newest") return null;
 
   return (
@@ -28,7 +32,7 @@ export default function FilterChips({
           <button
             onClick={onClearTier}
             className="hover:text-red-400 transition-colors"
-            title="Buang penapis tier"
+            title={t("stock", "clearTier") || "Hapus filter tier"}
           >
             ✕
           </button>
@@ -37,11 +41,11 @@ export default function FilterChips({
 
       {currentSort !== "newest" && (
         <span className="bg-white/10 border border-white/20 px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase flex items-center gap-2">
-          Susun: {SORT_LABELS[currentSort]}
+          {t("stock", "sortLabel") || "Susun"}: {SORT_LABELS[currentSort]}
           <button
             onClick={onClearSort}
             className="hover:text-red-400 transition-colors"
-            title="Tetapkan semula susunan"
+            title={t("stock", "clearSort") || "Reset susunan"}
           >
             ✕
           </button>

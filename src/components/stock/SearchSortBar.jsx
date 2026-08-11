@@ -1,33 +1,29 @@
 import { useState, useRef, useEffect } from "react";
+import { useLangCurr } from "../context/LanguageCurrencyContext";
 
 export default function SearchSortBar({
   setCurrentSearch,
   currentSort,
   setCurrentSort,
 }) {
+  const { t } = useLangCurr();
   const [searchValue, setSearchValue] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  // BUG FIX 1: Debounce — ref untuk simpan timer ID
   const debounceRef = useRef(null);
-
-  // BUG FIX 2: Click-outside — ref pada wrapper dropdown
   const dropdownRef = useRef(null);
 
   const SORT_LABELS = {
-    newest: "Terbaru",
-    oldest: "Terlama",
-    price_asc: "Harga Terendah",
-    price_desc: "Harga Tertinggi",
+    newest: t("stock", "sortNewest") || "Terbaru",
+    oldest: t("stock", "sortOldest") || "Terlama",
+    price_asc: t("stock", "sortPriceAsc") || "Harga Terendah",
+    price_desc: t("stock", "sortPriceDesc") || "Harga Tertinggi",
   };
 
-  // BUG FIX 1: Debounce search — tunggu 450ms selepas user berhenti taip
-  // sebelum hantar value ke parent (yang akan trigger API call)
   const handleSearchChange = (e) => {
     const val = e.target.value;
     setSearchValue(val);
 
-    // Batalkan timer sebelumnya kalau user masih menaip
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
     debounceRef.current = setTimeout(() => {
@@ -35,7 +31,6 @@ export default function SearchSortBar({
     }, 450);
   };
 
-  // Bersihkan timer bila komponen di-unmount (elak memory leak)
   useEffect(() => {
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -66,16 +61,17 @@ export default function SearchSortBar({
       <div className="relative flex-1">
         <input
           value={searchValue}
-          placeholder="Cari kod atau tajuk akaun..."
-          className="w-full bg-[#0f172a] border border-white/10 rounded-xl py-3 pl-6 pr-10 text-white outline-none focus:border-blue-500 transition-all"
+          placeholder={
+            t("stock", "searchPlaceholder") || "Cari kod atau tajuk akaun..."
+          }
+          className="w-full bg-[#0f172a] border border-white/10 rounded-xl py-3 pl-6 pr-10 text-white outline-none focus:border-blue-500 transition-all text-sm"
           onChange={handleSearchChange}
         />
-        {/* Butang ✕ hanya muncul bila ada teks dalam input */}
         {searchValue && (
           <button
             onClick={handleClearSearch}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/80 transition-colors text-lg leading-none"
-            title="Kosongkan carian"
+            title={t("stock", "clearSearch") || "Kosongkan carian"}
             aria-label="Kosongkan carian"
           >
             ✕
@@ -83,14 +79,13 @@ export default function SearchSortBar({
         )}
       </div>
 
-      {/* Sort dropdown dengan click-outside handler */}
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setDropdownOpen((prev) => !prev)}
           className="w-full md:w-56 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl font-bold transition flex justify-between items-center active:scale-95"
         >
           <span className="text-xs uppercase tracking-widest">
-            {SORT_LABELS[currentSort] || "Susun"}
+            {SORT_LABELS[currentSort] || t("stock", "sortLabel") || "Susun"}
           </span>
           <span className="text-[10px]">{dropdownOpen ? "▲" : "▼"}</span>
         </button>

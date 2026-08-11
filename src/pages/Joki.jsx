@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { apiGet} from "../services/api";
+import { apiGet } from "../services/api";
 import {
   Coins,
   Layers,
@@ -76,7 +76,7 @@ export default function Joki() {
     const loadMlbbBySlug = async () => {
       setLoading(true);
       try {
-        const res = await apiGet("/joki/games/all");
+        const res = await apiGet("/api/joki/games");
         const activeGames = res.data || [];
 
         let targetGame = activeGames.find(
@@ -97,7 +97,7 @@ export default function Joki() {
         setIsValidSlug(true);
 
         const resVar = await apiGet(
-          `/joki/variants/${targetGame.id}?type=unit`,
+          `/api/joki/variants/${targetGame.id}?type=unit`,
         );
         let fetchedVariants = resVar.data || [];
 

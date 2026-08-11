@@ -7,6 +7,7 @@ import { AiFillTikTok } from "react-icons/ai";
 import { FaFacebookSquare } from "react-icons/fa";
 
 import Vegaz from "../assets/logo/vegazgameshop.png";
+import { useLangCurr } from "./context/LanguageCurrencyContext";
 
 function PlatformIcon({ type, className }) {
   const t = type?.toLowerCase();
@@ -61,20 +62,28 @@ function buildHref(type, value, msg = "") {
   return value.startsWith("http") ? value : `#`;
 }
 
-const QUICK_LINKS = [
-  { to: "/", label: "Home" },
-  { to: "/stock", label: "Stock MLBB" },
-  { to: "/topup", label: "Top Up" },
-  { to: "/joki-mlbb", label: "Joki MLBB" },
-  { to: "/check-region", label: "ID MLBB Checker" },
-];
-
-const SUPPORT_LINKS = [
-  { to: "/about", label: "About & FAQ" },
-  { to: "/calculator-mlbb", label: "Calculator MLBB" },
-];
-
 export default function Footer() {
+  const { t } = useLangCurr();
+
+  const QUICK_LINKS = [
+    { to: "/", label: t("footer", "home") || "Home" },
+    { to: "/stock", label: t("footer", "stockMlbb") || "Stock MLBB" },
+    { to: "/tp", label: t("footer", "topUp") || "Top Up" },
+    { to: "/jk", label: t("footer", "jokiMlbb") || "Joki MLBB" },
+    {
+      to: "/check-region",
+      label: t("footer", "regionChecker") || "ID MLBB Checker",
+    },
+  ];
+
+  const SUPPORT_LINKS = [
+    { to: "/about", label: t("footer", "aboutFaq") || "About & FAQ" },
+    {
+      to: "/calculator-mlbb",
+      label: t("footer", "calcMlbb") || "Calculator MLBB",
+    },
+  ];
+
   const [shop, setShop] = useState({
     name: "VEGAZGAMESHOP",
     description:
@@ -139,7 +148,7 @@ export default function Footer() {
 
           <div className="flex flex-col gap-4">
             <h4 className="text-[11px] font-bold text-blue-400 uppercase tracking-[0.18em]">
-              Navigasi
+              {t("footer", "navigation") || "Navigasi"}
             </h4>
             <ul className="flex flex-col gap-2.5">
               {QUICK_LINKS.map(({ to, label }) => (
@@ -157,7 +166,7 @@ export default function Footer() {
 
           <div className="flex flex-col gap-4">
             <h4 className="text-[11px] font-bold text-blue-400 uppercase tracking-[0.18em]">
-              Customer Service
+              {t("footer", "customerService") || "Customer Service"}
             </h4>
             <ul className="flex flex-col gap-3">
               {csContacts.map((c) => (
@@ -185,7 +194,7 @@ export default function Footer() {
 
           <div className="flex flex-col gap-4">
             <h4 className="text-[11px] font-bold text-blue-400 uppercase tracking-[0.18em]">
-              Dukungan
+              {t("footer", "support") || "Dukungan"}
             </h4>
             <ul className="flex flex-col gap-2.5">
               {SUPPORT_LINKS.map(({ to, label }) => (
@@ -204,7 +213,7 @@ export default function Footer() {
           <div className="flex flex-col gap-6">
             <div className="flex flex-col gap-4">
               <h4 className="text-[11px] font-bold text-blue-400 uppercase tracking-[0.18em]">
-                Social Media
+                {t("footer", "socialMedia") || "Social Media"}
               </h4>
               <ul className="flex flex-col gap-3">
                 {socials.map((s) => (
@@ -250,10 +259,10 @@ export default function Footer() {
                 />
                 <div className="flex flex-col leading-tight relative z-10">
                   <span className="text-[12px] font-bold text-white uppercase">
-                    Jual Akun
+                    {t("footer", "sellAccount") || "Jual Akun"}
                   </span>
                   <span className="text-[10px] text-blue-100 opacity-80">
-                    Proses Cepat & Aman
+                    {t("footer", "fastAndSafe") || "Proses Cepat & Aman"}
                   </span>
                 </div>
               </a>
