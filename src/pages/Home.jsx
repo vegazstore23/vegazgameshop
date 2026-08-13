@@ -92,10 +92,6 @@ export default function Home() {
               </div>
               <FeaturedAccounts />
             </ScrollReveal>
-
-            <ScrollReveal delay={0.1}>
-              <Advantages />
-            </ScrollReveal>
           </div>
         </section>
 
@@ -112,6 +108,9 @@ export default function Home() {
                 <FeedbackSlider />
               </div>
               <div className="mb-8 pt-16 border-t border-white/10">
+                <ScrollReveal delay={0.1}>
+                  <Advantages />
+                </ScrollReveal>
                 <h2 className="text-xl font-bold text-center mb-10 font-orbitron tracking-[0.2em] uppercase italic text-white">
                   <RiPhoneFill className="inline mr-3 text-blue-400" /> Official
                   Support
