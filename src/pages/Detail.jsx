@@ -60,10 +60,7 @@ const Detail = () => {
   }
 
   return (
-    <div
-      className="min-h-screen bg-fixed bg-cover bg-center"
-      style={{ backgroundImage: `url(${mainBg})` }}
-    >
+    <div className="min-h-screen bg-[#020617] bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-blue-950/20 via-[#020617] to-[#020617]">
       <main
         className="min-h-screen bg-black/60 backdrop-blur-sm border-x border-white/5"
         style={{

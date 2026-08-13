@@ -13,20 +13,22 @@ export function LanguageCurrencyProvider({ children }) {
     () => localStorage.getItem("vgz_lang") || "MY",
   );
 
-  // State rate dinamis dari database admin-dashboard
-  const [rateMYR, setRateMYR] = useState(3500);
+  const [rateMYR, setRateMYR] = useState(3600);
+  const [rateUSD, setRateUSD] = useState(15000);
 
   useEffect(() => {
     localStorage.setItem("vgz_lang", lang);
   }, [lang]);
 
-  // Ambil rate kurs terbaru dari backend settings admin
   useEffect(() => {
     async function fetchSettingsRate() {
       try {
         const res = await apiGet("/api/settings");
         if (res?.data?.exchangeRateMYR) {
           setRateMYR(Number(res.data.exchangeRateMYR));
+        }
+        if (res?.data?.exchangeRateUSD) {
+          setRateUSD(Number(res.data.exchangeRateUSD));
         }
       } catch (err) {
         console.error("Gagal memuat kurs admin:", err);
@@ -41,28 +43,28 @@ export function LanguageCurrencyProvider({ children }) {
     );
   };
 
-  const rateIDRToUSD = 18500;
-
   const formatPrice = (priceInIDR) => {
     const amount = Number(priceInIDR) || 0;
+    if (!amount) return lang === "ID" ? "Rp 0" : lang === "EN" ? "$ 0" : "RM 0";
 
     if (lang === "ID") {
       return `Rp ${amount.toLocaleString("id-ID")}`;
     }
 
     if (lang === "EN") {
-      const priceUSD = amount / rateIDRToUSD;
-      return `$ ${priceUSD.toFixed(2)}`;
+      const rawUSD = amount / rateUSD;
+      const roundedUSD = Math.round(rawUSD / 5) * 5;
+      return `$ ${roundedUSD}`;
     }
 
-    // Menggunakan rateMYR dinamis dari database admin-dashboard
-    const priceMYR = amount / rateMYR;
-    return `RM ${priceMYR.toFixed(2)}`;
+    const rawMYR = amount / rateMYR;
+    const roundedMYR = Math.round(rawMYR / 5) * 5;
+    return `RM ${roundedMYR}`;
   };
 
   return (
     <LanguageCurrencyContext.Provider
-      value={{ lang, setLang, formatPrice, t, rateMYR }}
+      value={{ lang, setLang, formatPrice, t, rateMYR, rateUSD }}
     >
       {children}
     </LanguageCurrencyContext.Provider>

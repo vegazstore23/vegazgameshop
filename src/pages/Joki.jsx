@@ -31,7 +31,7 @@ export default function Joki() {
   );
 
   return (
-    <div className="w-full min-h-screen text-slate-100 antialiased font-sans pb-24 bg-[#121318]">
+    <div className="w-full min-h-screen text-slate-100 antialiased font-sans pb-24 bg-[#020617] bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-blue-950/20 via-[#020617] to-[#020617]">
       <div className="max-w-7xl mx-auto px-4 pt-6 space-y-8">
         <div className="text-center space-y-2 mt-4 md:mt-8">
           <h1 className="text-2xl md:text-4xl font-black tracking-tight flex items-center justify-center gap-3 uppercase">

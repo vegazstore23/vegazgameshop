@@ -61,7 +61,7 @@ const Topup = () => {
   }
 
   return (
-    <div className="py-6 text-white min-h-screen bg-slate-950">
+    <div className="py-6 text-white min-h-screen bg-[#020617] bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-blue-950/20 via-[#020617] to-[#020617]">
       <CatalogView
         activeTab={activeTab}
         setActiveTab={setActiveTab}

@@ -1,8 +1,8 @@
 import { useLocation } from "react-router-dom";
-
 import Header from "../components/Header";
-
 import Footer from "../components/Footer";
+
+import bottomBg from "../assets/background/FTA.png";
 
 const HIDE_BOTTOM_NAV_PATHS = ["/detail", "/checkout"];
 
@@ -17,7 +17,16 @@ export default function MainLayout({ children }) {
     <div className="min-h-screen flex flex-col bg-[#050510]">
       <Header hideBottomNav={hideBottomNav} />
 
-      <main className="flex-1 pt-16 md:pt-20 pb-16 lg:pb-0">{children}</main>
+      <main className="flex-1 pt-16 md:pt-20 pb-0">{children}</main>
+
+      {/* --- TARIK PAKSA NAIK PAKAI -mt- LUAR BIASA BIAR NEMPEL & PLONG --- */}
+      <div className="w-full bg-[#050510] leading-none -mt-16 sm:-mt-24 md:-mt-32 lg:-mt-40 relative z-20 pointer-events-none select-none">
+        <img
+          src={bottomBg}
+          alt="Divider Decor"
+          className="w-full h-auto block"
+        />
+      </div>
 
       <Footer />
     </div>

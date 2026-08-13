@@ -13,8 +13,8 @@ import { GiSwordman } from "react-icons/gi";
 import Vegaz from "../assets/logo/vegazgameshop.png";
 
 import { useLangCurr } from "./context/LanguageCurrencyContext";
+import LanguageSwitchModal from "./ui/LanguageSwitchModal";
 
-// --- Icons ---
 const IconHome = () => <RiHome3Fill className="w-6 h-6" />;
 const IconStock = () => <RiArchiveStackFill className="w-6 h-6" />;
 const IconRegion = () => <RiMapPinFill className="w-6 h-6" />;
@@ -25,41 +25,27 @@ const IconSell = () => <RiSendPlaneFill className="w-6 h-6" />;
 const IconSupport = () => <RiCustomerServiceFill className="w-6 h-6" />;
 
 function FlagSwitcher() {
-  const { lang, setLang, t } = useLangCurr();
-  const [open, setOpen] = useState(false);
-  const modalRef = useRef(null);
+  const { lang } = useLangCurr();
+  const [openModal, setOpenModal] = useState(false);
 
   const flags = {
-    MY: { src: "https://flagcdn.com/w40/my.png", label: "Malaysia (MY / RM)" },
-    ID: { src: "https://flagcdn.com/w40/id.png", label: "Indonesia (ID / Rp)" },
-    EN: { src: "https://flagcdn.com/w40/us.png", label: "English (EN / $)" },
+    MY: { src: "https://flagcdn.com/w40/my.png", label: "MY" },
+    ID: { src: "https://flagcdn.com/w40/id.png", label: "ID" },
+    EN: { src: "https://flagcdn.com/w40/us.png", label: "EN" },
   };
 
-  // Tutup modal jika klik di luar area konten modal
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (modalRef.current && !modalRef.current.contains(e.target)) {
-        setOpen(false);
-      }
-    };
-    if (open) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [open]);
+  const currentKey = (lang || "MY").toUpperCase();
+  const currentFlag = flags[currentKey] || flags.MY;
 
   return (
     <>
       <button
-        onClick={(e) => {
-          e.stopPropagation();
-          setOpen(true);
-        }}
-        className="flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-slate-900/80 border border-slate-700/80 hover:border-blue-500 transition shadow-md shrink-0 group"
+        onClick={() => setOpenModal(true)}
+        className="flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-slate-900/80 border border-slate-700/80 hover:border-blue-500 transition shadow-md shrink-0 group active:scale-95"
       >
         <div className="w-5 h-5 rounded-full overflow-hidden shrink-0 flex items-center justify-center border border-slate-600">
           <img
-            src={flags[lang].src}
+            src={currentFlag.src}
             alt={lang}
             className="w-full h-full object-cover"
           />
@@ -69,65 +55,10 @@ function FlagSwitcher() {
         </span>
       </button>
 
-      {/* 🌟 POPUP MODAL SWITCHER */}
-      {open && (
-        <div className="fixed inset-0 z-[99999] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div
-            ref={modalRef}
-            className="w-full max-w-sm bg-slate-900 border border-slate-700/80 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.9)] overflow-hidden p-6 space-y-5 animate-in zoom-in-95 duration-200"
-          >
-            {/* Header Popup */}
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-sm font-black text-white uppercase tracking-wider">
-                {t("global", "tabSwitch") || "Select Language & Currency"}
-              </h3>
-              <button
-                onClick={() => setOpen(false)}
-                className="w-7 h-7 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition text-xs font-bold"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* List Pilihan Bahasa */}
-            <div className="space-y-2">
-              {Object.keys(flags).map((k) => (
-                <button
-                  key={k}
-                  onClick={() => {
-                    setLang(k);
-                    setOpen(false);
-                  }}
-                  className={`w-full flex items-center justify-between p-3.5 rounded-2xl transition border ${
-                    lang === k
-                      ? "bg-blue-600/20 border-blue-500 text-white shadow-lg shadow-blue-600/10"
-                      : "bg-slate-800/40 border-slate-800 text-slate-300 hover:bg-slate-800 hover:text-white"
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-6 h-6 rounded-full overflow-hidden border border-slate-600 shrink-0 flex items-center justify-center shadow">
-                      <img
-                        src={flags[k].src}
-                        className="w-full h-full object-cover"
-                        alt={k}
-                      />
-                    </div>
-                    <span className="text-xs font-extrabold tracking-wide">
-                      {flags[k].label}
-                    </span>
-                  </div>
-
-                  {lang === k && (
-                    <span className="text-[10px] bg-blue-600 text-white font-black px-2 py-0.5 rounded-full uppercase tracking-widest shadow">
-                      Active
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+      <LanguageSwitchModal
+        isOpen={openModal}
+        onClose={() => setOpenModal(false)}
+      />
     </>
   );
 }
@@ -213,7 +144,7 @@ export default function Header({ hideBottomNav = false }) {
     load();
   }, []);
 
-  // Live Search Effect (Debounce 300ms untuk ambil data stock publik dengan aman)
+  // Live Search Effect (Debounce 300ms)
   useEffect(() => {
     const query = searchQuery.trim().toLowerCase();
     if (!query) {
@@ -316,7 +247,7 @@ export default function Header({ hideBottomNav = false }) {
           </ul>
 
           <div className="flex items-center gap-3 shrink-0 ml-auto lg:ml-0">
-            {/* Search Container dengan Ref */}
+            {/* Search Container */}
             <div className="relative" ref={searchRef}>
               <div className="relative w-40 sm:w-56 xl:w-64">
                 <input
@@ -387,6 +318,7 @@ export default function Header({ hideBottomNav = false }) {
               )}
             </div>
 
+            {/* Flag & Language Switcher Modal */}
             <FlagSwitcher />
 
             <button

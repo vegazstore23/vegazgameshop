@@ -195,7 +195,7 @@ export default function JokiGameDetail() {
     );
 
   return (
-    <div className="bg-[#1c1c22] min-h-screen pb-32 lg:pb-10 font-sans">
+    <div className="min-h-screen pb-32 lg:pb-10 font-sans bg-[#020617] bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-blue-950/20 via-[#020617] to-[#020617]">
       <div className="max-w-7xl mx-auto px-4 pt-4">
         <button
           onClick={() => navigate("/joki")}
