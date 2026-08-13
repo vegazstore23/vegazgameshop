@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { apiGet } from "../../services/api";
 
-import GameIconPlaceholder from "../../assets/misc/Entry.svg";
+import GameIconPlaceholder from "../../assets/logo/LOGO-VEGAZ.jpg";
 
 export default function StockProfileBanner() {
   const [profileData, setProfileData] = useState(null);

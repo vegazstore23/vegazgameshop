@@ -1,82 +1,529 @@
-//JOKI PAGE LANDING ( DAFTAR GAME - SOON)
-
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { apiGet } from "../services/api";
-import { Gamepad2 } from "lucide-react";
+import {
+  Star,
+  HeadphonesIcon,
+  ShoppingCart,
+  ShieldCheck,
+  Zap,
+  MessageCircle,
+  Tag,
+  QrCode,
+  Wallet,
+  ChevronDown,
+  ArrowLeft,
+} from "lucide-react";
+import { useLangCurr } from "../components/context/LanguageCurrencyContext";
 
-export default function JokiLanding() {
-  const [games, setGames] = useState([]);
-  const [loading, setLoading] = useState(false);
+import JokiBanner from "../components/joki/JokiBanner";
+import JokiDescription from "../components/joki/JokiDescription";
+import JokiForm from "../components/joki/JokiForm";
+import JokiPackageGrid from "../components/joki/JokiPackageGrid";
+import { generateMessage, sendToChat } from "../utils/FormChat";
+
+const COUNTRY_CODES = [
+  { name: "Indonesia", code: "+62", flag: "🇮🇩" },
+  { name: "Malaysia", code: "+60", flag: "🇲🇾" },
+];
+
+export default function JokiGameDetail() {
+  const { slug } = useParams();
   const navigate = useNavigate();
+  const { formatPrice, lang, t } = useLangCurr();
+
+  const step3Ref = useRef(null);
+  const formRef = useRef(null);
+
+  const [mlbbGame, setMlbbGame] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [waAdmin, setWaAdmin] = useState("");
+
+  const [variants, setVariants] = useState([]);
+  const [packages, setPackages] = useState([]);
+
+  const [jokiType, setJokiType] = useState("unit");
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const [promoCode, setPromoCode] = useState("");
+  const [selectedPayment, setSelectedPayment] = useState("");
+
+  const [selectedCountry, setSelectedCountry] = useState(COUNTRY_CODES[0]);
+  const [isCountryOpen, setIsCountryOpen] = useState(false);
+  const [phone, setPhone] = useState("");
+
+  const [accountData, setAccountData] = useState({
+    loginType: "Moonton",
+    userId: "",
+    emailOrHp: "",
+    password: "",
+    reqHero: "",
+    notes: "",
+  });
 
   useEffect(() => {
-    const loadGames = async () => {
+    async function fetchContact() {
+      try {
+        const res = await apiGet("/api/contact");
+        const admin = res.data?.find(
+          (c) => c.isActive && c.roles?.includes("order"),
+        );
+        if (admin) setWaAdmin(admin.value);
+      } catch (err) {}
+    }
+    fetchContact();
+  }, []);
+
+  useEffect(() => {
+    const loadGameData = async () => {
       setLoading(true);
       try {
-        const res = await apiGet("/api/joki/games");
-        setGames(res.data || []);
+        const resGames = await apiGet("/api/joki/games");
+        const activeGames = resGames.data || [];
+        let targetGame = activeGames.find(
+          (g) => g.slug === slug || g.id.toString() === slug,
+        );
+
+        if (!targetGame && activeGames.length > 0) targetGame = activeGames[0];
+        if (!targetGame) {
+          setLoading(false);
+          return;
+        }
+        setMlbbGame(targetGame);
+
+        const [resUnit, resPkg] = await Promise.all([
+          apiGet(`/api/joki/variants/${targetGame.id}?type=unit`),
+          apiGet(`/api/joki/variants/${targetGame.id}?type=package`),
+        ]);
+
+        setVariants(
+          resUnit.data?.sort(
+            (a, b) => (a.sort_order || 0) - (b.sort_order || 0),
+          ) || [],
+        );
+        setPackages(
+          resPkg.data?.sort(
+            (a, b) => (a.sort_order || 0) - (b.sort_order || 0),
+          ) || [],
+        );
       } catch (err) {
-        console.error("Gagal memuat data game joki:", err);
+        console.error(err);
       } finally {
         setLoading(false);
       }
     };
-    loadGames();
-  }, []);
+    if (slug) loadGameData();
+  }, [slug]);
+
+  const handleSelectItem = (item, type) => {
+    setSelectedItem(item);
+    setJokiType(type);
+
+    if (type === "unit") {
+      setQuantity(item.maxUnit || item.max_unit || 1);
+    } else {
+      setQuantity(1);
+    }
+
+    setTimeout(() => {
+      step3Ref.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 150);
+  };
+
+  const totalPrice = (selectedItem?.price || 0) * quantity;
+  const isFormValid =
+    selectedItem &&
+    accountData.userId &&
+    accountData.password &&
+    phone &&
+    selectedPayment;
+
+  const handleSubmitOrder = async () => {
+    if (!isFormValid) {
+      alert("Harap lengkapi Data Akun, Paket, Pembayaran, dan Nomor WhatsApp!");
+      return;
+    }
+
+    const orderPayload = {
+      gameId: mlbbGame?.id,
+      gameName: mlbbGame?.name || "Mobile Legends",
+      userId: accountData.userId,
+      email: accountData.emailOrHp,
+      password: accountData.password,
+      loginType: accountData.loginType,
+      notes: accountData.notes + ` (Req Hero: ${accountData.reqHero})`,
+      jokiType,
+      currency: lang === "ID" ? "IDR" : "MYR",
+      totalPrice,
+      variantId: jokiType === "unit" ? selectedItem.id : null,
+      starsCount: jokiType === "unit" ? quantity : null,
+      packageId: jokiType === "package" ? selectedItem.id : null,
+    };
+
+    try {
+      const res = await apiGet("/api/joki/orders", orderPayload);
+      if (res?.data && waAdmin) {
+        const detailJoki =
+          jokiType === "unit"
+            ? `⭐ Per Bintang: ${selectedItem.name} (${quantity} Bintang)`
+            : `📦 Paket Borongan: ${selectedItem.name}`;
+
+        // PANGGIL DARI FORMCHAT
+        const message = generateMessage("joki", {
+          gameName: orderPayload.gameName,
+          jokiType: jokiType === "unit" ? "Satuan" : "Borongan",
+          detailJoki: detailJoki,
+          userId: orderPayload.userId,
+          loginType: orderPayload.loginType,
+          phone: `${selectedCountry.code}${phone}`,
+          totalPrice: formatPrice(totalPrice),
+          paymentMethod: selectedPayment,
+        });
+
+        sendToChat(waAdmin, message);
+      }
+    } catch (err) {
+      alert("Gagal memproses order joki, silakan coba lagi.");
+    }
+  };
+
+  if (loading)
+    return (
+      <div className="min-h-screen bg-[#1c1c22] flex items-center justify-center font-bold text-white">
+        Memuat Data Joki...
+      </div>
+    );
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white p-4 md:p-8 pt-24">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-5xl font-black tracking-tight flex items-center justify-center gap-3">
-            <Gamepad2 className="text-blue-500 animate-pulse" size={40} />
-            VEGAZ JOKI SERVICE
-          </h1>
-          <p className="text-slate-400 text-sm md:text-base mt-2">
-            Pilih Game Favorit Anda dan Tingkatkan Rank Bersama Pro Player Vegaz
-          </p>
+    <div className="bg-[#1c1c22] min-h-screen pb-32 lg:pb-10 font-sans">
+      <div className="max-w-7xl mx-auto px-4 pt-4">
+        <button
+          onClick={() => navigate("/joki")}
+          className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
+        >
+          <ArrowLeft size={18} />
+          <span className="text-xs font-bold uppercase tracking-wider">
+            Kembali ke Katalog Joki
+          </span>
+        </button>
+      </div>
+
+      <div className="w-full relative bg-[#141414] mt-3">
+        <JokiBanner gameData={mlbbGame} />
+      </div>
+
+      <div className="hidden lg:block bg-white/5 border-y border-white/10 py-3 mb-8">
+        <div className="max-w-7xl mx-auto flex items-center justify-center gap-10 text-xs text-slate-300">
+          <span className="flex items-center gap-2">
+            <ShieldCheck size={16} /> Jaminan Layanan
+          </span>
+          <span className="flex items-center gap-2">
+            <MessageCircle size={16} /> Layanan Chat 24/7
+          </span>
+          <span className="flex items-center gap-2">
+            <ShieldCheck size={16} /> Pembayaran Aman!
+          </span>
+          <span className="flex items-center gap-2">
+            <Zap size={16} /> Proses Cepat & Profesional
+          </span>
         </div>
+      </div>
 
-        <div className="bg-slate-900/60 border border-slate-800 p-6 md:p-8 rounded-3xl">
-          <h2 className="text-lg font-bold text-white mb-6 border-b border-slate-800 pb-3">
-            Daftar Game yang Tersedia
-          </h2>
+      <div className="max-w-7xl mx-auto px-4 lg:px-10 mt-6 lg:mt-0 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* KIRI - STEPS ORDER */}
+        <div className="lg:col-span-8 space-y-6">
+          <div ref={formRef}>
+            <JokiForm
+              accountData={accountData}
+              setAccountData={setAccountData}
+            />
+          </div>
 
-          {loading ? (
-            <div className="h-40 flex items-center justify-center text-slate-500 font-medium text-sm animate-pulse">
-              Memuat daftar game joki...
+          <div className="bg-[#282830] rounded-2xl p-5 sm:p-6 shadow-lg border border-white/5">
+            <div className="flex items-center gap-3 mb-6 border-b border-white/10 pb-4">
+              <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center font-bold text-white text-sm">
+                2
+              </div>
+              <h2 className="text-base font-bold text-white">
+                Pilih Nominal / Paket Joki
+              </h2>
             </div>
-          ) : games.length === 0 ? (
-            <div className="text-center text-slate-500 italic py-12">
-              Belum ada layanan joki game yang aktif.
+
+            {variants.length > 0 && (
+              <div className="mb-6">
+                <h3 className="text-sm font-bold text-slate-300 mb-3">
+                  Joki Per Bintang (Satuan)
+                </h3>
+                <JokiPackageGrid
+                  items={variants}
+                  selectedItem={selectedItem}
+                  onSelect={(item) => handleSelectItem(item, "unit")}
+                  formatPrice={formatPrice}
+                  type="unit"
+                />
+              </div>
+            )}
+
+            {packages.length > 0 && (
+              <div>
+                <h3 className="text-sm font-bold text-slate-300 mb-3">
+                  Paket Borongan (Flat Rate)
+                </h3>
+                <JokiPackageGrid
+                  items={packages}
+                  selectedItem={selectedItem}
+                  onSelect={(item) => handleSelectItem(item, "package")}
+                  formatPrice={formatPrice}
+                  type="package"
+                />
+              </div>
+            )}
+          </div>
+
+          <div
+            ref={step3Ref}
+            className="bg-[#282830] rounded-2xl p-5 sm:p-6 shadow-lg border border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center font-bold text-white text-sm">
+                3
+              </div>
+              <h2 className="text-base font-bold text-white">
+                Masukkan Jumlah Pembelian
+              </h2>
             </div>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-              {games.map((game) => (
-                <button
-                  key={game.id}
-                  onClick={() => navigate(`/joki/${game.id}`)} // Pindah ke slash spesifik game ID/Slug
-                  className="flex flex-col items-center gap-4 p-5 rounded-2xl border bg-slate-900 border-slate-800 text-slate-400 hover:border-blue-500 hover:text-white transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/5 group text-center"
+            <div className="flex items-center gap-3 bg-[#383842] rounded-xl p-1 w-fit">
+              <button
+                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                className="w-10 h-10 bg-slate-800 hover:bg-slate-700 rounded-lg text-white font-bold flex items-center justify-center transition-colors"
+              >
+                -
+              </button>
+              <input
+                type="number"
+                value={quantity}
+                onChange={(e) =>
+                  setQuantity(Math.max(1, Number(e.target.value)))
+                }
+                className="w-12 bg-transparent text-center text-white font-bold outline-none"
+              />
+              <button
+                onClick={() => setQuantity(quantity + 1)}
+                className="w-10 h-10 bg-blue-600 hover:bg-blue-500 rounded-lg text-white font-bold flex items-center justify-center transition-colors"
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          <div className="bg-[#282830] rounded-2xl p-5 sm:p-6 shadow-lg border border-white/5">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center font-bold text-white text-sm">
+                4
+              </div>
+              <h2 className="text-base font-bold text-white">Kode Promo</h2>
+            </div>
+            <div className="flex gap-2 mb-2">
+              <input
+                type="text"
+                placeholder="Ketik Kode Promo Kamu"
+                value={promoCode}
+                onChange={(e) => setPromoCode(e.target.value)}
+                className="flex-1 bg-[#383842] border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-sm text-white outline-none uppercase"
+              />
+              <button className="bg-slate-700 hover:bg-slate-600 px-5 py-3 rounded-xl text-white font-bold text-xs transition-colors">
+                Gunakan
+              </button>
+            </div>
+            <button className="text-xs text-blue-400 hover:underline font-bold flex items-center gap-1.5">
+              <Tag size={14} /> Pakai Promo Yang Tersedia
+            </button>
+          </div>
+
+          <div className="bg-[#282830] rounded-2xl p-5 sm:p-6 shadow-lg border border-white/5">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center font-bold text-white text-sm">
+                5
+              </div>
+              <h2 className="text-base font-bold text-white">
+                Pilih Pembayaran
+              </h2>
+            </div>
+            <div className="space-y-3">
+              {[
+                {
+                  id: "qris",
+                  name: "QRIS (All Payment)",
+                  icon: <QrCode className="text-blue-400" />,
+                },
+                {
+                  id: "ewallet",
+                  name: "E-Wallet (OVO, DANA, GoPay)",
+                  icon: <Wallet className="text-blue-400" />,
+                },
+              ].map((method) => (
+                <div
+                  key={method.id}
+                  onClick={() => setSelectedPayment(method.id)}
+                  className={`p-4 rounded-xl border cursor-pointer flex items-center justify-between transition-colors ${selectedPayment === method.id ? "bg-blue-500/10 border-blue-500" : "bg-[#383842]/50 border-white/5 hover:bg-[#383842]"}`}
                 >
-                  {game.iconUrl ? (
-                    <img
-                      src={game.iconUrl}
-                      alt={game.name}
-                      className="w-16 h-16 rounded-2xl object-cover border border-slate-700 group-hover:border-blue-500 transition-colors"
-                    />
-                  ) : (
-                    <div className="w-16 h-16 rounded-2xl bg-slate-800 flex items-center justify-center font-bold text-xl text-white">
-                      {game.name?.[0]}
-                    </div>
-                  )}
-                  <span className="font-bold text-sm md:text-base leading-tight">
-                    {game.name}
+                  <div className="flex items-center gap-3">
+                    {method.icon}
+                    <span className="text-sm font-bold text-white">
+                      {method.name}
+                    </span>
+                  </div>
+                  <span className="text-xs text-blue-400 font-bold">
+                    {formatPrice(totalPrice)}
                   </span>
-                </button>
+                </div>
               ))}
             </div>
-          )}
+          </div>
+
+          <div className="bg-[#282830] rounded-2xl p-5 sm:p-6 shadow-lg border border-white/5">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center font-bold text-white text-sm">
+                6
+              </div>
+              <h2 className="text-base font-bold text-white">Detail Kontak</h2>
+            </div>
+            <div className="flex gap-2">
+              <div className="relative">
+                <button
+                  onClick={() => setIsCountryOpen(!isCountryOpen)}
+                  className="h-full px-3 py-3 bg-[#383842] hover:bg-[#484852] rounded-xl text-white text-xs font-bold flex items-center gap-2 transition-colors"
+                >
+                  <span>{selectedCountry.flag}</span>{" "}
+                  <span>{selectedCountry.code}</span> <ChevronDown size={14} />
+                </button>
+                {isCountryOpen && (
+                  <div className="absolute left-0 mt-2 w-48 bg-[#282830] border border-slate-700 rounded-xl shadow-2xl z-50 p-2">
+                    {COUNTRY_CODES.map((c) => (
+                      <div
+                        key={c.code}
+                        onClick={() => {
+                          setSelectedCountry(c);
+                          setIsCountryOpen(false);
+                        }}
+                        className="flex items-center justify-between px-3 py-2 hover:bg-[#383842] rounded-lg cursor-pointer text-xs text-white transition-colors"
+                      >
+                        <span>
+                          {c.flag} {c.name}
+                        </span>{" "}
+                        <span className="text-slate-400">{c.code}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <input
+                type="number"
+                placeholder="8123456789 (tanpa angka 0 di depan)"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="flex-1 px-4 py-3 bg-[#383842] border border-transparent rounded-xl text-white text-sm outline-none focus:border-blue-500 transition-colors"
+              />
+            </div>
+          </div>
+
+          <JokiDescription gameData={mlbbGame} />
+        </div>
+
+        {/* KANAN - SIDEBAR SUMMARY */}
+        <div className="lg:col-span-4 hidden lg:flex flex-col gap-5 sticky top-24 h-fit">
+          <div className="bg-[#282830] rounded-2xl p-5 border border-white/5 flex flex-col items-center shadow-lg">
+            <h3 className="text-xs text-slate-400 uppercase font-bold mb-1 w-full text-left">
+              Ulasan dan rating
+            </h3>
+            <div className="flex items-center gap-3 my-2 w-full">
+              <span className="text-4xl font-black text-white">4.99</span>
+              <div className="flex gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    size={20}
+                    className="text-[#FACC15] fill-[#FACC15]"
+                  />
+                ))}
+              </div>
+            </div>
+            <p className="text-[10px] text-slate-400 w-full">
+              Berdasarkan total 136.66rb rating
+            </p>
+          </div>
+
+          <div className="bg-[#282830] rounded-2xl p-5 border border-white/5 flex items-center gap-4 shadow-lg">
+            <HeadphonesIcon size={24} className="text-slate-300" />
+            <div>
+              <p className="text-sm font-bold text-white">Butuh Bantuan?</p>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Kamu bisa hubungi admin disini.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-[#282830] rounded-2xl p-5 border border-white/5 shadow-lg flex flex-col gap-4">
+            <div className="bg-[#1c1c22] rounded-xl p-4 border border-white/5">
+              <p className="text-xs font-bold text-white mb-3">
+                Joki Rank {mlbbGame?.name || "Mobile Legends"}
+              </p>
+              <p className="text-sm text-blue-400 font-black mb-4">
+                {selectedItem ? selectedItem.name : "Belum memilih paket"}
+              </p>
+
+              <div className="space-y-2 text-xs border-b border-white/10 pb-3 mb-3">
+                <div className="flex justify-between text-slate-300">
+                  <span>Harga</span>{" "}
+                  <span>{formatPrice(selectedItem?.price || 0)}</span>
+                </div>
+                <div className="flex justify-between text-slate-300">
+                  <span>Jumlah Pembelian</span> <span>{quantity}</span>
+                </div>
+                <div className="flex justify-between text-slate-300">
+                  <span>Biaya</span> <span>Rp 0</span>
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-bold text-white">
+                  Total Pembayaran
+                </span>
+                <span className="text-lg font-black text-blue-500">
+                  {formatPrice(totalPrice)}
+                </span>
+              </div>
+            </div>
+            <button
+              onClick={handleSubmitOrder}
+              disabled={!isFormValid}
+              className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-black text-sm rounded-xl transition-all flex items-center justify-center gap-2"
+            >
+              <ShoppingCart size={18} />{" "}
+              {waAdmin ? "Pesan Sekarang!" : "Menyambung..."}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* MOBILE CHECKOUT (Muncul di layar kecil) */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-[#282830] border-t border-white/10 z-50 p-4 shadow-[0_-10px_20px_rgba(0,0,0,0.5)]">
+        <div className="max-w-md mx-auto flex items-center gap-4">
+          <div className="flex-1">
+            <p className="text-[10px] text-slate-400 font-bold uppercase">
+              Total Pembayaran
+            </p>
+            <p className="text-lg text-blue-500 font-black">
+              {formatPrice(totalPrice)}
+            </p>
+          </div>
+          <button
+            onClick={handleSubmitOrder}
+            disabled={!isFormValid}
+            className="flex-1 py-3 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-black uppercase text-sm rounded-xl transition-all flex items-center justify-center gap-2"
+          >
+            <ShoppingCart size={16} /> Pesan
+          </button>
         </div>
       </div>
     </div>

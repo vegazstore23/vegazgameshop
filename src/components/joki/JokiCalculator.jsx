@@ -1,6 +1,7 @@
 import { AlertCircle, Plus, Minus } from "lucide-react";
 import JokiPackageGrid from "./JokiPackageGrid";
 import { getRankImage } from "../../utils/rankImages";
+import { useLangCurr } from "../context/LanguageCurrencyContext";
 
 export default function JokiCalculator({
   gameId,
@@ -12,10 +13,12 @@ export default function JokiCalculator({
   minOrderRequired,
   selectedPkg,
   setSelectedPkg,
-  formatCurrency,
+  formatPrice,
   jokiType,
   setJokiType,
 }) {
+  const { t } = useLangCurr();
+
   const handleCounter = (type) => {
     if (type === "plus") {
       setTotalStarsOrdered((prev) => prev + 1);
@@ -31,9 +34,6 @@ export default function JokiCalculator({
 
   return (
     <div className="w-full space-y-8">
-      {/* ========================================================= */}
-      {/* BAGIAN ATAS: PILIHAN JOKI PER BINTANG                      */}
-      {/* ========================================================= */}
       <div
         className={`bg-slate-900/40 border rounded-3xl p-6 space-y-5 transition-all duration-300 ${
           jokiType === "unit"
@@ -63,9 +63,9 @@ export default function JokiCalculator({
                   key={v.id || index}
                   type="button"
                   onClick={() => {
-                    setJokiType("unit"); // Auto switch ke tipe unit
+                    setJokiType("unit");
                     setStartRankIdx(index);
-                    setSelectedPkg(null); // Reset pilihan borongan
+                    setSelectedPkg(null);
                   }}
                   className={`border p-5 rounded-2xl flex items-center gap-4 text-left transition-all duration-300 group ${
                     isSelected
@@ -95,7 +95,7 @@ export default function JokiCalculator({
                       Harga per bintang:
                     </p>
                     <p className="text-emerald-400 font-black text-sm font-mono mt-0.5">
-                      {formatCurrency(v.price)}
+                      {formatPrice(v.price)}
                     </p>
                   </div>
                 </button>
@@ -108,7 +108,6 @@ export default function JokiCalculator({
           )}
         </div>
 
-        {/* Pengatur Jumlah Bintang (Hanya tampil jika opsi per bintang sedang aktif) */}
         {jokiType === "unit" && variants[startRankIdx] && (
           <div className="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
@@ -158,9 +157,6 @@ export default function JokiCalculator({
         )}
       </div>
 
-      {/* ========================================================= */}
-      {/* BAGIAN BAWAH: PAKET JOKI BORONGAN                         */}
-      {/* ========================================================= */}
       <div
         className={`bg-slate-900/40 border rounded-3xl p-6 space-y-5 transition-all duration-300 ${
           jokiType === "package"
@@ -177,15 +173,14 @@ export default function JokiCalculator({
           </h4>
         </div>
 
-        {/* Grid paket borongan langsung mejeng di bawah mengalir */}
         <JokiPackageGrid
           gameId={gameId}
           selectedPkg={selectedPkg}
           setSelectedPkg={(pkg) => {
-            setJokiType("package"); // Auto switch ke tipe borongan paket
+            setJokiType("package");
             setSelectedPkg(pkg);
           }}
-          formatCurrency={formatCurrency}
+          formatPrice={formatPrice}
         />
       </div>
     </div>

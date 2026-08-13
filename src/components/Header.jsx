@@ -24,7 +24,6 @@ const IconAbout = () => <RiSpam2Fill className="w-6 h-6" />;
 const IconSell = () => <RiSendPlaneFill className="w-6 h-6" />;
 const IconSupport = () => <RiCustomerServiceFill className="w-6 h-6" />;
 
-// --- CUSTOM FLAG & LANGUAGE SWITCHER POPUP COMPONENT ---
 function FlagSwitcher() {
   const { lang, setLang, t } = useLangCurr();
   const [open, setOpen] = useState(false);
@@ -51,7 +50,6 @@ function FlagSwitcher() {
 
   return (
     <>
-      {/* Tombol Trigger Switcher di Header */}
       <button
         onClick={(e) => {
           e.stopPropagation();
@@ -134,7 +132,6 @@ function FlagSwitcher() {
   );
 }
 
-// --- MAIN HEADER COMPONENT ---
 export default function Header({ hideBottomNav = false }) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -233,7 +230,6 @@ export default function Header({ hideBottomNav = false }) {
         );
         const json = await res.json();
 
-        // Ekstraksi array dengan aman dari berbagai kemungkinan struktur response backend
         let list = [];
         if (Array.isArray(json)) {
           list = json;
@@ -243,7 +239,6 @@ export default function Header({ hideBottomNav = false }) {
           list = json.data.data;
         }
 
-        // Filter berdasarkan pencarian (kode, judul, atau deskripsi)
         const filtered = list.filter((item) => {
           const title = (item.title || "").toLowerCase();
           const code = (item.code || "").toLowerCase();
@@ -286,31 +281,29 @@ export default function Header({ hideBottomNav = false }) {
   const getDesktopNavClass = (path) => {
     const isActive = pathname === path;
     return `flex items-center gap-2 font-semibold transition ${
-      isActive ? "text-white" : "text-gray-400 hover:text-blue-400"
+      isActive ? "text-yellow-400" : "text-white hover:text-yellow-300"
     }`;
   };
 
   const getBottomNavClass = (path) => {
     const isActive = pathname === path;
     return `flex flex-col items-center justify-center text-xs font-medium transition ${
-      isActive ? "text-white" : "text-gray-400 hover:text-blue-400"
+      isActive ? "text-yellow-400" : "text-white hover:text-yellow-300"
     }`;
   };
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full z-[9999] bg-[#172454] border-b border-white/10 shadow-lg">
+      <header className="fixed top-0 left-0 w-full z-[9999] bg-[#09052b] border-b border-white/10 shadow-lg">
         <div className="max-w-screen-xl mx-auto px-4 md:px-6 flex items-center justify-between h-16 md:h-20 gap-3 md:gap-4">
-          {/* 1. KIRI: LOGO */}
           <Link to="/" className="flex items-center shrink-0">
             <img
               src={Vegaz}
-              className="h-8 md:h-10 lg:h-11 object-contain drop-shadow-[0_0_8px_rgba(59,130,246,0.6)]"
+              className="h-8 md:h-10 lg:h-11 object-contain"
               alt="VegazGameShop"
             />
           </Link>
 
-          {/* Nav Links Desktop */}
           <ul className="hidden lg:flex items-center gap-6 xl:gap-8 flex-1 justify-center">
             {DESKTOP_NAV.map(({ to, icon, label }) => (
               <li key={to}>
@@ -322,7 +315,6 @@ export default function Header({ hideBottomNav = false }) {
             ))}
           </ul>
 
-          {/* 2. KANAN: LIVE SEARCH, FLAG SWITCHER, HAMBURGER */}
           <div className="flex items-center gap-3 shrink-0 ml-auto lg:ml-0">
             {/* Search Container dengan Ref */}
             <div className="relative" ref={searchRef}>
@@ -341,7 +333,6 @@ export default function Header({ hideBottomNav = false }) {
                 </span>
               </div>
 
-              {/* 🌟 DROPDOWN LIVE SEARCH (Dinamis dengan Switcher Bahasa) */}
               {suggestions.length > 0 && (
                 <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-slate-900 border border-slate-700 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] overflow-hidden z-50 p-2 space-y-1.5">
                   <div className="px-3 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800">
@@ -358,7 +349,6 @@ export default function Header({ hideBottomNav = false }) {
                       }}
                       className="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-800 cursor-pointer transition group"
                     >
-                      {/* Thumbnail Akun */}
                       <div className="w-12 h-12 rounded-lg overflow-hidden bg-slate-800 shrink-0 border border-slate-700">
                         <img
                           src={
@@ -370,7 +360,6 @@ export default function Header({ hideBottomNav = false }) {
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                         />
                       </div>
-                      {/* Info Akun */}
                       <div className="flex flex-col flex-1 min-w-0">
                         <span className="text-xs font-black text-white truncate group-hover:text-blue-400 transition-colors">
                           {item.title || item.code}
@@ -398,7 +387,6 @@ export default function Header({ hideBottomNav = false }) {
               )}
             </div>
 
-            {/* Flag & Currency Switcher */}
             <FlagSwitcher />
 
             <button
@@ -415,7 +403,6 @@ export default function Header({ hideBottomNav = false }) {
         </div>
       </header>
 
-      {/* DROPDOWN MENU MOBILE */}
       <div
         id="mobileMenu"
         className={`fixed top-16 md:top-20 left-0 w-full bg-[#1c4ed8]/70 backdrop-blur-xl border-b border-white/10 flex flex-col gap-2 p-6 z-40 lg:hidden transition-all duration-300 ease-out shadow-2xl ${
@@ -428,8 +415,8 @@ export default function Header({ hideBottomNav = false }) {
           to="/about"
           className={`flex items-center gap-3 p-3 rounded-xl font-semibold transition ${
             pathname === "/about"
-              ? "bg-white/20 text-white"
-              : "text-gray-200 hover:text-white hover:bg-white/10"
+              ? "bg-white/20 text-yellow-400"
+              : "text-white hover:text-yellow-300 hover:bg-white/10"
           }`}
         >
           <IconAbout />
@@ -442,7 +429,7 @@ export default function Header({ hideBottomNav = false }) {
           href={orderHref}
           target="_blank"
           rel="noreferrer"
-          className="flex items-center gap-3 p-3 rounded-xl font-semibold text-gray-200 hover:text-white hover:bg-white/10 transition"
+          className="flex items-center gap-3 p-3 rounded-xl font-semibold text-white hover:text-yellow-300 hover:bg-white/10 transition"
         >
           <IconSell />
           <span>{t("header", "sellAccount") || "Jual Account"}</span>
@@ -454,7 +441,7 @@ export default function Header({ hideBottomNav = false }) {
           href={csHref}
           target="_blank"
           rel="noreferrer"
-          className="flex items-center gap-3 p-3 rounded-xl font-semibold text-gray-200 hover:text-white hover:bg-white/10 transition"
+          className="flex items-center gap-3 p-3 rounded-xl font-semibold text-white hover:text-yellow-300 hover:bg-white/10 transition"
         >
           <IconSupport />
           <span>{t("header", "customerService") || "Customer Service"}</span>
@@ -462,7 +449,7 @@ export default function Header({ hideBottomNav = false }) {
       </div>
 
       {!hideBottomNav && (
-        <nav className="fixed bottom-0 left-0 w-full bg-[#172454] border-t border-white/10 shadow-[0_-4px_20px_rgba(0,0,0,0.4)] flex justify-around items-center h-16 lg:hidden z-50">
+        <nav className="fixed bottom-0 left-0 w-full bg-[#09052b] border-t border-white/10 shadow-[0_-4px_20px_rgba(0,0,0,0.4)] flex justify-around items-center h-16 lg:hidden z-50">
           {BOTTOM_NAV.map(({ to, icon, label }) => (
             <Link key={to} to={to} className={getBottomNavClass(to)}>
               {icon}

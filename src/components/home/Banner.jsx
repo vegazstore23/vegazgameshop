@@ -1,16 +1,9 @@
 import { useEffect, useState, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import {
-  Autoplay,
-  EffectCoverflow,
-  Pagination,
-  Keyboard,
-  A11y,
-} from "swiper/modules";
+import { Autoplay, EffectCoverflow, Keyboard, A11y } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/effect-coverflow";
-import "swiper/css/pagination";
 
 import { apiGet } from "../../services/api";
 
@@ -53,7 +46,7 @@ export default function Banner() {
 
   if (!banners.length) {
     return (
-      <div style={{ width: "100%", padding: "24px 0" }}>
+      <div style={{ width: "100%", padding: "12px 0" }}>
         <style>{`
           @keyframes banner-pulse {
             0%, 100% { opacity: 1; }
@@ -64,7 +57,7 @@ export default function Banner() {
           style={{
             width: "100%",
             aspectRatio: BANNER_ASPECT,
-            borderRadius: "14px",
+            borderRadius: "16px",
             background: "rgba(255,255,255,0.05)",
             animation: "banner-pulse 1.5s ease-in-out infinite",
           }}
@@ -78,14 +71,14 @@ export default function Banner() {
 
   return (
     <div
-      style={{ width: "100%", padding: "8px 0", overflow: "hidden" }}
+      style={{ width: "100%", padding: "4px 0", overflow: "hidden" }}
       role="region"
       aria-label="Banner carousel"
     >
       <style>{`
         .banner-swiper {
           width: 100%;
-          padding-bottom: 36px !important;
+          padding-bottom: 12px !important;
           overflow: visible !important;
         }
 
@@ -115,17 +108,11 @@ export default function Banner() {
           display: block;
           pointer-events: none; 
         }
-
-        .banner-swiper .swiper-pagination-bullet-active {
-          width: 32px;
-          background: #3b82f6;
-          box-shadow: 0 0 10px #3b82f6;
-        }
       `}</style>
 
       <Swiper
         className="banner-swiper"
-        modules={[Autoplay, EffectCoverflow, Pagination, Keyboard, A11y]}
+        modules={[Autoplay, EffectCoverflow, Keyboard, A11y]}
         effect="coverflow"
         grabCursor
         centeredSlides
@@ -149,7 +136,6 @@ export default function Banner() {
               }
             : false
         }
-        pagination={{ clickable: true }}
         keyboard={{ enabled: true }}
         a11y={{ enabled: true }}
         breakpoints={{

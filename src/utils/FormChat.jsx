@@ -1,11 +1,9 @@
 import { apiGet } from "../services/api";
 
-
 export const getContactByRole = async (targetRole) => {
   try {
     const res = await apiGet("/api/contact");
     if (res?.success && Array.isArray(res.data)) {
-
       const contact = res.data.find(
         (item) => item.isActive && item.roles.includes(targetRole),
       );
@@ -18,6 +16,88 @@ export const getContactByRole = async (targetRole) => {
   }
 };
 
+export const sendToChat = (contactValue, message, isTelegram = false) => {
+  const encodedMsg = encodeURIComponent(message);
+
+  if (isTelegram) {
+    const username = contactValue.replace("@", "");
+    window.open(`https://t.me/${username}`, "_blank");
+  } else {
+    const cleanWA = contactValue.replace(/\D/g, "");
+    window.open(`https://wa.me/${cleanWA}?text=${encodedMsg}`, "_blank");
+  }
+};
+
+export const generateMessage = (source, data = {}) => {
+  switch (source) {
+    case "topup":
+      return (
+        `Halo Admin Vegaz, saya mahu order TopUp:\n\n` +
+        `🎮 Game: ${data.brandName}\n` +
+        `📦 Produk: ${data.productName}\n` +
+        `🆔 SERVER: ${data.userId}${data.zoneId ? ` (${data.zoneId})` : ""}\n` +
+        `👤 Nickname: ${data.nickname || "-"}\n` +
+        `💳 Payment: ${data.paymentMethod}\n` +
+        `📞 No WASSAP: ${data.phone}\n` +
+        `💰 Total: ${data.totalPrice}\n\n` +
+        `Mohon instruksi pembayarannya. Terima kasih!`
+      );
+
+    case "joki":
+      return (
+        `Halo Admin Vegaz, saya order Joki:\n\n` +
+        `🎮 Game: ${data.gameName}\n` +
+        `📌 Tipe: ${data.jokiType}\n` +
+        `📋 Paket: ${data.detailJoki}\n` +
+        `👤 ID/Nick: ${data.userId}\n` +
+        `🔑 Login Via: ${data.loginType}\n` +
+        `📞 WA Kustomer: ${data.phone}\n` +
+        `💰 Total: ${data.totalPrice}\n\n` +
+        `Mohon proses pembayaran via ${data.paymentMethod}. Terima kasih!`
+      );
+
+    case "account_buy":
+      let promoInfo = "";
+      if (data.promoCode) {
+        promoInfo = `\n🎟 Promo Dipakai: *${data.promoCode}*`;
+      }
+
+      let referralInfo = "";
+      if (data.referral) {
+        referralInfo = `\n📢 Tahu dari: *${data.referral}*`;
+      }
+
+      return (
+        `Halo Admin Vegaz, saya berminat nak beli account ini:\n\n` +
+        `🚀 Unit: *${data.title}*\n` +
+        `🆔 Code: *${data.code}*\n` +
+        `💰 Harga: *${data.price}*${promoInfo}${referralInfo}\n` +
+        `🔗 Link: ${data.url}\n\n` +
+        `Adakah masih tersedia dan nak detail pembayaran?`
+      );
+
+    case "general_buy":
+      return (
+        `Halo Admin VegazGameShop,\n\nSaya ingin membeli akun:\n` +
+        `*Produk:* ${data.title}\n` +
+        `*Harga:* ${data.price}\n\n` +
+        `Apakah stok ini masih tersedia?`
+      );
+
+    case "account_sell":
+      return (
+        `Halo Admin VegazGameShop,\n\nSaya ingin menjual akun:\n` +
+        `*Nickname:* ${data.nickname || "-"}\n` +
+        `*Rank:* ${data.rank || "-"}\n` +
+        `*Total Skin:* ${data.skinCount || "-"}\n` +
+        `*Harga:* Rp ${data.askingPrice || "-"}`
+      );
+
+    default:
+      return `Halo Admin, saya butuh bantuan terkait layanan VegazGameShop.`;
+  }
+};
+
 export const handleWhatsAppChat = async (targetRole, type, data = {}) => {
   const contact = await getContactByRole(targetRole);
 
@@ -26,28 +106,18 @@ export const handleWhatsAppChat = async (targetRole, type, data = {}) => {
     return;
   }
 
-  const targetValue = contact.value;
   const isWhatsapp = contact.type === "whatsapp";
 
-  let message = "";
+  let source = "default";
+  if (type === "beli") source = "general_buy";
+  if (type === "jual") source = "account_sell";
 
-  switch (type) {
-    case "beli":
-      message = `Halo Admin VegazGameShop,\n\nSaya ingin membeli akun:\n*Produk:* ${data.title || data.name}\n*Harga:* Rp ${data.price?.toLocaleString("id-ID")}\n\nApakah stok ini masih tersedia?`;
-      break;
-    case "jual":
-      message = `Halo Admin VegazGameShop,\n\nSaya ingin menjual akun:\n*Nickname:* ${data.nickname || "-"}\n*Rank:* ${data.rank || "-"}\n*Total Skin:* ${data.skinCount || "-"}\n*Harga:* Rp ${data.askingPrice || "-"}`;
-      break;
-    default:
-      message = `Halo Admin, saya butuh bantuan terkait layanan VegazGameShop.`;
-  }
+  const payload = {
+    title: data.title || data.name,
+    price: data.price ? `Rp ${data.price.toLocaleString("id-ID")}` : "-",
+    ...data,
+  };
 
-  const encodedMsg = encodeURIComponent(message);
-
-  if (isWhatsapp) {
-    window.open(`https://wa.me/${targetValue}?text=${encodedMsg}`, "_blank");
-  } else {
-    const username = targetValue.replace("@", "");
-    window.open(`https://t.me/${username}`, "_blank");
-  }
+  const message = generateMessage(source, payload);
+  sendToChat(contact.value, message, !isWhatsapp);
 };

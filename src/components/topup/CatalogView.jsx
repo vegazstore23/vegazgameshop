@@ -3,23 +3,74 @@ import { Gamepad2, Flame, Monitor, Ticket } from "lucide-react";
 import BannerSlider from "./BannerSlider";
 import { useLangCurr } from "../context/LanguageCurrencyContext";
 
+const PUBLISHER_MAP = {
+  // Mobile Games & Popular
+  "mobile legends": "Moonton",
+  mlbb: "Moonton",
+  "free fire": "Garena",
+  ff: "Garena",
+  pubg: "Tencent Games",
+  "pubg mobile": "Tencent Games",
+  roblox: "Roblox Corporation",
+  "genshin impact": "COGNOSPHERE / HoYoverse",
+  honkai: "COGNOSPHERE / HoYoverse",
+  "zenless zone zero": "COGNOSPHERE / HoYoverse",
+  zzz: "COGNOSPHERE / HoYoverse",
+  "honor of kings": "Tencent Games",
+  hok: "Tencent Games",
+  "arena breakout": "Proxima Beta",
+  "point blank": "Zepetto",
+  valorant: "Riot Games",
+  "league of legends": "Riot Games",
+  "wild rift": "Riot Games",
+  "call of duty": "Activision / Garena",
+  codm: "Activision / Garena",
+  "stumble guys": "Scopely",
+  "magic chess": "Moonton",
+  undawn: "Level Infinite",
+  "ea sports fc": "Electronic Arts",
+  efootball: "Konami",
+  pes: "Konami",
+  "brawl stars": "Supercell",
+  "clash of clans": "Supercell",
+  "clash royale": "Supercell",
+  "hay day": "Supercell",
+  "omega strikers": "Odyssey Interactive",
+  ragnarok: "Gravity",
+  "sausage man": "XD Entertainment",
+  lifeafter: "NetEase",
+  "identity v": "NetEase",
+  naraka: "NetEase",
+  badlanders: "NetEase",
+  "hyper front": "NetEase",
+
+  steam: "Valve",
+  "google play": "Google",
+  spotify: "Spotify AB",
+  netflix: "Netflix",
+  vidio: "Vidio",
+  viu: "Viu",
+  iqiyi: "iQIYI",
+  bilibili: "Bilibili",
+  wetv: "Tencent",
+  playstation: "Sony",
+  xbox: "Microsoft",
+  nintendo: "Nintendo",
+  minecraft: "Mojang / Microsoft",
+  garena: "Garena",
+  Unipin: "UniPin",
+  gemscool: "Gemscool",
+};
+
 const getGameDeveloper = (brandName = "") => {
-  const name = brandName.toLowerCase();
-  if (name.includes("mobile legends") || name.includes("mlbb"))
-    return "Moonton";
-  if (name.includes("free fire") || name.includes("ff")) return "Garena";
-  if (name.includes("pubg")) return "Tencent Games";
-  if (name.includes("roblox")) return "Roblox Corporation";
-  if (
-    name.includes("genshin") ||
-    name.includes("honkai") ||
-    name.includes("zenless")
-  )
-    return "COGNOSPHERE / HoYoverse";
-  if (name.includes("honor of kings") || name.includes("hok"))
-    return "Tencent Games";
-  if (name.includes("arena breakout")) return "Proxima Beta";
-  if (name.includes("point blank")) return "Zepetto";
+  const name = brandName.toLowerCase().trim();
+
+  for (const key in PUBLISHER_MAP) {
+    if (name.includes(key)) {
+      return PUBLISHER_MAP[key];
+    }
+  }
+
   return "Official Publisher";
 };
 
@@ -76,7 +127,7 @@ const CatalogView = ({ brands, onSelectGame, activeTab, setActiveTab }) => {
           <BannerSlider />
         </div>
 
-        {/* SECTION 1: POPULER SEKARANG! */}
+        {/* SECTION 1: POPULER SEKARANG! (Mobile: 2 baris / 2 kolom, Desktop: 3 kolom) */}
         {popularBrands.length > 0 &&
           activeTab === "topup_games" &&
           !searchTerm && (
@@ -93,7 +144,7 @@ const CatalogView = ({ brands, onSelectGame, activeTab, setActiveTab }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 {popularBrands.slice(0, 6).map((brand) => (
                   <div
                     key={`popular-${brand.brandName}`}
@@ -112,7 +163,7 @@ const CatalogView = ({ brands, onSelectGame, activeTab, setActiveTab }) => {
 
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
-                    <div className="absolute bottom-0 inset-x-0 bg-yellow-400 text-slate-950 px-4 py-2 flex items-center justify-between font-bold">
+                    <div className="absolute bottom-0 inset-x-0 bg-yellow-400 text-slate-950 px-3 py-1.5 sm:px-4 sm:py-2 flex items-center justify-between font-bold">
                       <span className="text-xs sm:text-sm font-extrabold truncate max-w-[70%]">
                         {brand.brandName}
                       </span>
@@ -159,9 +210,9 @@ const CatalogView = ({ brands, onSelectGame, activeTab, setActiveTab }) => {
           </div>
         </div>
 
-        {/* GRID KATALOG UTAMA */}
+        {/* GRID KATALOG UTAMA (Mobile: 3 baris / 3 kolom, md: 4, lg: 6) */}
         {currentFilteredBrands.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3.5 sm:gap-4">
+          <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3.5 sm:gap-4">
             {currentFilteredBrands.map((brand) => (
               <div
                 key={brand.brandName}

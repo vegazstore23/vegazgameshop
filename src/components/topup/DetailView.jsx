@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { apiGet, apiFetch } from "../../services/api";
 import OrderForm from "./OrderForm";
 import { useLangCurr } from "../context/LanguageCurrencyContext";
+import { generateMessage, sendToChat } from "../../utils/FormChat";
 import {
   ShieldCheck,
   Zap,
@@ -17,6 +18,65 @@ const DetailView = ({ waAdmin = "628xxx" }) => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { formatPrice, t } = useLangCurr();
+
+  const PUBLISHER_MAP = {
+    "mobile legends": "Moonton",
+    mlbb: "Moonton",
+    "free fire": "Garena",
+    ff: "Garena",
+    pubg: "Tencent Games",
+    "pubg mobile": "Tencent Games",
+    roblox: "Roblox Corporation",
+    "genshin impact": "COGNOSPHERE / HoYoverse",
+    honkai: "COGNOSPHERE / HoYoverse",
+    "zenless zone zero": "COGNOSPHERE / HoYoverse",
+    zzz: "COGNOSPHERE / HoYoverse",
+    "honor of kings": "Tencent Games",
+    hok: "Tencent Games",
+    "arena breakout": "Proxima Beta",
+    "point blank": "Zepetto",
+    valorant: "Riot Games",
+    "league of legends": "Riot Games",
+    "wild rift": "Riot Games",
+    "call of duty": "Activision / Garena",
+    codm: "Activision / Garena",
+    "stumble guys": "Scopely",
+    "magic chess": "Moonton",
+    undawn: "Level Infinite",
+    "ea sports fc": "Electronic Arts",
+    efootball: "Konami",
+    pes: "Konami",
+    "brawl stars": "Supercell",
+    "clash of clans": "Supercell",
+    "clash royale": "Supercell",
+    "hay day": "Supercell",
+    steam: "Valve",
+    "google play": "Google",
+    spotify: "Spotify AB",
+    netflix: "Netflix",
+    vidio: "Vidio",
+    viu: "Viu",
+    iqiyi: "iQIYI",
+    bilibili: "Bilibili",
+    wetv: "Tencent",
+    playstation: "Sony",
+    xbox: "Microsoft",
+    nintendo: "Nintendo",
+    minecraft: "Mojang / Microsoft",
+    garena: "Garena",
+    unipin: "UniPin",
+    gemscool: "Gemscool",
+  };
+
+  const getGameDeveloper = (brandName = "") => {
+    const name = brandName.toLowerCase().trim();
+    for (const key in PUBLISHER_MAP) {
+      if (name.includes(key)) {
+        return PUBLISHER_MAP[key];
+      }
+    }
+    return "Official Publisher";
+  };
 
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -57,7 +117,6 @@ const DetailView = ({ waAdmin = "628xxx" }) => {
 
       try {
         if (!brandData) {
-          // Menggunakan /api/topup/categories agar tidak 404
           const resBrands = await apiGet("/api/topup/categories");
           let allBrands = [];
           if (resBrands?.data) {
@@ -127,21 +186,19 @@ const DetailView = ({ waAdmin = "628xxx" }) => {
         }),
       });
 
-      const text =
-        `Halo Admin Vegaz, saya mahu order TopUp:\n\n` +
-        `🎮 Game: ${brandName}\n` +
-        `📦 Produk: ${selectedProduct.productName}\n` +
-        `🆔 SERVER: ${formData.userId}${formData.zoneId ? ` (${formData.zoneId})` : ""}\n` +
-        `👤 Nickname: ${nickname || "-"}\n` +
-        `💳 Payment: ${selectedPayment}\n` +
-        `📱 No WASSAP: ${formData.phone}\n` +
-        `💰 Total: ${formatPrice(selectedProduct.sellPrice)}\n\n` +
-        `Mohon instruksi pembayarannya. Terima kasih!`;
+      // PANGGIL DARI FORMCHAT
+      const message = generateMessage("topup", {
+        brandName: brandName,
+        productName: selectedProduct.productName,
+        userId: formData.userId,
+        zoneId: formData.zoneId,
+        nickname: nickname,
+        paymentMethod: selectedPayment,
+        phone: formData.phone,
+        totalPrice: formatPrice(selectedProduct.sellPrice),
+      });
 
-      window.open(
-        `https://wa.me/${waAdmin}?text=${encodeURIComponent(text)}`,
-        "_blank",
-      );
+      sendToChat(waAdmin, message);
     } catch (err) {
       alert("Terjadi kesalahan saat memproses pesanan: " + err.message);
     } finally {
@@ -186,7 +243,7 @@ const DetailView = ({ waAdmin = "628xxx" }) => {
               {brandName}
             </h1>
             <p className="text-slate-400 text-xs sm:text-sm mt-1">
-              {brandData?.publisher || "Publisher"}
+              {getGameDeveloper(brandName)}
             </p>
             <div className="flex flex-wrap items-center gap-4 mt-3 text-[10px] sm:text-xs text-white/90 font-bold">
               <span className="flex items-center gap-1.5">

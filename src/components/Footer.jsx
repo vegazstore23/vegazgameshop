@@ -125,7 +125,7 @@ export default function Footer() {
 
   return (
     <footer className="relative text-gray-300 bg-[#080f2a]">
-      <div className="bg-transparent py-6 pt-16 -translate-y-6 relative z-[9] w-full rounded-t-[40px] md:rounded-t-[60px] overflow-hidden"></div>
+      <div className="bg-[#09052b] border-b border-white/10 shadow-lg py-6 pt-16 -translate-y-6 relative z-[9] w-full rounded-t-[40px] md:rounded-t-[60px] overflow-hidden"></div>
 
       <div className="max-w-7xl mx-auto px-6 pt-10 pb-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10">

@@ -12,6 +12,7 @@ import Stock from "./pages/Stock";
 import Detail from "./pages/Detail";
 import Region from "./pages/Region";
 import Joki from "./pages/Joki";
+import JokiDetail from "./pages/JokiGameDetail";
 import Calculator from "./pages/Calculator";
 import About from "./pages/About";
 import DetailView from "./components/topup/DetailView";
@@ -44,6 +45,7 @@ function App() {
               <Route path="/detail/:id" element={<Detail />} />
               <Route path="/check-region" element={<Region />} />
               <Route path="/joki" element={<Joki />} />
+              <Route path="/joki/:slug" element={<JokiDetail />} />
               <Route path="/calculator-mlbb" element={<Calculator />} />
               <Route path="/about" element={<About />} />
               <Route

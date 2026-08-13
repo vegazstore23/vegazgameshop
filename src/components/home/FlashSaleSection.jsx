@@ -6,7 +6,7 @@ import {
   RiVipDiamondFill,
   RiGamepadFill,
   RiRocketFill,
-  RiGhostSmileFill, // Icon buat state kosong
+  RiGhostSmileFill,
 } from "react-icons/ri";
 import { apiGet } from "../../services/api";
 
@@ -73,7 +73,6 @@ export default function FlashSaleSection() {
       ? flashSales
       : flashSales.filter((item) => item.item_type === activeTab);
 
-  // Konfigurasi Tabs menggunakan Icons
   const tabs = [
     { id: "all", label: "Semua", icon: <RiFireFill size={14} /> },
     { id: "topup", label: "Topup", icon: <RiVipDiamondFill size={14} /> },
@@ -81,7 +80,6 @@ export default function FlashSaleSection() {
     { id: "joki", label: "Joki", icon: <RiRocketFill size={14} /> },
   ];
 
-  // Kalau nggak ada Flash Sale sama sekali dari database, sembunyikan section
   if (loading || flashSales.length === 0) return null;
 
   return (

@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { apiGet } from "../../services/api";
 import { useLangCurr } from "../context/LanguageCurrencyContext";
+import { generateMessage, sendToChat } from "../../utils/FormChat";
+import PromoModal from "../ui/PromoModal"; // Sesuaikan path import PromoModal jika berbeda
 
 export default function DetailInfo({ account, isDescOpen, setIsDescOpen }) {
   const { formatPrice, t } = useLangCurr();
   const [waAdmin, setWaAdmin] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     async function fetchContact() {
@@ -24,26 +27,6 @@ export default function DetailInfo({ account, isDescOpen, setIsDescOpen }) {
   const mainPrice = Number(account.price) || 0;
   const originalPrice = Math.round(mainPrice / 0.9);
   const isAvailable = account.status?.toLowerCase() === "available";
-
-  const handleOrder = () => {
-    const cleanWA = waAdmin.replace(/\D/g, "");
-    const detailUrl = window.location.href;
-    const formattedPrice = formatPrice(mainPrice);
-
-    const message = `Halo Admin Vegaz, saya berminat nak beli account ini:
-
-🚀 Unit: *${account.title || account.code}*
-🆔 Code: *${account.code}*
-💰 Harga: *${formattedPrice}*
-🔗 Link: ${detailUrl}
-
-Adakah masih tersedia?`;
-
-    window.open(
-      `https://wa.me/${cleanWA}?text=${encodeURIComponent(message)}`,
-      "_blank",
-    );
-  };
 
   return (
     <div className="p-6 bg-[#021d4a]/60 backdrop-blur-xl border border-blue-400/20 rounded-3xl text-white shadow-2xl">
@@ -103,16 +86,6 @@ Adakah masih tersedia?`;
           </div>
         )}
       </div>
-
-      <button
-        onClick={handleOrder}
-        disabled={!waAdmin || !isAvailable}
-        className="w-full bg-green-500 hover:bg-green-400 disabled:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed text-white py-4 rounded-2xl font-black transition-all transform active:scale-95 shadow-[0_0_20px_rgba(34,197,94,0.3)] uppercase text-xs tracking-[0.2em]"
-      >
-        {isAvailable
-          ? t("detail", "buyNowBtn") || "Beli Akaun Ini Sekarang"
-          : t("global", "notAvailable") || "Akaun Tidak Tersedia"}
-      </button>
     </div>
   );
 }

@@ -28,7 +28,6 @@ export default function Stock() {
   const [searchSortResetKey, setSearchSortResetKey] = useState(0);
   const [retryTrigger, setRetryTrigger] = useState(0);
 
-  // Ref untuk titik target scroll (pas di atas area filter/search)
   const filterSectionRef = useRef(null);
 
   const scrollToFilter = () => {
@@ -150,7 +149,6 @@ export default function Stock() {
         style={{ backgroundImage: `url(${bg1})` }}
       >
         <div className="max-w-7xl mx-auto px-4 py-12 space-y-8">
-          {/* REF DIPASANG DI SINI (Area Filter & Search) */}
           <div
             ref={filterSectionRef}
             className="bg-blue-900/90 rounded-3xl p-6 border border-white/5 shadow-2xl scroll-mt-6"
