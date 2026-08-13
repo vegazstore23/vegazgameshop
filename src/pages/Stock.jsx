@@ -144,11 +144,11 @@ export default function Stock() {
   return (
     <div className="min-h-screen bg-[#141414]">
       <StockProfileBanner />
-      <div className="min-h-screen bg-[#020617] bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-blue-950/20 via-[#020617] to-[#020617]">
+      <div className="min-h-screen bg-[#020617] bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops)),radial-gradient(ellipse_at_right,_var(--tw-gradient-stops))] from-blue-950/30 via-[#020617] to-blue-950/30">
         <div className="max-w-7xl mx-auto px-4 py-12 space-y-8">
           <div
             ref={filterSectionRef}
-            className="bg-blue-900/90 rounded-3xl p-6 border border-white/5 shadow-2xl scroll-mt-6"
+            className="bg-[#021d4a] rounded-3xl p-6 border border-white/5 shadow-2xl scroll-mt-6"
           >
             <TierFilter activeTier={activeTier} onSelect={handleTierSelect} />
 
@@ -176,7 +176,6 @@ export default function Stock() {
             }}
           />
 
-          {/* UI Error */}
           {!loading && error && (
             <div className="bg-red-500/10 border border-red-500/50 p-10 rounded-2xl text-center animate-in fade-in zoom-in duration-300">
               <p className="text-red-400 font-bold mb-2 text-lg uppercase tracking-tighter">
@@ -192,7 +191,6 @@ export default function Stock() {
             </div>
           )}
 
-          {/* Skeleton Loading */}
           {loading && (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
               {Array.from({ length: 8 }).map((_, i) => (
@@ -204,7 +202,6 @@ export default function Stock() {
             </div>
           )}
 
-          {/* Empty State */}
           {!loading && !error && accounts.length === 0 && (
             <div className="bg-orange-500/10 border border-orange-500/50 p-10 rounded-2xl text-center animate-in fade-in zoom-in duration-300">
               <p className="text-orange-400 font-bold mb-2 text-lg uppercase tracking-tighter">
@@ -231,7 +228,6 @@ export default function Stock() {
             </div>
           )}
 
-          {/* Account List */}
           {!loading && !error && accounts.length > 0 && (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
               {accounts.map((item) => (
@@ -245,7 +241,6 @@ export default function Stock() {
             </div>
           )}
 
-          {/* Oper fungsi scrollToFilter ke Pagination */}
           <Pagination
             totalPages={totalPages}
             currentPage={currentPage}

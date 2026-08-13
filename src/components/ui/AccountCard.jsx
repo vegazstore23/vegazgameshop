@@ -81,7 +81,7 @@ export default function AccountCard({ acc, type, waAdmin: propWaAdmin }) {
   return (
     <div
       onClick={() => navigate(`/detail/${acc.id}`)}
-      className="group relative rounded-2xl bg-gradient-to-b from-blue-500/90 to-blue-600/90 border border-white/10 shadow-lg transition flex flex-col h-full text-white overflow-hidden cursor-pointer"
+      className="group relative rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 border border-white/10 shadow-lg transition flex flex-col h-full text-white overflow-hidden cursor-pointer"
     >
       <div className="absolute top-2 left-2 bg-orange-500 text-[10px] px-2 py-1 rounded z-10 font-bold shadow-md">
         -10%

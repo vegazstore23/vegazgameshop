@@ -39,11 +39,17 @@ export default function StockProfileBanner() {
         </div>
       </div>
 
-      <div className="bg-[#001d57] pb-8">
+      <div className="bg-[#140c5e] pb-8">
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <div className="relative -mt-12 md:-mt-16 lg:-mt-20 z-10 flex items-end gap-4 md:gap-6">
-            <div className="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 p-1.5 md:p-2 bg-[#1a1c20] rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.8)] border-4 border-[#1a1c20]">
-              <div className="w-full h-full rounded-2xl overflow-hidden border border-white/10 relative">
+            <div className="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 [perspective:800px]">
+              <div
+                className="w-full h-full rounded-2xl overflow-hidden shadow-2xl relative border border-white/10"
+                style={{
+                  transform: "rotateY(20deg) rotateX(-1deg)", // Ditingkatkan derajatnya
+                  transformOrigin: "left center",
+                }}
+              >
                 <img
                   src={profileData.gameIcon || GameIconPlaceholder}
                   alt="Game Icon"

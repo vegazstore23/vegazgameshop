@@ -19,8 +19,7 @@ export default function MainLayout({ children }) {
 
       <main className="flex-1 pt-16 md:pt-20 pb-0">{children}</main>
 
-      {/* --- TARIK PAKSA NAIK PAKAI -mt- LUAR BIASA BIAR NEMPEL & PLONG --- */}
-      <div className="w-full bg-[#050510] leading-none -mt-16 sm:-mt-24 md:-mt-32 lg:-mt-40 relative z-20 pointer-events-none select-none">
+       <div className="w-full bg-[#050510] leading-none -mt-16 sm:-mt-24 md:-mt-32 lg:-mt-40 relative z-20 pointer-events-none select-none">
         <img
           src={bottomBg}
           alt="Divider Decor"

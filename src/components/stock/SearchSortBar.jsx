@@ -82,7 +82,7 @@ export default function SearchSortBar({
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setDropdownOpen((prev) => !prev)}
-          className="w-full md:w-56 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl font-bold transition flex justify-between items-center active:scale-95"
+          className="w-full md:w-56 bg-blue-800 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition flex justify-between items-center active:scale-95"
         >
           <span className="text-xs uppercase tracking-widest">
             {SORT_LABELS[currentSort] || t("stock", "sortLabel") || "Susun"}

@@ -61,7 +61,7 @@ export default function Home() {
       <div>
         <MarqueeTicker />
 
-        <section className="w-full bg-[#020617] bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-blue-950/20 via-[#020617] to-[#020617] py-12 px-4">
+        <section className="w-full bg-[#020617] bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops)),radial-gradient(ellipse_at_right,_var(--tw-gradient-stops))] from-blue-950/30 via-[#020617] to-blue-950/30 py-12 px-4">
           <div className="max-w-7xl mx-auto flex flex-col gap-16">
             <ScrollReveal delay={0.1}>
               <FlashSaleSection />
@@ -95,8 +95,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 3. BAGIAN FEEDBACK & CONTACT (Nuansa Putih bersih elegan) */}
-        <section className="w-full bg-[#020617] py-6 md:py-10 px-3 md:px-4">
+        <section className="w-full bg-[#020617] bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops)),radial-gradient(ellipse_at_right,_var(--tw-gradient-stops))] from-blue-950/30 via-[#020617] to-blue-950/30 py-6 md:py-10 px-3 md:px-4">
           <div className="max-w-7xl mx-auto flex flex-col gap-10 md:gap-16">
             <ScrollReveal>
               <div className="mb-8 pt-16 border-t border-white/10"></div>
