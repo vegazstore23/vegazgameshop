@@ -144,7 +144,6 @@ export const id = {
     noItemSelected: "Belum ada item produk yang dipilih.",
     orderNow: "Pesan Sekarang!",
     processing: "Memproses...",
-    // Step Form Topup
     step1Title: "Masukkan Data Akun",
     step2Title: "Pilih Nominal Top Up",
     step3Title: "Jumlah (Quantity)",

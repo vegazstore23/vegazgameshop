@@ -1,107 +1,105 @@
 import { Link } from "react-router-dom";
+import { useLangCurr } from "../context/LanguageCurrencyContext";
+import { ShieldCheck, Zap, Globe, Sparkles } from "lucide-react";
 
 export default function PopularSection() {
+  const { t } = useLangCurr();
+
   const items = [
     {
-      title: "Stock Acc MLBB",
-      desc: "All Stock Account MLBB by VegazStore",
+      title: "Mobile Legends",
+      dev: "Moonton",
       to: "/stock",
-      glow: "from-cyan-500 via-blue-500 to-indigo-500",
-      accentText: "text-cyan-400",
-      iconBg: "from-cyan-500 to-blue-600",
-      badge: "READY STOCK",
-    },
-    {
-      title: "Check Region ID",
-      desc: "Cek region account MLBB sebelum topup",
-      to: "/check-region",
-      glow: "from-purple-500 via-fuchsia-500 to-pink-500",
-      accentText: "text-fuchsia-400",
-      iconBg: "from-purple-500 to-fuchsia-600",
-      badge: "FREE UTILITY",
-    },
-    {
-      title: "Top Up Games",
-      desc: "Top up diamond cepat harga berbaloi",
-      to: "/topup-games",
-      glow: "from-amber-400 via-orange-500 to-yellow-500",
-      accentText: "text-amber-400",
-      iconBg: "from-amber-500 to-orange-600",
-      badge: "INSTANT PROCESS",
+      badgeText: "STOCK",
+      icon: <ShieldCheck className="w-6 h-6 sm:w-8 sm:h-8 text-cyan-400" />,
+      gradientBg: "from-blue-950 via-[#071330] to-[#020d26]",
+      borderGlow: "border-cyan-500/30 group-hover:border-cyan-400",
+      accentFold: "bg-cyan-500/20",
     },
     {
       title: "Joki Rank MLBB",
-      desc: "Push rank aman oleh pro player terpercaya",
+      dev: "VegazStore",
       to: "/joki-boost",
-      glow: "from-red-500 via-rose-500 to-orange-500",
-      accentText: "text-red-400",
-      iconBg: "from-red-500 to-rose-600",
-      badge: "FAST PUSH",
+      badgeText: "PUSH",
+      icon: <Zap className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400" />,
+      gradientBg: "from-blue-950 via-[#071330] to-[#020d26]",
+      borderGlow: "border-blue-500/30 group-hover:border-blue-400",
+      accentFold: "bg-blue-500/20",
+    },
+    {
+      title: "Check Region MLBB",
+      dev: "VegazStore",
+      to: "/check-region",
+      badgeText: "FREE",
+      icon: <Globe className="w-6 h-6 sm:w-8 sm:h-8 text-sky-400" />,
+      gradientBg: "from-blue-950 via-[#071330] to-[#020d26]",
+      borderGlow: "border-sky-500/30 group-hover:border-sky-400",
+      accentFold: "bg-sky-500/20",
+    },
+    {
+      title: "Top Up Games",
+      dev: "VegazStore",
+      to: "/topup-games",
+      badgeText: "INSTANT",
+      icon: <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-indigo-400" />,
+      gradientBg: "from-blue-950 via-[#071330] to-[#020d26]",
+      borderGlow: "border-indigo-500/30 group-hover:border-indigo-400",
+      accentFold: "bg-indigo-500/20",
     },
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6">
-      {/* grid-cols-2 untuk mobile, md:grid-cols-4 untuk desktop agar pas 4 item */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+    <section className="max-w-7xl mx-auto px-3 sm:px-4 py-6">
+      {/* HEADER SECTION POPULER (Judul Original Dipertahankan) */}
+      <div className="mb-4 sm:mb-6 space-y-0.5 sm:space-y-1">
+        <div className="flex items-center gap-2">
+          <span className="text-lg sm:text-xl">🔥</span>
+          <h2 className="text-base sm:text-xl md:text-2xl font-black text-white tracking-wide uppercase">
+            POPULER SEKARANG!
+          </h2>
+        </div>
+        <p className="text-[11px] sm:text-xs md:text-sm text-gray-400 font-medium">
+          Berikut adalah beberapa produk yang paling populer saat ini.
+        </p>
+      </div>
+
+      {/* GRID KARTU PRODUK (MOBILE OPTIMIZED) */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 md:gap-5">
         {items.map((item, i) => (
           <Link
             key={i}
             to={item.to}
-            className="group relative rounded-2xl p-[1px] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] focus:outline-none"
+            className={`group relative flex flex-col justify-between rounded-2xl sm:rounded-[22px] overflow-hidden border ${item.borderGlow} shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.97] bg-gradient-to-b ${item.gradientBg}`}
           >
-            {/* 1. Outer Neon Glow Border */}
-            <div
-              className={`absolute inset-0 bg-gradient-to-r ${item.glow} opacity-30 blur-sm group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`}
-            />
-
-            {/* 2. Main Card Container */}
-            <div className="relative flex flex-col justify-between w-full h-44 p-4 md:p-5 rounded-2xl bg-slate-950/80 backdrop-blur-xl border border-white/15 group-hover:border-white/30 shadow-2xl overflow-hidden transition-all duration-300">
-              <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-1000 ease-in-out pointer-events-none" />
-
-              <div className="z-10">
-                <div className="flex items-center justify-between mb-2">
-                  <span
-                    className={`text-[9px] md:text-[10px] font-black tracking-widest uppercase px-2 py-0.5 rounded-full bg-white/5 border border-white/10 ${item.accentText}`}
-                  >
-                    {item.badge}
-                  </span>
-                </div>
-
-                <h3 className="text-base md:text-lg font-black tracking-tight text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-slate-300 transition-all">
-                  {item.title}
-                </h3>
-                <p className="text-[11px] md:text-xs text-slate-400 mt-1 line-clamp-2">
-                  {item.desc}
-                </p>
+            {/* BAGIAN ATAS: IKON & BADGE */}
+            <div className="p-3 sm:p-4 md:p-5 flex items-start justify-between relative z-10">
+              <div className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 group-hover:scale-110 transition-transform duration-300 shadow-inner">
+                {item.icon}
               </div>
 
-              <div className="flex items-center justify-between z-10 pt-2 border-t border-white/5">
-                <span className="text-[10px] md:text-[11px] font-bold tracking-wider text-slate-400 group-hover:text-white transition-colors">
-                  EXPLORE NOW
-                </span>
+              <span className="text-[8px] sm:text-[9px] md:text-[10px] font-black tracking-wider uppercase px-2 py-0.5 sm:py-1 rounded-full bg-blue-500/10 border border-blue-400/20 text-cyan-300">
+                {item.badgeText}
+              </span>
+            </div>
 
-                <div
-                  className={`w-7 h-7 md:w-8 md:h-8 rounded-xl bg-gradient-to-tr ${item.iconBg} flex items-center justify-center shadow-md group-hover:scale-110 group-hover:translate-x-1 transition-all duration-300`}
-                >
-                  <svg
-                    className="w-3.5 h-3.5 md:w-4 md:h-4 text-white fill-current"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M5 12h14M12 5l7 7-7 7"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
-              </div>
+            {/* BAGIAN BAWAH: NAMA PRODUK & DEVELOPER */}
+            <div className="relative bg-[#0d1b3e] p-3 sm:p-3.5 md:p-4 border-t border-white/10 flex flex-col justify-center min-h-[64px] sm:min-h-[72px] md:min-h-[80px]">
+              <h3 className="text-xs sm:text-sm font-black text-white leading-tight line-clamp-1 uppercase tracking-tight group-hover:text-cyan-400 transition-colors">
+                {item.title}
+              </h3>
+              <p className="text-[9px] sm:text-[10px] md:text-xs text-blue-300/70 font-bold mt-0.5 line-clamp-1">
+                {item.dev}
+              </p>
+
+              {/* Aksen Segitiga/Folded Corner di Sudut Kanan Bawah */}
+              <div
+                className={`absolute bottom-0 right-0 w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 ${item.accentFold}`}
+                style={{ clipPath: "polygon(100% 0, 0 100%, 100% 100%)" }}
+              />
             </div>
           </Link>
         ))}
       </div>
-    </div>
+    </section>
   );
 }
