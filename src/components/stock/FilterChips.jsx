@@ -6,13 +6,14 @@ export default function FilterChips({
   currentSort,
   onClearSort,
 }) {
-  const { t } = useLangCurr();
+  const { t, formatPrice, rateMYR } = useLangCurr();
 
+  // Konversi nilai batas MYR ke Rupiah dasar agar formatPrice() bisa membaca switcher secara tepat
   const TIER_LABELS = {
-    entry: "Entry RM1–RM100",
-    mid: "Mid RM101–RM249",
-    mythic: "Mythic RM250–RM400",
-    glory: "Glory RM401–RM10,000",
+    entry: `Entry ${formatPrice(1 * rateMYR)}–${formatPrice(100 * rateMYR)}`,
+    mid: `Mid ${formatPrice(101 * rateMYR)}–${formatPrice(249 * rateMYR)}`,
+    mythic: `Mythic ${formatPrice(250 * rateMYR)}–${formatPrice(400 * rateMYR)}`,
+    glory: `Glory ${formatPrice(401 * rateMYR)}–${formatPrice(10000 * rateMYR)}`,
   };
 
   const SORT_LABELS = {
@@ -25,7 +26,7 @@ export default function FilterChips({
   if (!activeTier && currentSort === "newest") return null;
 
   return (
-    <div className="flex flex-wrap gap-2 mt-4">
+    <div className="flex flex-wrap gap-2 mt-2">
       {activeTier && (
         <span className="bg-blue-600/50 border border-blue-400/30 px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase flex items-center gap-2">
           Tier: {TIER_LABELS[activeTier]}

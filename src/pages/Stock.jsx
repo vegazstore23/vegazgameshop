@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react"; // Tambah useRef
+import { useEffect, useState, useRef } from "react";
 import { apiGet } from "../services/api";
 import { useLangCurr } from "../components/context/LanguageCurrencyContext";
 import StockProfileBanner from "../components/stock/StockProfileBanner";
@@ -8,7 +8,6 @@ import FilterChips from "../components/stock/FilterChips";
 import AccountCard from "../components/ui/AccountCard";
 import Pagination from "../components/stock/Paginations";
 import Advantages from "../components/stock/Advantages";
-import bg1 from "../assets/background/bg-akun.webp";
 
 export default function Stock() {
   const { t } = useLangCurr();
@@ -145,10 +144,10 @@ export default function Stock() {
     <div className="min-h-screen bg-[#141414]">
       <StockProfileBanner />
       <div className="min-h-screen bg-[#020617] bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops)),radial-gradient(ellipse_at_right,_var(--tw-gradient-stops))] from-blue-950/30 via-[#020617] to-blue-950/30">
-        <div className="max-w-7xl mx-auto px-4 py-12 space-y-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-12 space-y-4 sm:space-y-8">
           <div
             ref={filterSectionRef}
-            className="bg-[#021d4a] rounded-3xl p-6 border border-white/5 shadow-2xl scroll-mt-6"
+            className="bg-[#021d4a] rounded-2xl md:rounded-3xl p-4 md:p-6 border border-white/5 shadow-2xl scroll-mt-4"
           >
             <TierFilter activeTier={activeTier} onSelect={handleTierSelect} />
 
@@ -177,11 +176,11 @@ export default function Stock() {
           />
 
           {!loading && error && (
-            <div className="bg-red-500/10 border border-red-500/50 p-10 rounded-2xl text-center animate-in fade-in zoom-in duration-300">
-              <p className="text-red-400 font-bold mb-2 text-lg uppercase tracking-tighter">
+            <div className="bg-red-500/10 border border-red-500/50 p-6 md:p-10 rounded-2xl text-center animate-in fade-in zoom-in duration-300">
+              <p className="text-red-400 font-bold mb-2 text-base md:text-lg uppercase tracking-tighter">
                 {t("stock", "errorTitle") || "Ralat Memuatkan Data!"}
               </p>
-              <p className="text-white/60 text-sm mb-4">{error}</p>
+              <p className="text-white/60 text-xs md:text-sm mb-4">{error}</p>
               <button
                 onClick={() => setRetryTrigger((prev) => prev + 1)}
                 className="mt-2 px-6 py-2 bg-red-500/20 hover:bg-red-500/40 border border-red-500/50 text-red-300 rounded-xl text-xs font-bold uppercase tracking-widest transition-all"
@@ -192,25 +191,25 @@ export default function Stock() {
           )}
 
           {loading && (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6 mt-4 md:mt-6">
               {Array.from({ length: 8 }).map((_, i) => (
                 <div
                   key={i}
-                  className="bg-white/5 rounded-2xl h-48 animate-pulse"
+                  className="bg-white/5 rounded-2xl h-44 md:h-48 animate-pulse"
                 />
               ))}
             </div>
           )}
 
           {!loading && !error && accounts.length === 0 && (
-            <div className="bg-orange-500/10 border border-orange-500/50 p-10 rounded-2xl text-center animate-in fade-in zoom-in duration-300">
-              <p className="text-orange-400 font-bold mb-2 text-lg uppercase tracking-tighter">
+            <div className="bg-orange-500/10 border border-orange-500/50 p-6 md:p-10 rounded-2xl text-center animate-in fade-in zoom-in duration-300">
+              <p className="text-orange-400 font-bold mb-2 text-base md:text-lg uppercase tracking-tighter">
                 {activeTier
                   ? t("stock", "emptyTierTitle") ||
                     "Tiada akaun tersedia dalam tier ini!"
                   : t("stock", "emptyTitle") || "Tiada akaun ditemui!"}
               </p>
-              <p className="text-white/60 text-sm">
+              <p className="text-white/60 text-xs md:text-sm">
                 {activeTier
                   ? t("stock", "emptyTierDesc") ||
                     "Sila tetapkan semula penapis tier atau cuba tier yang lain."
@@ -229,7 +228,7 @@ export default function Stock() {
           )}
 
           {!loading && !error && accounts.length > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6 mt-4 md:mt-6">
               {accounts.map((item) => (
                 <AccountCard
                   key={item.id}

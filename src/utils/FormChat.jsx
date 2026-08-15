@@ -28,6 +28,12 @@ export const sendToChat = (contactValue, message, isTelegram = false) => {
   }
 };
 
+// Helper internal untuk menghapus 'www.' dan memastikan format murni 'https://'
+const cleanUrl = (rawUrl = "") => {
+  if (!rawUrl) return "";
+  return rawUrl.replace(/^https?:\/\/(www\.)?/, "https://");
+};
+
 export const generateMessage = (source, data = {}) => {
   switch (source) {
     case "topup":
@@ -67,12 +73,14 @@ export const generateMessage = (source, data = {}) => {
         referralInfo = `\n📢 Tahu dari: *${data.referral}*`;
       }
 
+      const formattedUrl = cleanUrl(data.url);
+
       return (
         `Halo Admin Vegaz, saya berminat nak beli account ini:\n\n` +
         `🚀 Unit: *${data.title}*\n` +
         `🆔 Code: *${data.code}*\n` +
         `💰 Harga: *${data.price}*${promoInfo}${referralInfo}\n` +
-        `🔗 Link: ${data.url}\n\n` +
+        `🔗 Link: ${formattedUrl}\n\n` +
         `Adakah masih tersedia dan nak detail pembayaran?`
       );
 
