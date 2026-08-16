@@ -43,8 +43,7 @@ const Topup = () => {
     const brandName = brand.brandName || brand.name || brand;
     const brandSlug = createSlug(brandName);
 
-    // Navigasi ke slug bersih, datanya (termasuk activeTab) dioper via state
-    navigate(`/topup/${brandSlug}`, {
+     navigate(`/topup/${brandSlug}`, {
       state: {
         selectedBrand: brand,
         activeTab: activeTab,

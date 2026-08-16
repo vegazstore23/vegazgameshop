@@ -33,6 +33,16 @@ export const en = {
     sellAccount: "Sell Account",
     fastAndSafe: "Fast & Secure Process",
   },
+  home: {
+    flashSale: "Flash Sale",
+    endsIn: "Ends In",
+    trending: "Trending",
+    topChoice: "Top Choice",
+    popularServices: "Popular Services",
+    mlbbAccount: "MLBB Account",
+    clientFeedbacks: "Client Feedbacks",
+    officialSupport: "Official Support",
+  },
   region: {
     pageTitle: "Check Account Region",
     pageDesc:
@@ -56,12 +66,6 @@ export const en = {
     errInvalid: "User ID or Zone ID not found. Please double-check your input.",
     errDefault:
       "A system error occurred. Please ensure a stable connection and try again.",
-  },
-  home: {
-    flashSale: "Flash Sale",
-    endsIn: "Ends In",
-    trending: "Trending",
-    topChoice: "Top Choice",
   },
   stock: {
     searchPlaceholder: "Search code or account title...",
@@ -144,7 +148,6 @@ export const en = {
     noItemSelected: "No product item selected yet.",
     orderNow: "Order Now!",
     processing: "Processing...",
-    // Step Form Topup
     step1Title: "Enter Account Data",
     step2Title: "Select Top Up Amount",
     step3Title: "Quantity",
@@ -166,7 +169,6 @@ export const en = {
       "This number will be contacted if there are issues with your transaction.",
     searchCountry: "Search country...",
     countryNotFound: "Country not found",
-    // Notif Error & Pop-up Modal
     validationModalTitle: "Complete Order Details",
     validationModalDesc:
       "Please fill in all required fields before proceeding:",

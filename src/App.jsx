@@ -24,9 +24,32 @@ function App() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
+    }, 1000);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    const pageTitles = {
+      "/": "VegazGameShop — Platform Jual Beli & Topup Games Terpercaya",
+      "/topup": "Topup Games & Jasa Joki Premium | VegazGameShop",
+      "/stock": "Stok Akaun MLBB Premium & Murah | VegazGameShop",
+      "/check-region": "Cek Region ID MLBB | VegazGameShop",
+      "/joki": "Jasa Joki MLBB Pro & Profesional | VegazGameShop",
+      "/calculator-mlbb": "Kalkulator Winrate & Gacha MLBB | VegazGameShop",
+      "/about": "Tentang Kami, FAQ & Bantuan | VegazGameShop",
+    };
+
+   if (location.pathname.startsWith("/detail/")) {
+      document.title = "Detail Akaun MLBB | VegazGameShop";
+    } else if (location.pathname.startsWith("/topup/")) {
+      document.title = "Topup Game Pilihan | VegazGameShop";
+    } else if (location.pathname.startsWith("/joki/")) {
+      document.title = "Jasa Joki Game Pilihan | VegazGameShop";
+    } else {
+      document.title =
+        pageTitles[location.pathname] || "VegazGameShop — Gaming Store";
+    }
+  }, [location.pathname]);
 
   return (
     <LanguageCurrencyProvider>

@@ -33,6 +33,16 @@ export const my = {
     sellAccount: "Jual Akaun",
     fastAndSafe: "Proses Pantas & Selamat",
   },
+  home: {
+    flashSale: "Jualan Kilat",
+    endsIn: "Tamat Dalam",
+    trending: "Popular Section",
+    topChoice: "Pilihan Utama",
+    popularServices: "Perkhidmatan Popular",
+    mlbbAccount: "Akaun MLBB",
+    clientFeedbacks: "Maklum Balas Pelanggan",
+    officialSupport: "Sokongan Rasmi",
+  },
   region: {
     pageTitle: "Semak Region Akaun MLBB",
     pageDesc:
@@ -57,12 +67,6 @@ export const my = {
       "ID Pengguna atau ID Zon tidak dijumpai. Sila semak semula input anda.",
     errDefault:
       "Ralat sistem berlaku. Pastikan sambungan stabil dan cuba lagi.",
-  },
-  home: {
-    flashSale: "Jualan Kilat",
-    endsIn: "Tamat Dalam",
-    trending: "Arah Aliran",
-    topChoice: "Pilihan Utama",
   },
   stock: {
     searchPlaceholder: "Cari kod atau tajuk akaun...",
@@ -147,13 +151,12 @@ export const my = {
     noItemSelected: "Belum ada item produk yang dipilih.",
     orderNow: "Pesan Sekarang!",
     processing: "Memproses...",
-    // Step Form Topup
     step1Title: "Masukkan Data Akaun",
     step2Title: "Pilih Nominal Top Up",
     step3Title: "Kuantiti (Quantity)",
     step4Title: "Kod Promo",
     step5Title: "Kaedah Pembayaran",
-    step6Title: "Nombor WhatsApp Kontak",
+    step6Title: "Nomor WhatsApp Kontak",
     userIdLabel: "ID Akaun",
     userIdPlaceholder: "Contoh: 12345678",
     zoneIdLabel: "Server / Zone ID",
@@ -169,7 +172,6 @@ export const my = {
       "Nombor ini akan dihubungi jika terdapat masalah pada transaksi anda.",
     searchCountry: "Cari negara...",
     countryNotFound: "Negara tidak ditemui",
-    // Notif Error & Pop-up Modal
     validationModalTitle: "Lengkapkan Maklumat Pesanan",
     validationModalDesc:
       "Sila isi semua ruangan yang diperlukan sebelum meneruskan:",

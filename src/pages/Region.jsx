@@ -39,7 +39,7 @@ export default function Region() {
   );
 
   useEffect(() => {
-    document.title = `${t("region", "pageTitle")} | VegazGameShop`;
+   
   }, [t]);
 
   const [status, setStatus] = useState(STATUS.IDLE);

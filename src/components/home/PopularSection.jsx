@@ -10,7 +10,7 @@ export default function PopularSection() {
       title: "Mobile Legends",
       dev: "Moonton",
       to: "/stock",
-      badgeText: "STOCK",
+      badgeText: t("header", "stock") || "STOCK",
       icon: <ShieldCheck className="w-6 h-6 sm:w-8 sm:h-8 text-cyan-400" />,
       gradientBg: "from-blue-950 via-[#071330] to-[#020d26]",
       borderGlow: "border-cyan-500/30 group-hover:border-cyan-400",
@@ -50,20 +50,8 @@ export default function PopularSection() {
 
   return (
     <section className="max-w-7xl mx-auto px-3 sm:px-4 py-6">
-      {/* HEADER SECTION POPULER (Judul Original Dipertahankan) */}
-      <div className="mb-4 sm:mb-6 space-y-0.5 sm:space-y-1">
-        <div className="flex items-center gap-2">
-          <span className="text-lg sm:text-xl">🔥</span>
-          <h2 className="text-base sm:text-xl md:text-2xl font-black text-white tracking-wide uppercase">
-            POPULER SEKARANG!
-          </h2>
-        </div>
-        <p className="text-[11px] sm:text-xs md:text-sm text-gray-400 font-medium">
-          Berikut adalah beberapa produk yang paling populer saat ini.
-        </p>
-      </div>
+      <div className="mb-4 sm:mb-6 space-y-0.5 sm:space-y-1"></div>
 
-      {/* GRID KARTU PRODUK (MOBILE OPTIMIZED) */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 md:gap-5">
         {items.map((item, i) => (
           <Link
@@ -71,7 +59,6 @@ export default function PopularSection() {
             to={item.to}
             className={`group relative flex flex-col justify-between rounded-2xl sm:rounded-[22px] overflow-hidden border ${item.borderGlow} shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.97] bg-gradient-to-b ${item.gradientBg}`}
           >
-            {/* BAGIAN ATAS: IKON & BADGE */}
             <div className="p-3 sm:p-4 md:p-5 flex items-start justify-between relative z-10">
               <div className="p-2 sm:p-2.5 rounded-xl sm:rounded-2xl bg-white/5 border border-white/10 group-hover:scale-110 transition-transform duration-300 shadow-inner">
                 {item.icon}
@@ -82,7 +69,6 @@ export default function PopularSection() {
               </span>
             </div>
 
-            {/* BAGIAN BAWAH: NAMA PRODUK & DEVELOPER */}
             <div className="relative bg-[#0d1b3e] p-3 sm:p-3.5 md:p-4 border-t border-white/10 flex flex-col justify-center min-h-[64px] sm:min-h-[72px] md:min-h-[80px]">
               <h3 className="text-xs sm:text-sm font-black text-white leading-tight line-clamp-1 uppercase tracking-tight group-hover:text-cyan-400 transition-colors">
                 {item.title}
@@ -91,7 +77,6 @@ export default function PopularSection() {
                 {item.dev}
               </p>
 
-              {/* Aksen Segitiga/Folded Corner di Sudut Kanan Bawah */}
               <div
                 className={`absolute bottom-0 right-0 w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 ${item.accentFold}`}
                 style={{ clipPath: "polygon(100% 0, 0 100%, 100% 100%)" }}

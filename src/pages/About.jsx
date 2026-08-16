@@ -8,7 +8,7 @@ import { Info, HelpCircle, ShieldAlert, ShieldCheck } from "lucide-react";
 
 export default function About() {
   useEffect(() => {
-    document.title = "Tentang & FAQ | VegazGameShop";
+ 
   }, []);
 
   const [activeTab, setActiveTab] = useState("about");

@@ -33,6 +33,16 @@ export const id = {
     sellAccount: "Jual Akun",
     fastAndSafe: "Proses Cepat & Aman",
   },
+  home: {
+    flashSale: "Flash Sale",
+    endsIn: "Berakhir Dalam",
+    trending: "Sedang Tren",
+    topChoice: "Pilihan Terbaik",
+    popularServices: "Layanan Populer",
+    mlbbAccount: "Akun MLBB",
+    clientFeedbacks: "Ulasan Pelanggan",
+    officialSupport: "Dukungan Resmi",
+  },
   region: {
     pageTitle: "Cek Wilayah Akun",
     pageDesc:
@@ -56,12 +66,6 @@ export const id = {
     errInvalid:
       "ID Pengguna atau ID Zone tidak ditemukan. Silakan cek kembali input Anda.",
     errDefault: "Terjadi error sistem. Pastikan koneksi stabil dan coba lagi.",
-  },
-  home: {
-    flashSale: "Flash Sale",
-    endsIn: "Berakhir Dalam",
-    trending: "Sedang Tren",
-    topChoice: "Pilihan Terbaik",
   },
   stock: {
     searchPlaceholder: "Cari kode atau judul akun...",
@@ -165,7 +169,6 @@ export const id = {
       "Nomor ini akan dihubungi jika terjadi kendala pada transaksi Anda.",
     searchCountry: "Cari negara...",
     countryNotFound: "Negara tidak ditemukan",
-    // Notif Error & Pop-up Modal
     validationModalTitle: "Lengkapi Data Pesanan",
     validationModalDesc:
       "Harap isi semua formulir yang diperlukan sebelum melanjutkan:",

@@ -54,7 +54,6 @@ export default function Stock() {
   }, []);
 
   useEffect(() => {
-    document.title = "Stock Account MLBB Update | VegazGameShop";
 
     let cancelled = false;
 

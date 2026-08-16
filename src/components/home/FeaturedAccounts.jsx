@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { apiGet } from "../../services/api";
 import AccountCard from "../ui/AccountCard";
+import { useLangCurr } from "../context/LanguageCurrencyContext";
 
 // ── Skeleton card ─────────────────────────────────────────────────────────────
 function SkeletonCard() {
@@ -19,22 +20,26 @@ function SkeletonCard() {
 
 // ── Error state ───────────────────────────────────────────────────────────────
 function ErrorState({ onRetry }) {
+  const { t } = useLangCurr();
+
   return (
     <div className="col-span-2 md:col-span-4 flex flex-col items-center justify-center py-16 gap-4 text-center">
       <div className="w-12 h-12 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-2xl">
         ⚠️
       </div>
       <div>
-        <p className="text-white/60 text-sm">Gagal memuatkan akaun</p>
+        <p className="text-white/60 text-sm">
+          {t("stock", "errorTitle") || "Gagal memuatkan akaun"}
+        </p>
         <p className="text-white/30 text-xs mt-1">
-          Semak sambungan internet anda
+          {t("stock", "fetchError") || "Semak sambungan internet anda"}
         </p>
       </div>
       <button
         onClick={onRetry}
         className="text-xs font-bold text-blue-400 hover:text-blue-300 uppercase tracking-widest border border-blue-500/30 px-4 py-2 rounded-xl hover:bg-blue-500/10 transition-all"
       >
-        Cuba Semula
+        {t("stock", "retryBtn") || "Cuba Semula"}
       </button>
     </div>
   );
@@ -42,11 +47,13 @@ function ErrorState({ onRetry }) {
 
 // ── Empty state ───────────────────────────────────────────────────────────────
 function EmptyState() {
+  const { t } = useLangCurr();
+
   return (
     <div className="col-span-2 md:col-span-4 flex flex-col items-center justify-center py-16 gap-3 text-center">
       <div className="text-3xl opacity-30">🎮</div>
       <p className="text-white/40 text-sm">
-        Tiada akaun tersedia buat masa ini
+        {t("stock", "emptyTitle") || "Tiada akaun tersedia buat masa ini"}
       </p>
     </div>
   );

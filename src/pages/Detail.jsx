@@ -36,9 +36,7 @@ const Detail = () => {
 
   useEffect(() => {
     if (account) {
-      document.title = `${
-        account.title || account.name || "Detail Account"
-      } | VegazGameShop`;
+
     }
   }, [account]);
 

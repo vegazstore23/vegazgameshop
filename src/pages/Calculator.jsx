@@ -6,7 +6,7 @@ import ScrollReveal from "../components/ScrollReveal.jsx";
 
 export default function Calculator() {
   useEffect(() => {
-    document.title = "Kalkulator Gacha & Winrate | VegazGameShop";
+  
   }, []);
 
   const [activeTab, setActiveTab] = useState("winrate");
