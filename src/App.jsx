@@ -31,23 +31,22 @@ function App() {
   useEffect(() => {
     const pageTitles = {
       "/": "VegazGameShop — Platform Jual Beli & Topup Games Terpercaya",
-      "/topup": "Topup Games & Jasa Joki Premium | VegazGameShop",
+      "/topup": "Topup Games Termurah 100% | VegazGameShop",
       "/stock": "Stok Akaun MLBB Premium & Murah | VegazGameShop",
       "/check-region": "Cek Region ID MLBB | VegazGameShop",
-      "/joki": "Jasa Joki MLBB Pro & Profesional | VegazGameShop",
+      "/joki": "Joki GameBooster Terpadu | VegazGameShop",
       "/calculator-mlbb": "Kalkulator Winrate & Gacha MLBB | VegazGameShop",
       "/about": "Tentang Kami, FAQ & Bantuan | VegazGameShop",
     };
 
-   if (location.pathname.startsWith("/detail/")) {
-      document.title = "Detail Akaun MLBB | VegazGameShop";
+    if (location.pathname.startsWith("/detail/")) {
+      document.title = "Detail Akaun MLBB ";
     } else if (location.pathname.startsWith("/topup/")) {
-      document.title = "Topup Game Pilihan | VegazGameShop";
+      document.title = "Topup Game Pilihan ";
     } else if (location.pathname.startsWith("/joki/")) {
-      document.title = "Jasa Joki Game Pilihan | VegazGameShop";
+      document.title = "Game Booster Pilihan ";
     } else {
-      document.title =
-        pageTitles[location.pathname] || "VegazGameShop — Gaming Store";
+      document.title = pageTitles[location.pathname] || "VegazGameShop";
     }
   }, [location.pathname]);
 
