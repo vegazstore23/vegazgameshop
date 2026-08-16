@@ -57,15 +57,24 @@ export default function DetailInfo({ account, isDescOpen, setIsDescOpen }) {
       </div>
 
       <div className="bg-white/5 border border-white/10 p-5 rounded-2xl mb-6">
-        <p className="text-[10px] text-blue-300 uppercase font-black mb-1 tracking-widest">
+        <p className="text-[10px] text-blue-300 uppercase font-black mb-1.5 tracking-widest">
           {t("detail", "currentPrice") || "Harga Semasa"}
         </p>
-        <div className="flex items-baseline gap-3">
-          <span className="text-4xl font-black text-yellow-400 font-orbitron">
+
+        {/* Harga Utama yang Besar */}
+        <div className="mb-2">
+          <span className="text-3xl sm:text-4xl font-black text-yellow-400 font-orbitron">
             {formatPrice(mainPrice)}
           </span>
-          <span className="text-gray-500 line-through font-bold text-sm">
+        </div>
+
+        {/* Harga Coret & Badge Diskon Sejajar di Bawah */}
+        <div className="flex items-center gap-2.5">
+          <span className="text-gray-400 line-through font-bold text-xs sm:text-sm">
             {formatPrice(originalPrice)}
+          </span>
+          <span className="bg-red-500/20 border border-red-500/30 text-red-400 text-[10px] sm:text-xs font-black px-2 py-0.5 rounded-md uppercase tracking-wider">
+            Diskon
           </span>
         </div>
       </div>

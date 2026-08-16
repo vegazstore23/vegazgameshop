@@ -140,7 +140,7 @@ export default function AccountCard({ acc, type, waAdmin: propWaAdmin }) {
         <div
           className={`flex flex-col gap-1 mt-auto ${!isAvailable ? "opacity-50" : ""}`}
         >
-          <div className="flex justify-between text-[10px] text-gray-400 line-through">
+          <div className="flex justify-between text-[11px] text-gray-200 line-through">
             <span>{formatPrice(originalPriceIDR)}</span>
           </div>
 
