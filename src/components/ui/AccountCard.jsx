@@ -9,7 +9,9 @@ import StarIcon from "../../assets/icons/Star.webp";
 
 export default function AccountCard({ acc, type, waAdmin: propWaAdmin }) {
   const navigate = useNavigate();
-  const { lang, formatPrice, t } = useLangCurr();
+
+  // Ambil rateMYR dan rateUSD dari context untuk ngitung pembulatan di komponen ini
+  const { lang, t, rateMYR, rateUSD } = useLangCurr();
   const [waAdmin, setWaAdmin] = useState(propWaAdmin || "");
 
   if (!acc) return null;
@@ -54,6 +56,29 @@ export default function AccountCard({ acc, type, waAdmin: propWaAdmin }) {
   const priceIDR = Number(acc.price) || 0;
   const originalPriceIDR = Math.round(priceIDR / 0.9);
 
+  // --- FUNGSI KHUSUS PEMBULATAN HARGA AKUN STOCK ---
+  const formatStockPrice = (priceInIDR) => {
+    const amount = Number(priceInIDR) || 0;
+    if (!amount) return lang === "ID" ? "Rp 0" : lang === "EN" ? "$ 0" : "RM 0";
+
+    if (lang === "ID") {
+      return `Rp ${amount.toLocaleString("id-ID")}`;
+    }
+
+    if (lang === "EN") {
+      const rawUSD = amount / rateUSD;
+      // Dibulatkan ke kelipatan 5
+      const roundedUSD = Math.round(rawUSD / 5) * 5;
+      return `$ ${roundedUSD}`;
+    }
+
+    const rawMYR = amount / rateMYR;
+    // Dibulatkan ke kelipatan 5
+    const roundedMYR = Math.round(rawMYR / 5) * 5;
+    return `RM ${roundedMYR}`;
+  };
+  // -------------------------------------------------
+
   const getImageUrl = (path) => {
     if (!path) return null;
     return path.startsWith("http") ? path : `${ASSET_BASE}/uploads/${path}`;
@@ -66,7 +91,9 @@ export default function AccountCard({ acc, type, waAdmin: propWaAdmin }) {
     }
 
     const detailUrl = `${window.location.origin}/detail/${acc.id}`;
-    const formattedPrice = formatPrice(priceIDR);
+
+    // Pesan chat WA pakai harga yang sudah dibulatkan
+    const formattedPrice = formatStockPrice(priceIDR);
 
     const message = generateMessage("account_buy", {
       title: acc.title || acc.code,
@@ -141,12 +168,14 @@ export default function AccountCard({ acc, type, waAdmin: propWaAdmin }) {
           className={`flex flex-col gap-1 mt-auto ${!isAvailable ? "opacity-50" : ""}`}
         >
           <div className="flex justify-between text-[11px] text-gray-200 line-through">
-            <span>{formatPrice(originalPriceIDR)}</span>
+            {/* Tampilan harga coret pakai formatStockPrice */}
+            <span>{formatStockPrice(originalPriceIDR)}</span>
           </div>
 
           <div className="flex justify-between items-end">
+            {/* Tampilan harga utama pakai formatStockPrice */}
             <span className="text-yellow-400 font-black text-lg leading-none">
-              {formatPrice(priceIDR)}
+              {formatStockPrice(priceIDR)}
             </span>
           </div>
         </div>

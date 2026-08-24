@@ -10,7 +10,7 @@ import { RiCustomerServiceFill } from "react-icons/ri";
 import { RiSpam2Fill } from "react-icons/ri";
 import { RiSendPlaneFill } from "react-icons/ri";
 import { GiSwordman } from "react-icons/gi";
-import Vegaz from "../assets/logo/vegazgameshop.png";
+import Vegaz from "../assets/logo/vgs.svg";
 
 import { useLangCurr } from "./context/LanguageCurrencyContext";
 import LanguageSwitchModal from "./ui/LanguageSwitchModal";

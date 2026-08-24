@@ -38,9 +38,7 @@ export default function Region() {
     [t],
   );
 
-  useEffect(() => {
-   
-  }, [t]);
+  useEffect(() => {}, [t]);
 
   const [status, setStatus] = useState(STATUS.IDLE);
   const [errMsg, setErrMsg] = useState("");
@@ -81,8 +79,30 @@ export default function Region() {
   };
 
   return (
-    <div className="min-h-screen pt-32 pb-20 bg-[#020617] bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-blue-950/20 via-[#020617] to-[#020617]">
-      <div className="max-w-4xl mx-auto px-4">
+    <div className="relative min-h-screen pt-32 pb-20 bg-[#020617] overflow-hidden">
+      {/* BACKGROUND LUAR ANGKASA (STARS) */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/30 via-[#020617] to-[#020617]"></div>
+        <div
+          className="absolute inset-0 opacity-60 mix-blend-screen"
+          style={{
+            backgroundImage:
+              "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='transparent'/%3E%3Ccircle cx='50' cy='50' r='1.5' fill='%23fff' opacity='0.8'/%3E%3Ccircle cx='250' cy='150' r='2' fill='%23fff' opacity='0.6'/%3E%3Ccircle cx='150' cy='300' r='1' fill='%23fff' opacity='0.7'/%3E%3Ccircle cx='350' cy='350' r='2.5' fill='%23fff' opacity='0.5'/%3E%3Ccircle cx='80' cy='220' r='1' fill='%23fff' opacity='0.9'/%3E%3C/svg%3E\")",
+            backgroundRepeat: "repeat",
+            backgroundSize: "300px 300px",
+            animation: "twinkle-stars 4s infinite alternate",
+          }}
+        ></div>
+        <style>{`
+          @keyframes twinkle-stars {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.8; }
+          }
+        `}</style>
+      </div>
+
+      {/* KONTEN UTAMA */}
+      <div className="relative z-10 max-w-4xl mx-auto px-4">
         {/* Hero Header */}
         <ScrollReveal>
           <div className="text-center mb-12">

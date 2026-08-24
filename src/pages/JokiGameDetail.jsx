@@ -8,10 +8,6 @@ import {
   ShieldCheck,
   Zap,
   MessageCircle,
-  Tag,
-  QrCode,
-  Wallet,
-  ChevronDown,
   ArrowLeft,
 } from "lucide-react";
 import { useLangCurr } from "../components/context/LanguageCurrencyContext";
@@ -20,12 +16,10 @@ import JokiBanner from "../components/joki/JokiBanner";
 import JokiDescription from "../components/joki/JokiDescription";
 import JokiForm from "../components/joki/JokiForm";
 import JokiPackageGrid from "../components/joki/JokiPackageGrid";
+import JokiPromo from "../components/joki/JokiPromo";
+import JokiPayment from "../components/joki/JokiPayment";
+import JokiContact, { COUNTRY_CODES } from "../components/joki/JokiContact";
 import { generateMessage, sendToChat } from "../utils/FormChat";
-
-const COUNTRY_CODES = [
-  { name: "Indonesia", code: "+62", flag: "🇮🇩" },
-  { name: "Malaysia", code: "+60", flag: "🇲🇾" },
-];
 
 export default function JokiGameDetail() {
   const { slug } = useParams();
@@ -49,7 +43,6 @@ export default function JokiGameDetail() {
   const [selectedPayment, setSelectedPayment] = useState("");
 
   const [selectedCountry, setSelectedCountry] = useState(COUNTRY_CODES[0]);
-  const [isCountryOpen, setIsCountryOpen] = useState(false);
   const [phone, setPhone] = useState("");
 
   const [accountData, setAccountData] = useState({
@@ -168,7 +161,6 @@ export default function JokiGameDetail() {
             ? `⭐ Per Bintang: ${selectedItem.name} (${quantity} Bintang)`
             : `📦 Paket Borongan: ${selectedItem.name}`;
 
-        // PANGGIL DARI FORMCHAT
         const message = generateMessage("joki", {
           gameName: orderPayload.gameName,
           jokiType: jokiType === "unit" ? "Satuan" : "Borongan",
@@ -196,19 +188,7 @@ export default function JokiGameDetail() {
 
   return (
     <div className="min-h-screen pb-32 lg:pb-10 font-sans bg-[#020617] bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-blue-950/20 via-[#020617] to-[#020617]">
-      <div className="max-w-7xl mx-auto px-4 pt-4">
-        <button
-          onClick={() => navigate("/joki")}
-          className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
-        >
-          <ArrowLeft size={18} />
-          <span className="text-xs font-bold uppercase tracking-wider">
-            Kembali ke Katalog Joki
-          </span>
-        </button>
-      </div>
-
-      <div className="w-full relative bg-[#141414] mt-3">
+      <div className="w-full relative bg-[#141414]">
         <JokiBanner gameData={mlbbGame} />
       </div>
 
@@ -316,116 +296,21 @@ export default function JokiGameDetail() {
             </div>
           </div>
 
-          <div className="bg-[#282830] rounded-2xl p-5 sm:p-6 shadow-lg border border-white/5">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center font-bold text-white text-sm">
-                4
-              </div>
-              <h2 className="text-base font-bold text-white">Kode Promo</h2>
-            </div>
-            <div className="flex gap-2 mb-2">
-              <input
-                type="text"
-                placeholder="Ketik Kode Promo Kamu"
-                value={promoCode}
-                onChange={(e) => setPromoCode(e.target.value)}
-                className="flex-1 bg-[#383842] border border-transparent focus:border-blue-500 rounded-xl px-4 py-3 text-sm text-white outline-none uppercase"
-              />
-              <button className="bg-slate-700 hover:bg-slate-600 px-5 py-3 rounded-xl text-white font-bold text-xs transition-colors">
-                Gunakan
-              </button>
-            </div>
-            <button className="text-xs text-blue-400 hover:underline font-bold flex items-center gap-1.5">
-              <Tag size={14} /> Pakai Promo Yang Tersedia
-            </button>
-          </div>
+          <JokiPromo promoCode={promoCode} setPromoCode={setPromoCode} />
 
-          <div className="bg-[#282830] rounded-2xl p-5 sm:p-6 shadow-lg border border-white/5">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center font-bold text-white text-sm">
-                5
-              </div>
-              <h2 className="text-base font-bold text-white">
-                Pilih Pembayaran
-              </h2>
-            </div>
-            <div className="space-y-3">
-              {[
-                {
-                  id: "qris",
-                  name: "QRIS (All Payment)",
-                  icon: <QrCode className="text-blue-400" />,
-                },
-                {
-                  id: "ewallet",
-                  name: "E-Wallet (OVO, DANA, GoPay)",
-                  icon: <Wallet className="text-blue-400" />,
-                },
-              ].map((method) => (
-                <div
-                  key={method.id}
-                  onClick={() => setSelectedPayment(method.id)}
-                  className={`p-4 rounded-xl border cursor-pointer flex items-center justify-between transition-colors ${selectedPayment === method.id ? "bg-blue-500/10 border-blue-500" : "bg-[#383842]/50 border-white/5 hover:bg-[#383842]"}`}
-                >
-                  <div className="flex items-center gap-3">
-                    {method.icon}
-                    <span className="text-sm font-bold text-white">
-                      {method.name}
-                    </span>
-                  </div>
-                  <span className="text-xs text-blue-400 font-bold">
-                    {formatPrice(totalPrice)}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <JokiPayment
+            selectedPayment={selectedPayment}
+            setSelectedPayment={setSelectedPayment}
+            formatPrice={formatPrice}
+            totalPrice={totalPrice}
+          />
 
-          <div className="bg-[#282830] rounded-2xl p-5 sm:p-6 shadow-lg border border-white/5">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center font-bold text-white text-sm">
-                6
-              </div>
-              <h2 className="text-base font-bold text-white">Detail Kontak</h2>
-            </div>
-            <div className="flex gap-2">
-              <div className="relative">
-                <button
-                  onClick={() => setIsCountryOpen(!isCountryOpen)}
-                  className="h-full px-3 py-3 bg-[#383842] hover:bg-[#484852] rounded-xl text-white text-xs font-bold flex items-center gap-2 transition-colors"
-                >
-                  <span>{selectedCountry.flag}</span>{" "}
-                  <span>{selectedCountry.code}</span> <ChevronDown size={14} />
-                </button>
-                {isCountryOpen && (
-                  <div className="absolute left-0 mt-2 w-48 bg-[#282830] border border-slate-700 rounded-xl shadow-2xl z-50 p-2">
-                    {COUNTRY_CODES.map((c) => (
-                      <div
-                        key={c.code}
-                        onClick={() => {
-                          setSelectedCountry(c);
-                          setIsCountryOpen(false);
-                        }}
-                        className="flex items-center justify-between px-3 py-2 hover:bg-[#383842] rounded-lg cursor-pointer text-xs text-white transition-colors"
-                      >
-                        <span>
-                          {c.flag} {c.name}
-                        </span>{" "}
-                        <span className="text-slate-400">{c.code}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <input
-                type="number"
-                placeholder="8123456789 (tanpa angka 0 di depan)"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="flex-1 px-4 py-3 bg-[#383842] border border-transparent rounded-xl text-white text-sm outline-none focus:border-blue-500 transition-colors"
-              />
-            </div>
-          </div>
+          <JokiContact
+            selectedCountry={selectedCountry}
+            setSelectedCountry={setSelectedCountry}
+            phone={phone}
+            setPhone={setPhone}
+          />
 
           <JokiDescription gameData={mlbbGame} />
         </div>

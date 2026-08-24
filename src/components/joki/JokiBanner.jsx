@@ -1,186 +1,80 @@
-import { useEffect, useState, useRef } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import {
-  Autoplay,
-  EffectCoverflow,
-  Pagination,
-  Keyboard,
-  A11y,
-} from "swiper/modules";
-
-import "swiper/css";
-import "swiper/css/effect-coverflow";
-import "swiper/css/pagination";
-
+import { useEffect, useState } from "react";
 import { apiGet } from "../../services/api";
-
-const BANNER_ASPECT = 3115 / 1150;
+import GameIconPlaceholder from "../../assets/logo/LOGO-VEGAZ.jpg";
 
 export default function JokiBanner() {
-  const [banners, setBanners] = useState([]);
-  const isMounted = useRef(true);
+  const [profileData, setProfileData] = useState(null);
 
   useEffect(() => {
-    isMounted.current = true;
-    (async () => {
+    async function fetchProfileData() {
       try {
         const res = await apiGet("/api/banner");
-        // Filter banner khusus untuk page joki
-        const data = (res?.data || []).filter((b) =>
+        // Ambil banner pertama yang khusus untuk page joki
+        const data = (res?.data || []).find((b) =>
           b.page?.toLowerCase().includes("joki"),
         );
-        if (isMounted.current) setBanners(data);
+        setProfileData(data);
       } catch (err) {
-        console.error("[JokiBanner]", err);
+        console.error("Failed to fetch joki banner:", err);
       }
-    })();
-    return () => {
-      isMounted.current = false;
-    };
+    }
+    fetchProfileData();
   }, []);
 
-  const handleBannerClick = (swiper) => {
-    const clickedIndex = swiper.clickedIndex;
-    if (clickedIndex === undefined) return;
-
-    const clickedSlide = swiper.slides[clickedIndex];
-    if (!clickedSlide) return;
-
-    const targetUrl = clickedSlide.getAttribute("data-link");
-
-    if (targetUrl && targetUrl !== "#" && targetUrl.trim() !== "") {
-      window.open(targetUrl, "_blank", "noopener,noreferrer");
-    }
-  };
-
-  if (!banners.length) {
+  if (!profileData) {
     return (
-      <div
-        style={{
-          width: "100%",
-          padding: "16px 16px 0 16px",
-          maxWidth: "1280px",
-          margin: "0 auto",
-        }}
-      >
-        <style>{`
-          @keyframes banner-pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-          }
-        `}</style>
-        <div
-          style={{
-            width: "100%",
-            aspectRatio: BANNER_ASPECT,
-            borderRadius: "16px",
-            background: "rgba(255,255,255,0.05)",
-            animation: "banner-pulse 1.5s ease-in-out infinite",
-          }}
-        />
-      </div>
+      <div className="w-full aspect-[3110/1159] bg-gray-800 animate-pulse rounded-2xl mb-12"></div>
     );
   }
 
-  const slideCount = banners.length;
-  const canLoop = slideCount >= 3;
-
   return (
-    <div
-      style={{ width: "100%", padding: "12px 0", overflow: "hidden" }}
-      role="region"
-      aria-label="Joki Banner carousel"
-    >
-      <style>{`
-        .joki-banner-swiper {
-          width: 100%;
-          padding-bottom: 36px !important;
-          overflow: visible !important;
-        }
+    <div className="w-full mb-0 select-none group">
+      {/* BANNER ATAS */}
+      <div className="relative overflow-hidden z-0">
+        <div className="aspect-[3110/1159] w-full">
+          <img
+            src={profileData.image}
+            alt="Joki Cover"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent"></div>
+        </div>
+      </div>
 
-        .joki-banner-swiper .swiper-slide {
-          aspect-ratio: ${BANNER_ASPECT};
-          border-radius: 16px;
-          overflow: hidden;
-          cursor: pointer;
-          border: 1px solid rgba(255,255,255,0.05);
-          box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-          transition: box-shadow 0.4s ease, opacity 0.4s ease !important;
-          opacity: 0.6;
-          pointer-events: auto !important; 
-        }
+      {/* SECTION PROFIL GAME (PERSIS STOCK) */}
+      <div className="bg-[#140c5e] pb-6 md:pb-8">
+        <div className="max-w-7xl mx-auto px-4 md:px-10">
+          <div className="relative -mt-10 md:-mt-16 lg:-mt-20 z-10 flex items-center md:items-end gap-3 md:gap-6">
+            {/* LOGO GAME (Overlapping Banner + Perspective 3D) */}
+            <div className="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40 [perspective:800px]">
+              <div
+                className="w-full h-full rounded-2xl overflow-hidden shadow-2xl relative border border-white/10 bg-slate-900"
+                style={{
+                  transform: "rotateY(16deg) rotateX(-1deg)",
+                  transformOrigin: "left center",
+                }}
+              >
+                <img
+                  src={profileData.gameIcon || GameIconPlaceholder}
+                  alt="Game Icon"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent"></div>
+              </div>
+            </div>
 
-        .joki-banner-swiper .swiper-slide-active {
-          opacity: 1;
-          box-shadow: 0 16px 56px rgba(0,0,0,0.7),
-                      0 0 0 1px rgba(59,130,246,0.3);
-          z-index: 10;
-        }
-
-        .joki-banner-swiper .swiper-slide img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-          pointer-events: none; 
-        }
-
-        .joki-banner-swiper .swiper-pagination-bullet-active {
-          width: 32px;
-          background: #3b82f6;
-          box-shadow: 0 0 10px #3b82f6;
-        }
-      `}</style>
-
-      <Swiper
-        className="joki-banner-swiper"
-        modules={[Autoplay, EffectCoverflow, Pagination, Keyboard, A11y]}
-        effect="coverflow"
-        grabCursor
-        centeredSlides
-        loop={canLoop}
-        onClick={handleBannerClick}
-        touchStartPreventDefault={false}
-        coverflowEffect={{
-          rotate: 0,
-          stretch: 0,
-          depth: 50,
-          modifier: 1.2,
-          scale: 0.91,
-          slideShadows: false,
-        }}
-        autoplay={
-          canLoop
-            ? {
-                delay: 4000,
-                disableOnInteraction: false,
-                pauseOnMouseEnter: true,
-              }
-            : false
-        }
-        pagination={{ clickable: true }}
-        keyboard={{ enabled: true }}
-        a11y={{ enabled: true }}
-        breakpoints={{
-          0: { slidesPerView: 1.15 },
-          768: { slidesPerView: 1.3 },
-          1024: { slidesPerView: 1.4 },
-        }}
-      >
-        {banners.map((b, i) => {
-          const targetUrl = b.url || b.link || "";
-
-          return (
-            <SwiperSlide key={b.id ?? i} data-link={targetUrl}>
-              <img
-                src={b.image}
-                alt={b.title || `Joki Banner ${i + 1}`}
-                loading="lazy"
-              />
-            </SwiperSlide>
-          );
-        })}
-      </Swiper>
+            {/* JUDUL DAN DEVELOPER */}
+            <div className="flex flex-col justify-center md:justify-end pb-1 md:pb-3 flex-grow">
+              <h1 className="text-base sm:text-xl md:text-3xl lg:text-4xl font-extrabold text-white tracking-wide uppercase leading-tight">
+                {profileData.gameTitle || "Mobile Legends Joki VegazStore"}
+              </h1>
+              <p className="text-xs sm:text-sm md:text-base text-gray-300 font-semibold mt-0.5">
+                {profileData.developer || "Moonton"}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

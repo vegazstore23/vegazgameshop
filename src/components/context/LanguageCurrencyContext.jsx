@@ -43,6 +43,7 @@ export function LanguageCurrencyProvider({ children }) {
     );
   };
 
+  // FORMAT HARGA NORMAL UNTUK TOPUP & JOKI (Tanpa pembulatan kelipatan 5)
   const formatPrice = (priceInIDR) => {
     const amount = Number(priceInIDR) || 0;
     if (!amount) return lang === "ID" ? "Rp 0" : lang === "EN" ? "$ 0" : "RM 0";
@@ -53,13 +54,13 @@ export function LanguageCurrencyProvider({ children }) {
 
     if (lang === "EN") {
       const rawUSD = amount / rateUSD;
-      const roundedUSD = Math.round(rawUSD / 5) * 5;
-      return `$ ${roundedUSD}`;
+      // Normal tanpa manipulasi, toFixed(2) agar cuma 2 desimal (contoh: $ 1.25)
+      return `$ ${Number(rawUSD.toFixed(2))}`; 
     }
 
     const rawMYR = amount / rateMYR;
-    const roundedMYR = Math.round(rawMYR / 5) * 5;
-    return `RM ${roundedMYR}`;
+    // Normal tanpa manipulasi, toFixed(2) agar cuma 2 desimal (contoh: RM 3.50)
+    return `RM ${Number(rawMYR.toFixed(2))}`;
   };
 
   return (
