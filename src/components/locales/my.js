@@ -68,6 +68,20 @@ export const my = {
     errDefault:
       "Ralat sistem berlaku. Pastikan sambungan stabil dan cuba lagi.",
   },
+  popular: {
+    buyTitle: "Beli Akaun",
+    buyDesc: "Stok Akaun MLBB Padu",
+    sellTitle: "Jual Akaun",
+    sellDesc: "All Games Fast Proses",
+    topupTitle: "Top Up Games",
+    topupDesc: "Diamond & WDP Harga Murah",
+    jokiTitle: "Joki Rank MLBB",
+    jokiDesc: "Push Rank Cepat & Terpercaya",
+    regionTitle: "Check Region",
+    regionDesc: "Semak ID & Server Akaun Percuma",
+    calcTitle: "Calculator MLBB",
+    calcDesc: "Kira Winrate, Zodiac & Magic Wheel",
+  },
   stock: {
     searchPlaceholder: "Cari kod atau tajuk akaun...",
     clearSearch: "Kosongkan carian",

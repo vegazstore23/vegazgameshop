@@ -90,7 +90,7 @@ export default function Home() {
                   <RiStarFill className="text-blue-500" /> MLBB Account
                 </h2>
                 <a
-                  href="/pr"
+                  href="/product"
                   className="text-[10px] md:text-xs font-bold text-blue-400 hover:text-blue-300 uppercase tracking-widest transition-colors whitespace-nowrap"
                 >
                   {t("header", "viewAllResults") || "See All →"}

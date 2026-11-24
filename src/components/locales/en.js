@@ -67,6 +67,20 @@ export const en = {
     errDefault:
       "A system error occurred. Please ensure a stable connection and try again.",
   },
+  popular: {
+    buyTitle: "Buy Account",
+    buyDesc: "Ready & Safe MLBB Account Stock",
+    sellTitle: "Sell Account",
+    sellDesc: "Consign & Fast Sell Via Chat",
+    topupTitle: "Top Up Games",
+    topupDesc: "Instant Diamond & WDP Top Up",
+    jokiTitle: "MLBB Rank Boost",
+    jokiDesc: "Fast & Trusted Rank Boosting",
+    regionTitle: "Check Region",
+    regionDesc: "Free Account ID & Server Check",
+    calcTitle: "MLBB Calculator",
+    calcDesc: "Calculate Winrate, Zodiac & Magic Wheel",
+  },
   stock: {
     searchPlaceholder: "Search code or account title...",
     clearSearch: "Clear search",

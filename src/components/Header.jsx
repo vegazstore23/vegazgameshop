@@ -72,7 +72,6 @@ export default function Header({ hideBottomNav = false }) {
   const [orderHref, setOrderHref] = useState("#");
   const [csHref, setCsHref] = useState("#");
 
-  // State untuk Live Search Dropdown
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -115,7 +114,6 @@ export default function Header({ hideBottomNav = false }) {
     },
   ];
 
-  // Fetch Kontak Admin
   useEffect(() => {
     async function load() {
       try {
@@ -144,7 +142,6 @@ export default function Header({ hideBottomNav = false }) {
     load();
   }, []);
 
-  // Live Search Effect (Debounce 300ms)
   useEffect(() => {
     const query = searchQuery.trim().toLowerCase();
     if (!query) {
@@ -218,14 +215,14 @@ export default function Header({ hideBottomNav = false }) {
 
   const getBottomNavClass = (path) => {
     const isActive = pathname === path;
-    return `flex flex-col items-center justify-center text-xs font-medium transition ${
+    return `flex flex-col items-center justify-center text-xs font-medium transition active:scale-95 ${
       isActive ? "text-yellow-400" : "text-white hover:text-yellow-300"
     }`;
   };
 
   return (
     <>
-      <header className="fixed top-0 left-0 w-full z-[9999] bg-[#09052b] border-b border-white/10 shadow-lg">
+      <header className="fixed top-0 left-0 w-full z-[9999] bg-[#09052b] border-b border-white/10 shadow-lg pt-[env(safe-area-inset-top)]">
         <div className="max-w-screen-xl mx-auto px-4 md:px-6 flex items-center justify-between h-16 md:h-20 gap-3 md:gap-4">
           <Link to="/" className="flex items-center shrink-0">
             <img
@@ -318,7 +315,6 @@ export default function Header({ hideBottomNav = false }) {
               )}
             </div>
 
-            {/* Flag & Language Switcher Modal */}
             <FlagSwitcher />
 
             <button
@@ -337,7 +333,7 @@ export default function Header({ hideBottomNav = false }) {
 
       <div
         id="mobileMenu"
-        className={`fixed top-16 md:top-20 left-0 w-full bg-[#1c4ed8]/70 backdrop-blur-xl border-b border-white/10 flex flex-col gap-2 p-6 z-40 lg:hidden transition-all duration-300 ease-out shadow-2xl ${
+        className={`fixed top-[calc(4rem+env(safe-area-inset-top))] md:top-[calc(5rem+env(safe-area-inset-top))] left-0 w-full bg-[#1c4ed8]/70 backdrop-blur-xl border-b border-white/10 flex flex-col gap-2 p-6 z-40 lg:hidden transition-all duration-300 ease-out shadow-2xl ${
           menuOpen
             ? "opacity-100 translate-y-0"
             : "opacity-0 -translate-y-4 pointer-events-none"
@@ -381,13 +377,15 @@ export default function Header({ hideBottomNav = false }) {
       </div>
 
       {!hideBottomNav && (
-        <nav className="fixed bottom-0 left-0 w-full bg-[#09052b] border-t border-white/10 shadow-[0_-4px_20px_rgba(0,0,0,0.4)] flex justify-around items-center h-16 lg:hidden z-50">
-          {BOTTOM_NAV.map(({ to, icon, label }) => (
-            <Link key={to} to={to} className={getBottomNavClass(to)}>
-              {icon}
-              <span>{label}</span>
-            </Link>
-          ))}
+        <nav className="fixed bottom-0 left-0 w-full bg-[#09052b] border-t border-white/10 shadow-[0_-4px_20px_rgba(0,0,0,0.4)] z-50 lg:hidden pb-[env(safe-area-inset-bottom)]">
+          <div className="flex justify-around items-center h-16">
+            {BOTTOM_NAV.map(({ to, icon, label }) => (
+              <Link key={to} to={to} className={getBottomNavClass(to)}>
+                {icon}
+                <span>{label}</span>
+              </Link>
+            ))}
+          </div>
         </nav>
       )}
     </>

@@ -14,10 +14,18 @@ export default function MainLayout({ children }) {
   );
 
   return (
-    <div className="min-h-screen flex flex-col bg-black">
+    <div
+      className={`min-h-screen flex flex-col bg-black ${
+        !hideBottomNav
+          ? "pb-[calc(4rem+env(safe-area-inset-bottom))] lg:pb-0"
+          : "pb-[env(safe-area-inset-bottom)]"
+      }`}
+    >
       <Header hideBottomNav={hideBottomNav} />
 
-      <main className="flex-1 pt-16 md:pt-20 pb-0">{children}</main>
+      <main className="flex-1 pt-[calc(4rem+env(safe-area-inset-top))] md:pt-[calc(5rem+env(safe-area-inset-top))] pb-0">
+        {children}
+      </main>
 
       <div className="w-full bg-black leading-none -mt-16 sm:-mt-24 md:-mt-32 lg:-mt-40 relative z-20 pointer-events-none select-none">
         <img
