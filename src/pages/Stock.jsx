@@ -54,7 +54,6 @@ export default function Stock() {
   }, []);
 
   useEffect(() => {
-
     let cancelled = false;
 
     async function fetchStock() {
@@ -143,10 +142,10 @@ export default function Stock() {
     <div className="min-h-screen bg-black">
       <StockProfileBanner />
       <div className="min-h-screen bg-black">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-12 space-y-4 sm:space-y-8">
+        <div className="max-w-7xl mx-auto px-2.5 sm:px-4 pt-2.5 pb-6 sm:py-10 space-y-2.5 sm:space-y-6">
           <div
             ref={filterSectionRef}
-            className="bg-[#021d4a] rounded-2xl md:rounded-3xl p-4 md:p-6 border border-white/5 shadow-2xl scroll-mt-4"
+            className="bg-[#021d4a] rounded-xl sm:rounded-2xl md:rounded-3xl p-2.5 sm:p-4 border border-white/5 shadow-2xl scroll-mt-3"
           >
             <TierFilter activeTier={activeTier} onSelect={handleTierSelect} />
 
@@ -190,7 +189,7 @@ export default function Stock() {
           )}
 
           {loading && (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6 mt-4 md:mt-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3 md:gap-6 mt-2 sm:mt-4 md:mt-6">
               {Array.from({ length: 8 }).map((_, i) => (
                 <div
                   key={i}
@@ -227,7 +226,7 @@ export default function Stock() {
           )}
 
           {!loading && !error && accounts.length > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6 mt-4 md:mt-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3 md:gap-6 mt-2 sm:mt-4 md:mt-6">
               {accounts.map((item) => (
                 <AccountCard
                   key={item.id}

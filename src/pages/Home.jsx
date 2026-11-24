@@ -64,10 +64,9 @@ export default function Home() {
 
       <div>
         <MarqueeTicker />
-
         {/* BAGIAN KONTEN UTAMA */}
         <section className="w-full bg-black py-8 md:py-12 px-3 md:px-4">
-          <div className="max-w-7xl mx-auto flex flex-col gap-10 md:gap-16">
+          <div className="max-w-7xl mx-auto flex flex-col md:gap-16">
             <ScrollReveal delay={0.1}>
               <FlashSaleSection />
             </ScrollReveal>
@@ -75,7 +74,7 @@ export default function Home() {
             <ScrollReveal delay={0.2}>
               <div>
                 <div className="flex items-end justify-between mb-4 md:mb-6 border-b border-white/5 pb-3">
-                  <h2 className="text-lg md:text-2xl font-bold font-orbitron tracking-tighter flex items-center gap-2 uppercase italic">
+                  <h2 className="text-lg md:text-2xl font-bold font-orbitron tracking-tighter flex items-center uppercase italic">
                     <RiFireLine className="text-orange-500" />{" "}
                     {t("home", "trending") || "Layanan Populer"}
                   </h2>
@@ -86,7 +85,7 @@ export default function Home() {
 
             <ScrollReveal>
               <div className="flex items-end justify-between mb-4 md:mb-6 border-b border-white/5 pb-3 mt-4">
-                <h2 className="text-lg md:text-2xl font-bold font-orbitron tracking-tighter flex items-center gap-2 uppercase italic">
+                <h2 className="text-lg md:text-2xl font-bold font-orbitron tracking-tighter flex items-center uppercase italic">
                   <RiStarFill className="text-blue-500" /> MLBB Account
                 </h2>
                 <a
@@ -103,8 +102,11 @@ export default function Home() {
 
         {/* BAGIAN FEEDBACK & SUPPORT */}
         <section className="w-full bg-black py-8 md:py-10 px-3 md:px-4">
-          <div className="max-w-7xl mx-auto flex flex-col gap-8 md:gap-16">
+          <div className="max-w-7xl mx-auto flex flex-col md:gap-10">
             <ScrollReveal>
+              <ScrollReveal delay={0.1}>
+                <Advantages />
+              </ScrollReveal>
               <div className="mb-6 md:mb-8 pt-8 border-t border-white/10"></div>
               <div className="mb-12 md:mb-20">
                 <h2 className="text-lg md:text-xl font-bold mb-6 md:mb-10 text-center font-orbitron tracking-[0.15em] md:tracking-[0.2em] uppercase italic text-white flex justify-center items-center">
@@ -113,11 +115,7 @@ export default function Home() {
                 </h2>
                 <FeedbackSlider />
               </div>
-
               <div className="mb-6 md:mb-8 pt-8 md:pt-16 border-t border-white/10">
-                <ScrollReveal delay={0.1}>
-                  <Advantages />
-                </ScrollReveal>
                 <h2 className="text-lg md:text-xl font-bold text-center mt-12 mb-6 md:mb-10 font-orbitron tracking-[0.15em] md:tracking-[0.2em] uppercase italic text-white flex justify-center items-center">
                   <RiPhoneFill className="mr-2 md:mr-3 text-blue-400" />{" "}
                   {t("footer", "support") || "Official Support"}

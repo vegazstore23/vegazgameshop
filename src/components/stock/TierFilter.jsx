@@ -15,7 +15,7 @@ export default function TierFilter({ activeTier, onSelect }) {
   ];
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-1.5 sm:gap-2.5 mb-2.5 sm:mb-4">
       {tiers.map((t) => {
         const isActive = activeTier === t.id;
         return (

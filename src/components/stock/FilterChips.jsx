@@ -8,7 +8,6 @@ export default function FilterChips({
 }) {
   const { t, formatPrice, rateMYR } = useLangCurr();
 
-  // Konversi nilai batas MYR ke Rupiah dasar agar formatPrice() bisa membaca switcher secara tepat
   const TIER_LABELS = {
     entry: `Entry ${formatPrice(1 * rateMYR)}–${formatPrice(100 * rateMYR)}`,
     mid: `Mid ${formatPrice(101 * rateMYR)}–${formatPrice(249 * rateMYR)}`,
@@ -26,9 +25,9 @@ export default function FilterChips({
   if (!activeTier && currentSort === "newest") return null;
 
   return (
-    <div className="flex flex-wrap gap-2 mt-2">
+    <div className="flex flex-wrap gap-1.5 mt-1.5 sm:mt-2">
       {activeTier && (
-        <span className="bg-blue-600/50 border border-blue-400/30 px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase flex items-center gap-2">
+        <span className="bg-blue-600/50 border border-blue-400/30 px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold text-white uppercase flex items-center gap-1.5">
           Tier: {TIER_LABELS[activeTier]}
           <button
             onClick={onClearTier}
@@ -41,7 +40,7 @@ export default function FilterChips({
       )}
 
       {currentSort !== "newest" && (
-        <span className="bg-white/10 border border-white/20 px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase flex items-center gap-2">
+        <span className="bg-white/10 border border-white/20 px-2.5 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold text-white uppercase flex items-center gap-1.5">
           {t("stock", "sortLabel") || "Susun"}: {SORT_LABELS[currentSort]}
           <button
             onClick={onClearSort}
