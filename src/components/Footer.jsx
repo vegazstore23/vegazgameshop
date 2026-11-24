@@ -67,7 +67,7 @@ export default function Footer() {
 
   const QUICK_LINKS = [
     { to: "/", label: t("footer", "home") || "Home" },
-    { to: "/stock", label: t("footer", "stockMlbb") || "Stock MLBB" },
+    { to: "/product", label: t("footer", "stockMlbb") || "Stock MLBB" },
     { to: "/tp", label: t("footer", "topUp") || "Top Up" },
     { to: "/jk", label: t("footer", "jokiMlbb") || "Joki MLBB" },
     {

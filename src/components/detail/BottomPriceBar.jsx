@@ -30,7 +30,7 @@ export default function BottomPriceBar({ account }) {
   if (!account || account.status?.toLowerCase() === "sold") return null;
 
   const handleConfirmOrder = (modalData) => {
-    const detailUrl = `${window.location.origin}/detail/${account.id}`;
+    const detailUrl = `${window.location.origin}/preview/${account.id}`;
     const formattedPrice = formatPrice(modalData.finalPrice);
 
     const message = generateMessage("account_buy", {

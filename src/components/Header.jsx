@@ -81,7 +81,7 @@ export default function Header({ hideBottomNav = false }) {
   const DESKTOP_NAV = [
     { to: "/", icon: <IconHome />, label: t("header", "home") || "Home" },
     {
-      to: "/stock",
+      to: "/product",
       icon: <IconStock />,
       label: t("header", "stock") || "Stock",
     },
@@ -102,7 +102,7 @@ export default function Header({ hideBottomNav = false }) {
   const BOTTOM_NAV = [
     { to: "/", icon: <IconHome />, label: t("header", "home") || "Home" },
     {
-      to: "/stock",
+      to: "/product",
       icon: <IconStock />,
       label: t("header", "stock") || "Stock",
     },
@@ -274,7 +274,7 @@ export default function Header({ hideBottomNav = false }) {
                     <div
                       key={item.id}
                       onClick={() => {
-                        navigate(`/detail/${item.id}`);
+                        navigate(`/preview/${item.id}`);
                         setSuggestions([]);
                         setSearchQuery("");
                       }}
@@ -306,7 +306,7 @@ export default function Header({ hideBottomNav = false }) {
                   ))}
                   <button
                     onClick={() => {
-                      navigate(`/stock`);
+                      navigate(`/product`);
                       setSuggestions([]);
                       setSearchQuery("");
                     }}

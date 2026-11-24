@@ -104,7 +104,7 @@ export default function FeaturedAccounts() {
         accounts.map((acc) => (
           <Link
             key={acc.id}
-            to={`/detail/${acc.id}`}
+            to={`/preview/${acc.id}`}
             className="block hover:no-underline"
           >
             <AccountCard acc={acc} type="home" />

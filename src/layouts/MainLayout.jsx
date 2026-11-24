@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 
 import bottomBg from "../assets/background/FTA.png";
 
-const HIDE_BOTTOM_NAV_PATHS = ["/detail", "/checkout"];
+const HIDE_BOTTOM_NAV_PATHS = ["/preview", "/checkout"];
 
 export default function MainLayout({ children }) {
   const { pathname } = useLocation();
@@ -14,12 +14,12 @@ export default function MainLayout({ children }) {
   );
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#050510]">
+    <div className="min-h-screen flex flex-col bg-black">
       <Header hideBottomNav={hideBottomNav} />
 
       <main className="flex-1 pt-16 md:pt-20 pb-0">{children}</main>
 
-       <div className="w-full bg-[#050510] leading-none -mt-16 sm:-mt-24 md:-mt-32 lg:-mt-40 relative z-20 pointer-events-none select-none">
+      <div className="w-full bg-black leading-none -mt-16 sm:-mt-24 md:-mt-32 lg:-mt-40 relative z-20 pointer-events-none select-none">
         <img
           src={bottomBg}
           alt="Divider Decor"

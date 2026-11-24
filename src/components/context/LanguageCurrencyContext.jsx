@@ -55,7 +55,7 @@ export function LanguageCurrencyProvider({ children }) {
     if (lang === "EN") {
       const rawUSD = amount / rateUSD;
       // Normal tanpa manipulasi, toFixed(2) agar cuma 2 desimal (contoh: $ 1.25)
-      return `$ ${Number(rawUSD.toFixed(2))}`; 
+      return `$ ${Number(rawUSD.toFixed(2))}`;
     }
 
     const rawMYR = amount / rateMYR;

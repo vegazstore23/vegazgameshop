@@ -40,7 +40,7 @@ export default function DetailNavigation({ accountTitle = "" }) {
         <div className="flex items-center gap-2">
           {/* Tombol Back Panah */}
           <Link
-            to="/stock"
+            to="/product"
             className="group flex items-center justify-center w-10 h-10 bg-[#0d2147]/80 hover:bg-blue-600/30 rounded-xl border border-blue-500/20 hover:border-blue-500/50 transition-all duration-300 backdrop-blur-xl shadow-md active:scale-95 flex-shrink-0"
             title={t("detail", "backToStock") || "Kembali ke Stok"}
             aria-label="Kembali ke Stok"

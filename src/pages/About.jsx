@@ -31,7 +31,7 @@ export default function About() {
   };
 
   return (
-    <div className="min-h-screen pt-28 md:pt-36 pb-24 bg-[#020617] relative overflow-hidden">
+    <div className="min-h-screen pt-28 md:pt-36 pb-24 bg-black relative overflow-hidden">
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-blue-600/15 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute top-1/2 right-10 w-[300px] h-[300px] bg-indigo-600/10 blur-[100px] rounded-full pointer-events-none" />
 

@@ -9,7 +9,7 @@ export default function PopularSection() {
     {
       title: "Mobile Legends",
       dev: "Moonton",
-      to: "/stock",
+      to: "/product",
       badgeText: t("header", "stock") || "STOCK",
       icon: <ShieldCheck className="w-6 h-6 sm:w-8 sm:h-8 text-cyan-400" />,
       gradientBg: "from-blue-950 via-[#071330] to-[#020d26]",

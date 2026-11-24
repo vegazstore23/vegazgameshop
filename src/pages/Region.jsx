@@ -79,10 +79,9 @@ export default function Region() {
   };
 
   return (
-    <div className="relative min-h-screen pt-32 pb-20 bg-[#020617] overflow-hidden">
-      {/* BACKGROUND LUAR ANGKASA (STARS) */}
+    <div className="relative min-h-screen pt-32 pb-20 bg-black overflow-hidden">
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/30 via-[#020617] to-[#020617]"></div>
+        <div className="absolute inset-0 bg-black"></div>
         <div
           className="absolute inset-0 opacity-60 mix-blend-screen"
           style={{

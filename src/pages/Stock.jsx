@@ -140,9 +140,9 @@ export default function Stock() {
   };
 
   return (
-    <div className="min-h-screen bg-[#141414]">
+    <div className="min-h-screen bg-black">
       <StockProfileBanner />
-      <div className="min-h-screen bg-[#020617] bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops)),radial-gradient(ellipse_at_right,_var(--tw-gradient-stops))] from-blue-950/30 via-[#020617] to-blue-950/30">
+      <div className="min-h-screen bg-black">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 py-6 sm:py-12 space-y-4 sm:space-y-8">
           <div
             ref={filterSectionRef}

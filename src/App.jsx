@@ -32,14 +32,14 @@ function App() {
     const pageTitles = {
       "/": "VegazGameShop — Platform Jual Beli & Topup Games Terpercaya",
       "/topup": "Topup Games Termurah 100% | VegazGameShop",
-      "/stock": "Stok Akaun MLBB Premium & Murah | VegazGameShop",
+      "/product": "Stok Akaun MLBB Premium & Murah | VegazGameShop",
       "/check-region": "Cek Region ID MLBB | VegazGameShop",
       "/joki": "Joki GameBooster Terpadu | VegazGameShop",
       "/calculator-mlbb": "Kalkulator Winrate & Gacha MLBB | VegazGameShop",
       "/about": "Tentang Kami, FAQ & Bantuan | VegazGameShop",
     };
 
-    if (location.pathname.startsWith("/detail/")) {
+    if (location.pathname.startsWith("/preview/")) {
       document.title = "Detail Akaun MLBB ";
     } else if (location.pathname.startsWith("/topup/")) {
       document.title = "Topup Game Pilihan ";
@@ -63,8 +63,8 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/topup" element={<Topup />} />
               <Route path="/topup/:slug" element={<DetailView />} />
-              <Route path="/stock" element={<Stock />} />
-              <Route path="/detail/:id" element={<Detail />} />
+              <Route path="/product" element={<Stock />} />
+              <Route path="/preview/:id" element={<Detail />} />
               <Route path="/check-region" element={<Region />} />
               <Route path="/joki" element={<Joki />} />
               <Route path="/joki/:slug" element={<JokiDetail />} />

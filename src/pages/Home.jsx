@@ -51,8 +51,7 @@ function MarqueeTicker() {
 export default function Home() {
   const { t } = useLangCurr();
 
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <div className="text-white min-h-screen bg-gradient-to-b from-[#0a0a0f] via-[#050b14] to-[#02060a]">
@@ -67,7 +66,7 @@ export default function Home() {
         <MarqueeTicker />
 
         {/* BAGIAN KONTEN UTAMA */}
-        <section className="w-full bg-[#020617] bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops)),radial-gradient(ellipse_at_right,_var(--tw-gradient-stops))] from-blue-950/30 via-[#020617] to-blue-950/30 py-8 md:py-12 px-3 md:px-4">
+        <section className="w-full bg-black py-8 md:py-12 px-3 md:px-4">
           <div className="max-w-7xl mx-auto flex flex-col gap-10 md:gap-16">
             <ScrollReveal delay={0.1}>
               <FlashSaleSection />
@@ -91,7 +90,7 @@ export default function Home() {
                   <RiStarFill className="text-blue-500" /> MLBB Account
                 </h2>
                 <a
-                  href="/stock"
+                  href="/pr"
                   className="text-[10px] md:text-xs font-bold text-blue-400 hover:text-blue-300 uppercase tracking-widest transition-colors whitespace-nowrap"
                 >
                   {t("header", "viewAllResults") || "See All →"}
@@ -103,7 +102,7 @@ export default function Home() {
         </section>
 
         {/* BAGIAN FEEDBACK & SUPPORT */}
-        <section className="w-full bg-[#020617] bg-[radial-gradient(ellipse_at_left,_var(--tw-gradient-stops)),radial-gradient(ellipse_at_right,_var(--tw-gradient-stops))] from-blue-950/30 via-[#020617] to-blue-950/30 py-8 md:py-10 px-3 md:px-4">
+        <section className="w-full bg-black py-8 md:py-10 px-3 md:px-4">
           <div className="max-w-7xl mx-auto flex flex-col gap-8 md:gap-16">
             <ScrollReveal>
               <div className="mb-6 md:mb-8 pt-8 border-t border-white/10"></div>
