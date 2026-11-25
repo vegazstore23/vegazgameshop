@@ -27,9 +27,15 @@
     />
     <meta name="apple-mobile-web-app-title" content="VegazSTORE" />
 
-    <link rel="icon" type="image/svg+xml" href="/VEGAZ.svg" />
-    <link rel="icon" type="image/jpeg" href="/LOGO-VEGAZ.jpg" />
-    <link rel="apple-touch-icon" href="/LOGO-VEGAZ.jpg" />
+    <!-- Favicon Statis Valid untuk Browser & Google Search -->
+    <link
+      id="dynamic-favicon"
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="/VEGAZgs.png"
+    />
+    <link rel="apple-touch-icon" href="/VEGAZgs.png" />
     <link rel="manifest" href="/manifest.json" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -46,10 +52,7 @@
       property="og:description"
       content="Tengok stok akaun MLBB terkini, cek region ID, dan enjoy servis pantas & selamat kat VegazGameShop!"
     />
-    <meta
-      property="og:image"
-      content="https://vegazgameshop.com/LOGO-VEGAZ.jpg"
-    />
+    <meta property="og:image" content="https://vegazgameshop.com/VEGAZgs.png" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="VegazGameshop" />
@@ -74,6 +77,37 @@
           "query-input": "required name=search_term_string"
         }
       }
+    </script>
+
+    <script>
+      (function () {
+        const img = new Image();
+        img.src = "/VEGAZgs.png";
+        img.onload = function () {
+          const size = 192;
+          const canvas = document.createElement("canvas");
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext("2d");
+
+          // Potong menjadi lingkaran sempurna
+          ctx.beginPath();
+          ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+          ctx.closePath();
+          ctx.clip();
+
+          // Center-crop agar gambar tetap proporsional (cover)
+          const minSide = Math.min(img.width, img.height);
+          const sx = (img.width - minSide) / 2;
+          const sy = (img.height - minSide) / 2;
+          ctx.drawImage(img, sx, sy, minSide, minSide, 0, 0, size, size);
+
+          const link = document.getElementById("dynamic-favicon");
+          if (link) {
+            link.href = canvas.toDataURL("image/png");
+          }
+        };
+      })();
     </script>
 
     <style>
