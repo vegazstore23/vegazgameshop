@@ -12,7 +12,7 @@ import { apiGet } from "../../services/api";
 import { useLangCurr } from "../context/LanguageCurrencyContext";
 
 export default function FlashSaleSection() {
-  const { t, formatPrice } = useLangCurr();
+  const { t, formatPrice, formatAccountPrice } = useLangCurr();
   const [flashSales, setFlashSales] = useState([]);
   const [activeTab, setActiveTab] = useState("all");
   const [targetTime, setTargetTime] = useState(null);
@@ -152,8 +152,14 @@ export default function FlashSaleSection() {
 
               const title =
                 detail.title || detail.productName || detail.name || "Item";
+              const isAccount = sale.item_type === "account";
               const origPrice = Number(detail.price || detail.sellPrice || 0);
               const flashPrice = Number(sale.flash_sale_price);
+              // Akun: harga asli dibaca langsung dari backend (MYR base).
+              // Harga promo (IDR) dikonversi dengan kurs admin.
+              const origLabel = isAccount
+                ? formatAccountPrice(detail)
+                : formatPrice(origPrice);
 
               return (
                 <div
@@ -173,7 +179,7 @@ export default function FlashSaleSection() {
 
                   <div className="mt-3 md:mt-4 pt-2 md:pt-3 border-t border-slate-800">
                     <p className="text-[9px] md:text-[10px] text-slate-500 line-through font-mono font-semibold">
-                      {formatPrice(origPrice)}
+                      {origLabel}
                     </p>
                     <p className="text-yellow-400 font-black text-sm md:text-lg font-mono leading-none mt-1">
                       {formatPrice(flashPrice)}

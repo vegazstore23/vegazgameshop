@@ -73,13 +73,18 @@ export const generateMessage = (source, data = {}) => {
         referralInfo = `\n📢 Tahu dari: *${data.referral}*`;
       }
 
+      let refInfo = "";
+      if (data.priceRefMYR) {
+        refInfo = `\n🏷 Ref Stok: *${data.priceRefMYR}*`;
+      }
+
       const formattedUrl = cleanUrl(data.url);
 
       return (
         `Halo Admin Vegaz, saya berminat nak beli account ini:\n\n` +
         `🚀 Unit: *${data.title}*\n` +
         `🆔 Code: *${data.code}*\n` +
-        `💰 Harga: *${data.price}*${promoInfo}${referralInfo}\n` +
+        `💰 Harga: *${data.price}*${refInfo}${promoInfo}${referralInfo}\n` +
         `🔗 Link: ${formattedUrl}\n\n` +
         `Adakah masih tersedia dan nak detail pembayaran?`
       );

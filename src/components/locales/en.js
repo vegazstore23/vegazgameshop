@@ -3,7 +3,10 @@ export const en = {
     buyNow: "Buy Now",
     available: "Available",
     notAvailable: "Not Available",
-    tabSwitch: "Select Region and Language",
+    tabSwitch: "Select Region & Currency",
+    tabSwitchDesc: "Customize language and price display",
+    tabSwitchFooter:
+      "Price conversion follows VegazGameShop's active exchange rate.",
   },
   header: {
     home: "Home",

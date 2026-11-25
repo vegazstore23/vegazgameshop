@@ -3,7 +3,9 @@ export const my = {
     buyNow: "Beli Sekarang",
     available: "Tersedia",
     notAvailable: "Tidak Tersedia",
-    tabSwitch: "Pilih Lokasi dan Bahasa",
+    tabSwitch: "Pilih Wilayah & Mata Wang",
+    tabSwitchDesc: "Laraskan bahasa dan paparan harga",
+    tabSwitchFooter: "Penukaran harga mengikut kadar semasa VegazGameShop.",
   },
   header: {
     home: "Home",

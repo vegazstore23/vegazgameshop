@@ -8,34 +8,74 @@ const LanguageCurrencyContext = createContext();
 
 const dictionary = { ID: id, MY: my, EN: en };
 
+// Bahasa -> mata uang
+const LANG_TO_CURRENCY = { ID: "IDR", MY: "MYR", EN: "USD" };
+
+const DEFAULT_RATES = {
+  rateMYRtoIDR: 4500,
+  rateMYRtoUSD: 0.25,
+  idrRoundingStep: 1000,
+};
+
+const positive = (v) => {
+  const n = Number(v);
+  return v !== null && v !== undefined && v !== "" && Number.isFinite(n) && n > 0
+    ? n
+    : null;
+};
+
+// Ambil object konfigurasi kurs dari response /public/app-config (data.shop)
+// atau /settings (data langsung).
+const parseRates = (res) => {
+  const src = res?.data?.shop || res?.data || {};
+  return {
+    // fallback berantai: rateMYRtoIDR -> exchangeRateMYR (legacy) -> 4500
+    rateMYRtoIDR:
+      positive(src.rateMYRtoIDR) ??
+      positive(src.exchangeRateMYR) ??
+      DEFAULT_RATES.rateMYRtoIDR,
+    rateMYRtoUSD: positive(src.rateMYRtoUSD) ?? DEFAULT_RATES.rateMYRtoUSD,
+    idrRoundingStep: Math.max(
+      1,
+      Math.round(positive(src.idrRoundingStep) ?? DEFAULT_RATES.idrRoundingStep),
+    ),
+  };
+};
+
 export function LanguageCurrencyProvider({ children }) {
   const [lang, setLang] = useState(
     () => localStorage.getItem("vgz_lang") || "MY",
   );
 
-  const [rateMYR, setRateMYR] = useState(3600);
-  const [rateUSD, setRateUSD] = useState(15000);
+  const [rates, setRates] = useState(DEFAULT_RATES);
 
   useEffect(() => {
     localStorage.setItem("vgz_lang", lang);
   }, [lang]);
 
   useEffect(() => {
+    let cancelled = false;
     async function fetchSettingsRate() {
       try {
-        const res = await apiGet("/api/settings");
-        if (res?.data?.exchangeRateMYR) {
-          setRateMYR(Number(res.data.exchangeRateMYR));
+        let res;
+        try {
+          res = await apiGet("/api/public/app-config");
+        } catch {
+          res = await apiGet("/api/settings");
         }
-        if (res?.data?.exchangeRateUSD) {
-          setRateUSD(Number(res.data.exchangeRateUSD));
-        }
+        if (!cancelled) setRates(parseRates(res));
       } catch (err) {
         console.error("Gagal memuat kurs admin:", err);
       }
     }
     fetchSettingsRate();
+    return () => {
+      cancelled = true;
+    };
   }, []);
+
+  const { rateMYRtoIDR, rateMYRtoUSD, idrRoundingStep } = rates;
+  const currency = LANG_TO_CURRENCY[lang] || "MYR";
 
   const t = (page, key) => {
     return (
@@ -43,29 +83,78 @@ export function LanguageCurrencyProvider({ children }) {
     );
   };
 
-  // FORMAT HARGA NORMAL UNTUK TOPUP & JOKI (Tanpa pembulatan kelipatan 5)
-  const formatPrice = (priceInIDR) => {
-    const amount = Number(priceInIDR) || 0;
-    if (!amount) return lang === "ID" ? "Rp 0" : lang === "EN" ? "$ 0" : "RM 0";
+  const fmtMYR = (val) => {
+    const n = Math.round((Number(val) || 0) * 100) / 100;
+    return `RM ${Number.isInteger(n) ? n : n.toFixed(2)}`;
+  };
+  const fmtIDR = (val) =>
+    `Rp ${Math.round(Number(val) || 0).toLocaleString("id-ID")}`;
+  const fmtUSD = (val) => `$${Number(Number(val) || 0).toFixed(2)}`;
 
-    if (lang === "ID") {
-      return `Rp ${amount.toLocaleString("id-ID")}`;
+  // HARGA AKUN MLBB: baca langsung dari backend, JANGAN hitung ulang dari IDR.
+  // Fallback hanya untuk response lama yang belum punya `prices`.
+  const formatAccountPrice = (account, overrideCurrency) => {
+    const curr = overrideCurrency || currency;
+    const p = account?.prices?.[curr];
+    const priceMYR = positive(account?.priceMYR);
+
+    if (curr === "MYR") {
+      let val = positive(p) ?? priceMYR;
+      if (val === null && positive(account?.price)) {
+        val = Math.ceil(Number(account.price) / rateMYRtoIDR);
+      }
+      return fmtMYR(val ?? 0);
     }
 
-    if (lang === "EN") {
-      const rawUSD = amount / rateUSD;
-      // Normal tanpa manipulasi, toFixed(2) agar cuma 2 desimal (contoh: $ 1.25)
-      return `$ ${Number(rawUSD.toFixed(2))}`;
+    if (curr === "IDR") {
+      return fmtIDR(positive(p) ?? positive(account?.price) ?? 0);
     }
 
-    const rawMYR = amount / rateMYR;
-    // Normal tanpa manipulasi, toFixed(2) agar cuma 2 desimal (contoh: RM 3.50)
-    return `RM ${Number(rawMYR.toFixed(2))}`;
+    // USD
+    let usd = positive(p);
+    if (usd === null) {
+      const myr =
+        priceMYR ??
+        (positive(account?.price)
+          ? Math.ceil(Number(account.price) / rateMYRtoIDR)
+          : 0);
+      usd = myr * rateMYRtoUSD;
+    }
+    return fmtUSD(usd);
+  };
+
+  // HARGA IDR UMUM (Top-up, Joki, flash_sale_price): konversi pakai kurs admin.
+  const formatPrice = (idrAmount, overrideCurrency) => {
+    const curr = overrideCurrency || currency;
+    const amount = Number(idrAmount) || 0;
+
+    if (curr === "IDR") return fmtIDR(amount);
+
+    if (curr === "USD") {
+      return fmtUSD((amount / rateMYRtoIDR) * rateMYRtoUSD);
+    }
+
+    // MYR: bulatkan ke atas kelipatan RM 0.50 supaya tidak ada sen berantakan
+    const cleanMyr = Math.ceil((amount / rateMYRtoIDR) * 2) / 2;
+    return fmtMYR(cleanMyr);
   };
 
   return (
     <LanguageCurrencyContext.Provider
-      value={{ lang, setLang, formatPrice, t, rateMYR, rateUSD }}
+      value={{
+        lang,
+        setLang,
+        currency,
+        t,
+        formatPrice,
+        formatAccountPrice,
+        rateMYRtoIDR,
+        rateMYRtoUSD,
+        idrRoundingStep,
+        // alias kompatibilitas untuk file lain yang masih memakai nama lama
+        rateMYR: rateMYRtoIDR, // IDR per 1 MYR
+        rateUSD: rateMYRtoUSD > 0 ? rateMYRtoIDR / rateMYRtoUSD : 18000, // IDR per 1 USD
+      }}
     >
       {children}
     </LanguageCurrencyContext.Provider>

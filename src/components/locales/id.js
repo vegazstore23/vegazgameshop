@@ -3,7 +3,9 @@ export const id = {
     buyNow: "Beli Sekarang",
     available: "Tersedia",
     notAvailable: "Tidak Tersedia",
-    tabSwitch: "Pilih Lokasi dan Bahasa",
+    tabSwitch: "Pilih Wilayah & Mata Uang",
+    tabSwitchDesc: "Sesuaikan bahasa dan tampilan harga",
+    tabSwitchFooter: "Konversi harga mengikuti kurs aktif VegazGameShop.",
   },
   header: {
     home: "Beranda",

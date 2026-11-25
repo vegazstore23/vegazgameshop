@@ -10,13 +10,17 @@ import StarIcon from "../../assets/icons/Star.webp";
 export default function AccountCard({ acc, type, waAdmin: propWaAdmin }) {
   const navigate = useNavigate();
 
-  // Ambil rateMYR dan rateUSD dari context untuk ngitung pembulatan di komponen ini
-  const { lang, t, rateMYR, rateUSD } = useLangCurr();
+  const {
+    lang,
+    t,
+    formatAccountPrice,
+    rateMYRtoIDR,
+    rateMYRtoUSD,
+    idrRoundingStep,
+  } = useLangCurr();
   const [waAdmin, setWaAdmin] = useState(propWaAdmin || "");
 
-  if (!acc) return null;
-
-  const statusRaw = acc.status || "Available";
+  const statusRaw = acc?.status || "Available";
   const status =
     statusRaw.charAt(0).toUpperCase() + statusRaw.slice(1).toLowerCase();
   const isAvailable = status === "Available";
@@ -46,6 +50,8 @@ export default function AccountCard({ acc, type, waAdmin: propWaAdmin }) {
     }
   }, [propWaAdmin]);
 
+  if (!acc) return null;
+
   const ASSET_BASE = "https://apivgz.vegazgameshop.com";
   const imagePath =
     acc.image ||
@@ -53,31 +59,25 @@ export default function AccountCard({ acc, type, waAdmin: propWaAdmin }) {
     (acc.AccountImages && acc.AccountImages[0]?.image);
   const isHot = acc.isHot || false;
 
-  const priceIDR = Number(acc.price) || 0;
-  const originalPriceIDR = Math.round(priceIDR / 0.9);
+  // Harga akun dibaca langsung dari backend (MYR = harga dasar dari admin).
+  const priceMYR = Number(acc.prices?.MYR ?? acc.priceMYR) || 0;
 
-  // --- FUNGSI KHUSUS PEMBULATAN HARGA AKUN STOCK ---
-  const formatStockPrice = (priceInIDR) => {
-    const amount = Number(priceInIDR) || 0;
-    if (!amount) return lang === "ID" ? "Rp 0" : lang === "EN" ? "$ 0" : "RM 0";
-
-    if (lang === "ID") {
-      return `Rp ${amount.toLocaleString("id-ID")}`;
-    }
-
-    if (lang === "EN") {
-      const rawUSD = amount / rateUSD;
-      // Dibulatkan ke kelipatan 5
-      const roundedUSD = Math.round(rawUSD / 5) * 5;
-      return `$ ${roundedUSD}`;
-    }
-
-    const rawMYR = amount / rateMYR;
-    // Dibulatkan ke kelipatan 5
-    const roundedMYR = Math.round(rawMYR / 5) * 5;
-    return `RM ${roundedMYR}`;
+  // Harga coret (-10%): dihitung dari MYR dan dibulatkan ke atas ke RM bulat,
+  // lalu diturunkan ke IDR/USD dengan kurs & pembulatan yang sama dengan backend.
+  const originalMYR = priceMYR > 0 ? Math.ceil(priceMYR / 0.9) : 0;
+  const originalAcc = {
+    priceMYR: originalMYR,
+    price:
+      Math.ceil((originalMYR * rateMYRtoIDR) / idrRoundingStep) *
+      idrRoundingStep,
+    prices: {
+      MYR: originalMYR,
+      IDR:
+        Math.ceil((originalMYR * rateMYRtoIDR) / idrRoundingStep) *
+        idrRoundingStep,
+      USD: Math.round(originalMYR * rateMYRtoUSD * 100) / 100,
+    },
   };
-  // -------------------------------------------------
 
   const getImageUrl = (path) => {
     if (!path) return null;
@@ -92,13 +92,15 @@ export default function AccountCard({ acc, type, waAdmin: propWaAdmin }) {
 
     const detailUrl = `${window.location.origin}/preview/${acc.id}`;
 
-    // Pesan chat WA pakai harga yang sudah dibulatkan
-    const formattedPrice = formatStockPrice(priceIDR);
+    // Harga sesuai mata uang pilihan user; patokan RM disertakan agar admin
+    // langsung cocok dengan data stok.
+    const formattedPrice = formatAccountPrice(acc);
 
     const message = generateMessage("account_buy", {
       title: acc.title || acc.code,
       code: acc.code,
       price: formattedPrice,
+      priceRefMYR: lang !== "MY" ? formatAccountPrice(acc, "MYR") : "",
       url: detailUrl,
     });
 
@@ -168,14 +170,12 @@ export default function AccountCard({ acc, type, waAdmin: propWaAdmin }) {
           className={`flex flex-col gap-1 mt-auto ${!isAvailable ? "opacity-50" : ""}`}
         >
           <div className="flex justify-between text-[11px] text-gray-200 line-through">
-            {/* Tampilan harga coret pakai formatStockPrice */}
-            <span>{formatStockPrice(originalPriceIDR)}</span>
+            <span>{formatAccountPrice(originalAcc)}</span>
           </div>
 
           <div className="flex justify-between items-end">
-            {/* Tampilan harga utama pakai formatStockPrice */}
             <span className="text-yellow-400 font-black text-lg leading-none">
-              {formatStockPrice(priceIDR)}
+              {formatAccountPrice(acc)}
             </span>
           </div>
         </div>

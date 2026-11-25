@@ -1,56 +1,105 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Logo from "../../assets/logo/vgs.svg";
 
-export default function LoadingScreen() {
+const EASE_OUT = [0.16, 1, 0.3, 1];
+const EASE_IN = [0.7, 0, 0.84, 0];
+
+// Pita cahaya miring yang menyapu permukaan logo (seperti lampu menyorot aluminium)
+const SHEEN_GRADIENT =
+  "linear-gradient(110deg, transparent 40%, rgba(255,255,255,0.12) 45%, rgba(255,255,255,0.85) 50%, rgba(255,255,255,0.12) 55%, transparent 60%)";
+
+// Cahaya hanya muncul di area logo (dipotong memakai bentuk SVG-nya)
+const logoMask = {
+  WebkitMaskImage: `url(${Logo})`,
+  maskImage: `url(${Logo})`,
+  WebkitMaskRepeat: "no-repeat",
+  maskRepeat: "no-repeat",
+  WebkitMaskPosition: "center",
+  maskPosition: "center",
+  WebkitMaskSize: "contain",
+  maskSize: "contain",
+  backgroundImage: SHEEN_GRADIENT,
+  backgroundSize: "300% 100%",
+  backgroundRepeat: "no-repeat",
+};
+
+/**
+ * isLoading = true  -> logo muncul, melayang pelan, disapu cahaya
+ * isLoading = false -> logo zoom-in, layar larut dan menyatu dengan konten web
+ */
+export default function LoadingScreen({ isLoading = true }) {
+  const reduce = useReducedMotion();
+
   return (
-    <div className="fixed inset-0 z-[9999] bg-[#172454] flex items-center justify-center">
-      <div className="flex flex-col items-center justify-center">
-        {/* Logo & Glow */}
+    <AnimatePresence>
+      {isLoading && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{
-            opacity: 1,
-            scale: [1, 1.05, 1],
-            y: [0, -10, 0],
+          key="loading-screen"
+          className="fixed inset-0 z-[9999] bg-[#172454] flex items-center justify-center overflow-hidden"
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 1 }}
+          exit={{
+            opacity: 0,
+            transition: { duration: 0.8, delay: 0.3, ease: "easeInOut" },
           }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="relative flex items-center justify-center"
         >
-          {/* Glow Biru / Cyan */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/40 to-cyan-400/40 blur-[50px] rounded-full scale-125" />
-
-          <img
-            src={Logo}
-            alt="VegazGameShop Logo"
-            className="w-52 md:w-48 relative z-10 drop-shadow-[0_0_20px_rgba(37,99,235,0.6)]"
-          />
-        </motion.div>
-
-        {/* Teks & Bar Loading (Lebih rapat: mt-3, font fancy & futuristik) */}
-        <div className="mt-3 flex flex-col items-center gap-2">
-          <p className="text-cyan-300/80 text-[11px] font-bold tracking-[0.35em] uppercase font-mono animate-pulse drop-shadow-[0_0_8px_rgba(34,211,238,0.4)]">
-            Loading Resources...
-          </p>
-
-          {/* Bar Loading Sederhana */}
-          <div className="w-40 h-1 bg-white/10 rounded-full overflow-hidden shadow-inner">
+          {/* 1) Pop-up masuk  /  3) Zoom-in keluar */}
+          <motion.div
+            className="will-change-transform"
+            initial={{ opacity: 0, y: 28, scale: 0.9, filter: "blur(6px)" }}
+            animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+            exit={{
+              scale: reduce ? 1 : 16,
+              opacity: [1, 1, 0],
+              filter: "blur(2px)",
+              transition: {
+                duration: 1.1,
+                ease: EASE_IN,
+                opacity: { duration: 1.1, times: [0, 0.6, 1] },
+              },
+            }}
+            transition={{ duration: 1.1, ease: EASE_OUT }}
+          >
+            {/* Melayang halus seperti hover */}
             <motion.div
-              initial={{ x: "-100%" }}
-              animate={{ x: "100%" }}
+              animate={reduce ? undefined : { y: [0, -8, 0] }}
               transition={{
-                duration: 1.5,
+                duration: 3.2,
                 repeat: Infinity,
-                ease: "linear",
+                ease: "easeInOut",
+                delay: 1.1,
               }}
-              className="w-full h-full bg-gradient-to-r from-transparent via-cyan-400 to-transparent"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
+            >
+              <div className="relative">
+                <img
+                  src={Logo}
+                  alt="VegazGameShop Logo"
+                  className="w-52 md:w-48 block select-none"
+                  draggable={false}
+                />
+
+                {/* 2) Sapuan cahaya di permukaan logo */}
+                {!reduce && (
+                  <motion.div
+                    aria-hidden
+                    className="absolute inset-0 pointer-events-none"
+                    style={logoMask}
+                    initial={{ backgroundPosition: "100% 0" }}
+                    animate={{ backgroundPosition: "0% 0" }}
+                    transition={{
+                      duration: 1.6,
+                      ease: [0.45, 0, 0.25, 1],
+                      repeat: Infinity,
+                      repeatDelay: 1.2,
+                      delay: 1.0,
+                    }}
+                  />
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
